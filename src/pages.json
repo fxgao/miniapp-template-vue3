@@ -1,0 +1,18 @@
+{
+  "pages": [
+    {
+      "path": "pages/index",
+      "style": {
+        "enablePullDownRefresh": true
+      }
+    }
+  ],
+  "globalStyle": {
+    "backgroundTextStyle": "light",
+    "navigationBarTitleText": "得乐体育",
+    "navigationBarTextStyle": "black",
+    "navigationBarBackgroundColor": "#eeeeee",
+    "backgroundColor": "#eeeeee",
+    "debug": true
+  }
+}
