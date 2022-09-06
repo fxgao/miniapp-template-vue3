@@ -1,5 +1,5 @@
 import api from 'fxmp-request';
-import Config from './configs';
+import Config from './config';
 import Constant from '@/lib/constant';
 
 // contentType处理函数
@@ -20,6 +20,9 @@ const contentTypeFunc = (requestParams) => {
 
 // 鉴权函数
 const authFunc = (requestParams, header) => {
+  // 需要校验的部分
+  const Authorization = uni.getStorageSync('TOKEN');
+  header.authorization = Authorization;
   requestParams.data = requestParams.data || {};
   requestParams.data.ts = new Date().getTime();
   requestParams.data.sign = '';
@@ -72,8 +75,8 @@ const instanceConfigs = {
   reqValidateHandlers: [reqValidateFunc], // 请求前验证处理方法
   resThroughHandlers: [resThroughFunc], // 结果返回合法性处理方法
   responseCodeKey: 'code', // 返回状态码的键名
-  successCode: ['ok', 'OK', '1', 1], // 成功状态码值
-  resStampKey: 'now', // 返回时间戳键名
+  successCode: ['ok', 'OK', '200', 200], // 成功状态码值
+  resStampKey: 'date', // 返回时间戳键名
   resMessageKey: 'msg', // 返回提示信息键名
   specialResStatusErrorCode: [], // 特殊请求状态异常Code
   specialResStatusErrorCodeHandlers: {}, // 特殊请求状态异常Code处理方法

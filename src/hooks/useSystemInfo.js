@@ -1,7 +1,7 @@
 import { computed } from 'vue';
 import { useSystemInfoStore } from '@/stores/systemInfo';
 
-export const useSystemInfo = () => {
+const useSystemInfo = () => {
   const systemInfoStore = useSystemInfoStore();
   const systemInfo = computed(() => {
     return systemInfoStore.systemInfo || uni.globalSystemInfo || {};
@@ -108,3 +108,5 @@ export const useSystemInfo = () => {
     getSystemInfo
   };
 };
+
+export default useSystemInfo;

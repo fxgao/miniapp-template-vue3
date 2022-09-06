@@ -31,7 +31,7 @@ const common = {
   login: (code) => {
     const needControl = false;
     const requestParams = {
-      url: '/user/login',
+      url: '/wx/user/login',
       data: { code },
       method: 'POST'
     };
