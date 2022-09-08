@@ -5,5 +5,12 @@ export default defineConfig({
   build: {
     sourcemap: true
   },
-  plugins: [uni()]
+  plugins: [uni()],
+  css: {
+    preprocessorOptions: {
+      scss: {
+        additionalData: '@import "@/style/index.scss";'
+      }
+    }
+  }
 });

@@ -1,5 +1,5 @@
 <template>
-  <view class="container">
+  <view class="page-container">
     <view class="main">
       <Home v-if="current === 'home'" />
       <Course v-if="current === 'course'" />
@@ -7,7 +7,7 @@
       <Mine v-if="current === 'mine'" />
     </view>
     <view class="footer">
-      <button @click="slientLogin">登录</button>
+      <tab-bar @tabChange="tabChange" :tabs="tabList" :current="current"></tab-bar>
     </view>
   </view>
 </template>
@@ -18,27 +18,13 @@ import Course from './components/Course';
 import Home from './components/Home';
 import Mine from './components/Mine';
 import { onLoad } from '@dcloudio/uni-app';
-import { readonly, ref } from 'vue';
+import { readonly, ref, nextTick } from 'vue';
 import { useSystemInfoStore } from '@/stores/systemInfo';
-import api from '@/api';
 
 const systemInfo = useSystemInfoStore();
 
-const slientLogin = () => {
-  uni.login({
-    provider: 'weixin',
-    success: function (loginRes) {
-      console.log('slientLogin', loginRes);
-      const code = loginRes.code;
-      api.common.login(code).then((res) => {
-        console.log('login res', res);
-      });
-    }
-  });
-};
-
 const current = ref('home');
-const tabList = readonly(
+const tabList = readonly([
   {
     key: 'home',
     url: '/pages/index?key=home',
@@ -68,9 +54,33 @@ const tabList = readonly(
     reddot: true,
     title: '我的'
   }
-);
+]);
+
+const tabChange = (key) => {
+  if (key === current.value) return;
+
+  uni.pageScrollTo({
+    scrollTop: 0,
+    duration: 0
+  });
+  current.value = key;
+
+  nextTick(() => {
+    console.log('do smt');
+  });
+};
 
 onLoad((options) => {
   console.log(uni.globalSystemInfo, systemInfo.systemInfo.safeBottomHeight);
 });
 </script>
+
+<style lang="scss" scoped>
+.main {
+  background: #ffffff;
+  @include text-ellipsis();
+}
+.page-container {
+  width: 100%;
+}
+</style>

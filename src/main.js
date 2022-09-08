@@ -4,6 +4,7 @@ import App from './App.vue';
 
 import config from '@/api/config';
 import { useLogin } from '@/hooks';
+import tabBar from '@/components/tabbar';
 
 const BASE_URL = config.REQUEST_URL_PREFIX;
 
@@ -35,6 +36,7 @@ export function createApp() {
     app.config.globalProperties.$userDefaultAddressResolve = resolve;
   });
   // 全局组件注册
+  app.component('tab-bar', tabBar);
 
   // 引入Pinia
   app.use(Pinia.createPinia());

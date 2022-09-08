@@ -1,0 +1,64 @@
+view,
+image,
+swiper,
+swiper-item,
+scroll-view {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+image {
+  display: block;
+  font-size: 0;
+}
+
+button {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: none;
+
+  &::after {
+    content: none;
+  }
+}
+
+.page {
+  min-height: 100vh;
+}
+
+.navBack {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 52px;
+  height: 100%;
+
+  /* prettier-ignore */
+  padding-right: 10px;
+  color: #ffffff;
+  font-size: 14px;
+
+  image {
+    width: inherit;
+    height: inherit;
+  }
+}
+
+.navIcon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 52px;
+  height: 100%;
+
+  /* prettier-ignore */
+  padding-left: 10px;
+  color: #ffffff;
+  font-size: 14px;
+
+  image {
+    width: 50%;
+  }
+}
