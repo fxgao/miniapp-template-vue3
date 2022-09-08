@@ -1,5 +1,5 @@
 <template>
-  <div class="container">活动页面</div>
+  <view class="container">活动页面</view>
 </template>
 
 <script setup></script>

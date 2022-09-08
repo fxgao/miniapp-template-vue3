@@ -13,6 +13,7 @@
     "navigationBarTextStyle": "black",
     "navigationBarBackgroundColor": "#eeeeee",
     "backgroundColor": "#eeeeee",
+    "navigationStyle": "custom",
     "debug": true
   }
 }

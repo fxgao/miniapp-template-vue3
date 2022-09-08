@@ -5,6 +5,7 @@ import App from './App.vue';
 import config from '@/api/config';
 import { useLogin } from '@/hooks';
 import tabBar from '@/components/tabbar';
+import navBar from '@/components/navigation-bar';
 
 const BASE_URL = config.REQUEST_URL_PREFIX;
 
@@ -37,6 +38,7 @@ export function createApp() {
   });
   // 全局组件注册
   app.component('tab-bar', tabBar);
+  app.component('nav-bar', navBar);
 
   // 引入Pinia
   app.use(Pinia.createPinia());
