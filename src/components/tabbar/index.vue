@@ -52,11 +52,11 @@ console.log(systemInfo.safeBottom, props.tabs);
   align-items: center;
   justify-content: space-around;
   box-sizing: content-box;
-  height: 98rpx;
-  padding: 0 12rpx 8rpx 12rpx;
+  // height: 98rpx;
+  padding: 10rpx 12rpx 8rpx 12rpx;
   background: #ffffff;
   box-shadow: 0 2rpx 0 0 #dddddd;
-  opacity: 0.95;
+  border-top: 2rpx solid #eeeeee;
 }
 
 .default-tab {
@@ -64,15 +64,6 @@ console.log(systemInfo.safeBottom, props.tabs);
   display: flex;
   flex-direction: column;
   align-items: center;
-  .reddot {
-    position: absolute;
-    top: 0rpx;
-    right: 0rpx;
-    width: 12rpx;
-    height: 12rpx;
-    background: red;
-    border-radius: 50%;
-  }
   .icon-container {
     &.activity {
       width: 140rpx;
@@ -83,8 +74,8 @@ console.log(systemInfo.safeBottom, props.tabs);
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 60rpx;
-    height: 60rpx;
+    width: 48rpx;
+    height: 48rpx;
     margin-bottom: 4rpx;
   }
   .icon {
@@ -96,36 +87,36 @@ console.log(systemInfo.safeBottom, props.tabs);
       animation: tabActive 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
     }
 
-    width: 60rpx;
-    height: 60rpx;
+    width: 48rpx;
+    height: 48rpx;
   }
 
   .title {
-    height: 20rpx;
-    color: #531704;
+    height: 28rpx;
+    color: #a0a0a0;
     font-weight: 500;
     font-size: 20rpx;
-    line-height: 20rpx;
+    line-height: 28rpx;
   }
 }
 
 .active {
   .title {
-    color: #531704;
+    color: #ef6328;
   }
 }
 @keyframes tabActive {
   0% {
-    width: 60rpx;
-    height: 60rpx;
+    width: 48rpx;
+    height: 48rpx;
   }
   40% {
     width: 54rpx;
     height: 54rpx;
   }
   100% {
-    width: 60rpx;
-    height: 60rpx;
+    width: 48rpx;
+    height: 48rpx;
   }
 }
 </style>

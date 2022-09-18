@@ -7,6 +7,8 @@ import { useLogin } from '@/hooks';
 import tabBar from '@/components/tabbar';
 import navBar from '@/components/navigation-bar';
 
+import 'uno.css';
+
 const BASE_URL = config.REQUEST_URL_PREFIX;
 
 export function createApp() {

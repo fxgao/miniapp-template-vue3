@@ -7,8 +7,7 @@ const contentTypeFunc = (requestParams) => {
   let contentTypeStr = '';
   if (!requestParams.header) {
     if (requestParams.method === 'POST') {
-      // contentTypeStr = 'application/x-www-form-urlencoded';
-      contentTypeStr = 'application/json';
+      contentTypeStr = 'application/x-www-form-urlencoded';
     } else {
       contentTypeStr = 'application/json';
     }
@@ -22,7 +21,7 @@ const contentTypeFunc = (requestParams) => {
 const authFunc = (requestParams, header) => {
   // 需要校验的部分
   const Authorization = uni.getStorageSync('TOKEN');
-  header.authorization = Authorization;
+  header.token = Authorization;
   requestParams.data = requestParams.data || {};
   requestParams.data.ts = new Date().getTime();
   requestParams.data.sign = '';

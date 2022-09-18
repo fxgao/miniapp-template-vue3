@@ -59,8 +59,25 @@
       </view>
 
       <view class="nav-bar__center">
+        <!-- 地址选择区 -->
+        <view v-if="showSelectBlock" class="nav-bar__center-location">
+          <image
+            class="locationIcon"
+            src="https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/icon/location-icon.png"
+          />
+          <view class="locationChoose">
+            <picker
+              @change="locationChange"
+              :range="locationArr"
+              range-key="name"
+              :value="locationIndex"
+            >
+              <view class="picker"> 北京{{ locationArr[locationIndex].name }} </view>
+            </picker>
+          </view>
+        </view>
         <!-- 页面title -->
-        <text v-if="title" :style="titleColor" class="nav-bar__center-title">{{ title }}</text>
+        <text v-else-if="title" :style="titleColor" class="nav-bar__center-title">{{ title }}</text>
       </view>
 
       <view class="nav-bar__right">
@@ -115,6 +132,10 @@ const props = defineProps({
     type: String,
     default: 'none' // 0.none 1.normal 2.weixinIcon
   },
+  showSelectBlock: {
+    type: Boolean,
+    default: false
+  },
   isTransparent: {
     type: Boolean,
     default: false
@@ -149,13 +170,16 @@ const {
   showHomeIcon,
   title,
   titleColor,
-  interceptBack
+  interceptBack,
+  showSelectBlock
 } = toRefs(props);
 const navBarFullHeight = computed(() => {
   const { navBarHeight = 0, navBarExtendHeight = 0, statusBarHeight = 0 } = systemInfo;
   return `${navBarHeight + navBarExtendHeight + statusBarHeight}px`;
 });
 const showAddMiniProgram = ref(false);
+const locationIndex = ref(0);
+const locationArr = ref(constant.REGION_ARR);
 const shareButtonStyle = computed(() => {
   return `top:${systemInfo.capsulePosition.top}px;left:calc(${systemInfo.capsulePosition.left}px - 74rpx);`;
 });
@@ -223,6 +247,10 @@ const handleGoHomeClick = () => {
   uni.redirectTo({
     url: '/pages/index'
   });
+};
+const locationChange = (res) => {
+  console.log('locationChange', res);
+  locationIndex.value = parseInt(res.detail?.value);
 };
 
 onMounted(() => {
@@ -307,7 +335,7 @@ onMounted(() => {
       align-items: center;
       width: var(--nav-bar-right);
       height: 32px;
-      margin-left: 32rpx;
+      margin-left: 40rpx;
       .nav_back {
         &.w54 {
           width: 54rpx;
@@ -348,6 +376,21 @@ onMounted(() => {
     overflow: hidden;
     font-size: 17px;
     text-align: left;
+    .nav-bar__center-location {
+      display: flex;
+      align-items: center;
+      .locationIcon {
+        width: 48rpx;
+        height: 48rpx;
+        margin-right: 8rpx;
+      }
+      .locationChoose {
+        font-size: 36rpx;
+        font-weight: 600;
+        color: #333333;
+        line-height: 52rpx;
+      }
+    }
     .nav-bar__center-title {
       max-width: 450rpx;
       margin-top: -2px;

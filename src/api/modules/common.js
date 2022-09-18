@@ -28,22 +28,59 @@ const common = {
     });
     return requestTest;
   },
-  login: (code) => {
+  login(code) {
     const needControl = false;
     const requestParams = {
       url: '/wx/user/login',
+      method: 'POST',
       data: { code },
-      method: 'POST'
+      header: { 'content-type': 'application/json' }
     };
     const specialFail = function (err) {
       console.log(err);
     };
-    const requestTest = request({
+
+    return request({
       requestParams,
       specialFail,
       needControl
     });
-    return requestTest;
+  },
+  // 获取首页banner
+  getBanner() {
+    return request({
+      requestParams: {
+        url: '/wx/banner/list',
+        method: 'GET'
+      }
+    });
+  },
+  // 获取首页金刚位
+  getKingKongPosition() {
+    return request({
+      requestParams: {
+        url: '/wx/kingarea/list',
+        method: 'GET'
+      }
+    });
+  },
+  // 获取热门场馆
+  getHotStadiumList() {
+    return request({
+      requestParams: {
+        url: '/wx/stadium/hotStadiumList',
+        method: 'GET'
+      }
+    });
+  },
+  // 获取附近
+  getNearbyStadiumList(data) {
+    return request({
+      requestParams: {
+        url: '/wx/stadium/stadiumListByGeopoint',
+        method: 'GET'
+      }
+    });
   }
 };
 

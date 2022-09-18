@@ -90,6 +90,10 @@
     "stylelint-no-unsupported-browser-features": "^5.0.3",
     "stylelint-scss": "^4.3.0",
     "ts-node": "^10.9.1",
+    "unocss": "^0.45.21",
+    "unocss-preset-weapp": "^0.1.13",
+    "unplugin-transform-we-class": "^0.1.18",
+    "unplugin-unocss-attributify-wechat": "^0.1.13",
     "vite": "^2.9.14"
   },
   "browserslist": [

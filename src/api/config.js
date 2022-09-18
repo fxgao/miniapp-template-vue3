@@ -6,14 +6,23 @@ const ENV_ALIAS = {
   development: 'dev'
 }[Constant.PROCESS_ENV];
 
+// oss地址配置
+const OSS_URL_PREFIX_ENV_CONFIG = {
+  production: 'https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/',
+  development: 'https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/'
+};
+
 // 接口地址配置
 const REQUEST_URL_PREFIX_ENV_CONFIG = {
   production: 'http://abcd',
-  development: 'http://moth-admin-vue.webdyc.com/mothApi/little-moth-wx-api'
+  development: 'https://moth-admin-vue.webdyc.com/mothApi/little-moth-wx-api'
 };
 
 const REQUEST_URL_PREFIX =
   REQUEST_URL_PREFIX_ENV_CONFIG[Constant.PROCESS_ENV] || REQUEST_URL_PREFIX_ENV_CONFIG.production;
+
+const OSS_URL_PREFIX =
+  OSS_URL_PREFIX_ENV_CONFIG[Constant.PROCESS_ENV] || OSS_URL_PREFIX_ENV_CONFIG.production;
 
 // 请求状态码
 const RESPONSE_STATUS_CODE = {
@@ -55,6 +64,7 @@ const BUSINESS_ERROR_MSG = {
 export default {
   PROCESS_ENV: Constant.PROCESS_ENV,
   REQUEST_URL_PREFIX,
+  OSS_URL_PREFIX,
   RESPONSE_ERROR_MSG,
   BUSINESS_ERROR_MSG,
   RESPONSE_STATUS_CODE,

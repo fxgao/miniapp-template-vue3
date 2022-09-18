@@ -1,7 +1,6 @@
 <script setup>
-import { getCurrentInstance } from 'vue';
 import { onLaunch, onShow, onHide } from '@dcloudio/uni-app';
-import { useSystemInfo, useCheckVersion } from '@/hooks';
+import { useSystemInfo, useCheckVersion, useAppInstance } from '@/hooks';
 import { useLoginInfoStore } from '@/stores/loginInfo';
 
 const { systemInfo, getSystemInfo } = useSystemInfo();
@@ -10,9 +9,8 @@ const { checkClientVersion } = useCheckVersion();
 // 静默登录
 const slientLogin = (successFunc = null) => {
   const params = {};
-  const { appContext } = getCurrentInstance();
   const loginInfoStore = useLoginInfoStore();
-  const { $loginMP, $isResolve, $reject } = appContext.config.globalProperties;
+  const { $loginMP, $isResolve, $reject } = useAppInstance();
 
   params.everyLogin = true;
   params.timeout = 10000;
@@ -23,7 +21,7 @@ const slientLogin = (successFunc = null) => {
       console.log('成功结束静默登录', new Date(), res);
       // 业务代码
       if (res.data.code === 200) {
-        const loginInfo = res.data.data;
+        const loginInfo = res.data.data || {};
         // 存储pinia
         loginInfoStore.setLoginInfo(loginInfo);
 
@@ -50,10 +48,26 @@ const slientLogin = (successFunc = null) => {
   );
 };
 
+// 获取登录信息
+const getUserLocation = () => {
+  uni.getLocation({
+    type: 'gcj02', //返回可以用于uni.openLocation的经纬度
+    geocode: true,
+    success: function (res) {
+      console.log('getLocation res', res);
+      const latitude = res.latitude;
+      const longitude = res.longitude;
+    },
+    fail: function (err) {
+      console.log('getLocation fail', err);
+    }
+  });
+};
+
 // 存储登录信息
 const loginedSaveStorage = (loginInfo) => {
-  uni.setStorageSync('TOKEN', loginInfo);
-  // uni.setStorageSync('SHORT_TOKEN', loginInfo.sampleToken);
+  uni.setStorageSync('TOKEN', loginInfo.token);
+  uni.setStorageSync('OPEN_ID', loginInfo.openId);
   // uni.setStorageSync('UNION_ID', loginInfo.user.union_id);
   // uni.setStorageSync('SESSION_ID', loginInfo.session_id);
 };
@@ -75,6 +89,8 @@ onLaunch(() => {
   checkClientVersion();
   // 静默登录
   slientLogin();
+  // 获取用户位置信息
+  getUserLocation();
   // 加载字体
   loadFont();
 });
