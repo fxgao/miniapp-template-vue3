@@ -2,6 +2,8 @@
 import { onLaunch, onShow, onHide } from '@dcloudio/uni-app';
 import { useSystemInfo, useCheckVersion, useAppInstance } from '@/hooks';
 import { useLoginInfoStore } from '@/stores/loginInfo';
+import { useLocationInfoStore } from '@/stores/location';
+import api from '@/api';
 
 const { systemInfo, getSystemInfo } = useSystemInfo();
 const { checkClientVersion } = useCheckVersion();
@@ -50,16 +52,37 @@ const slientLogin = (successFunc = null) => {
 
 // 获取登录信息
 const getUserLocation = () => {
+  const locationInfoStore = useLocationInfoStore()
   uni.getLocation({
     type: 'gcj02', //返回可以用于uni.openLocation的经纬度
     geocode: true,
-    success: function (res) {
+    success: async (res) => {
       console.log('getLocation res', res);
       const latitude = res.latitude;
-      const longitude = res.longitude;
+      const lngitude = res.longitude;
+      const positionInfo = await api.common.locationTransPosition(latitude, lngitude);
+      console.log('positionInfo', positionInfo);
+      locationInfoStore.setLocationInfo({
+        lat: latitude,
+        lng: lngitude,
+        code: positionInfo.code,
+        name: positionInfo.name,
+        areaList: positionInfo.areaList,
+        locationInfo: res
+      })
     },
-    fail: function (err) {
+    fail: async (err) => {
       console.log('getLocation fail', err);
+      const positionInfo = await api.common.locationTransPosition(latitude, lngitude);
+      console.log('positionInfo', positionInfo);
+      locationInfoStore.setLocationInfo({
+        lat: null,
+        lng: null,
+        locationInfo: null,
+        code: positionInfo.code,
+        name: positionInfo.name,
+        areaList: positionInfo.areaList
+      })
     }
   });
 };

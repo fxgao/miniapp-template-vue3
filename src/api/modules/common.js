@@ -81,7 +81,22 @@ const common = {
         method: 'GET'
       }
     });
+  },
+  // 经纬度转位置
+  locationTransPosition(lat, lng) {
+    return request({
+      requestParams: {
+        url: '/wx/stadium/getAreaName',
+        method: 'GET',
+        responseReturnCode: false,
+        data: {
+          lat,
+          lng
+        }
+      }
+    });
   }
+
 };
 
 export default common;

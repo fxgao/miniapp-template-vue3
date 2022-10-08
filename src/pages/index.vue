@@ -17,10 +17,13 @@ import Activity from './components/Activity';
 import Course from './components/Course';
 import Home from './components/Home';
 import Mine from './components/Mine';
-import { readonly, ref, nextTick } from 'vue';
+import { readonly, ref, nextTick, computed } from 'vue';
 // import api from '@/api';
 // import { useSystemInfoStore } from '@/stores/systemInfo';
+import { useLocationInfoStore } from '@/stores/location';
 import Config from '@/api/config';
+const locationStore = useLocationInfoStore();
+const locationCode = computed(() => locationStore.locationInfo.code);
 
 // const systemInfo = useSystemInfoStore();
 

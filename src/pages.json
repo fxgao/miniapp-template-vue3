@@ -7,6 +7,17 @@
       }
     }
   ],
+  "subPackages": [
+    {
+      "name": "mp-html",
+      "root": "packages/mp-html/",
+      "pages": [
+        {
+          "path": "pages/index"
+        }
+      ]
+    }
+  ],
   "globalStyle": {
     "backgroundTextStyle": "light",
     "navigationBarTitleText": "得乐体育",

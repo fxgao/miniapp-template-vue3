@@ -1,15 +1,7 @@
-# 共用类旧代码
-src/lib/
-src/App.vue
-src/main.js
-# 不检测分包代码
-# src/packages
-
 #特殊文件
 bin/
 postcss.config.js
 src/components/mp-html/mp-html.vue
-src/components/mp-html/parser.js
 src/components/mp-html/node/node.vue
 
 # 编译文件

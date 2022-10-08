@@ -35,7 +35,7 @@
         </view>
       </view>
       <!-- 附近热门场馆 -->
-      <view class="stadiumBlock">
+      <view class="stadiumBlock" v-if="stadiumList.length > 0">
         <view
           :class="{ stadiumItem: true, hot: item.hot }"
           v-for="item in stadiumList"

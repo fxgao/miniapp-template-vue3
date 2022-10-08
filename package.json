@@ -106,9 +106,6 @@
     ],
     "src/**/*.{js,vue}": [
       "npm run lint:js"
-    ],
-    "**/*.{js,vue,scss,md,json}": [
-      "prettier --write"
     ]
   },
   "commitlint": {

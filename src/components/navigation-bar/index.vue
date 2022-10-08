@@ -72,7 +72,7 @@
               range-key="name"
               :value="locationIndex"
             >
-              <view class="picker"> 北京{{ locationArr[locationIndex].name }} </view>
+              <view class="picker"> 北京 {{locationArr[locationIndex].name}}</view>
             </picker>
           </view>
         </view>
@@ -107,10 +107,12 @@
 </template>
 
 <script setup>
-import { ref, toRefs, computed, onMounted } from 'vue';
+import { ref, toRefs, computed, onMounted, watch } from 'vue';
 import { useSystemInfoStore } from '@/stores/systemInfo';
+import { useLocationInfoStore } from '@/stores/location';
 import constant from '@/lib/constant';
 const systemInfo = useSystemInfoStore().systemInfo;
+const locationStore = useLocationInfoStore();
 
 const props = defineProps({
   showLogo: {
@@ -179,7 +181,15 @@ const navBarFullHeight = computed(() => {
 });
 const showAddMiniProgram = ref(false);
 const locationIndex = ref(0);
-const locationArr = ref(constant.REGION_ARR);
+const locationArr = computed(() => locationStore.getAreaList);
+const locationCode = computed(() => locationStore.getCode);
+// 只会在首次store被赋值时触发，正好用来init初始值
+watch(locationCode, (newVal, oldVal) => {
+  locationIndex.value = locationArr.value.findIndex(item => {
+    return item.code === newVal;
+  });
+}, { deep: true });
+
 const shareButtonStyle = computed(() => {
   return `top:${systemInfo.capsulePosition.top}px;left:calc(${systemInfo.capsulePosition.left}px - 74rpx);`;
 });
@@ -251,6 +261,10 @@ const handleGoHomeClick = () => {
 const locationChange = (res) => {
   console.log('locationChange', res);
   locationIndex.value = parseInt(res.detail?.value);
+  locationStore.$patch((state) => {
+    state.locationInfo.code = locationArr.value[res.detail?.value].code;
+    state.locationInfo.name = locationArr.value[res.detail?.value].name;
+  });
 };
 
 onMounted(() => {
