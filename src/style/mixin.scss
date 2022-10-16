@@ -18,6 +18,20 @@
   -webkit-box-orient: vertical;
 }
 
+@mixin text-ellipsis-3 {
+  display: box;
+  /* stylelint-disable-next-line */
+  display: -webkit-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  /* stylelint-disable-next-line */
+  box-orient: vertical;
+  /* stylelint-disable-next-line */
+  -webkit-box-orient: vertical;
+}
+
 @mixin flex-center {
   display: flex;
   align-items: center;

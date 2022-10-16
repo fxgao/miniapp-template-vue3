@@ -5,9 +5,9 @@
       :backgroundColor="'rgba(255,255,255,0)'"
       :isTransparent="true"
       :showSelectBlock="true"
-      :title="场馆详情"
+      :title="教练"
     />
-    <view class="pageContainer">
+    <view class="page-container">
 
     </view>
   </view>

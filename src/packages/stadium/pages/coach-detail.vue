@@ -5,9 +5,8 @@
       :backgroundColor="'rgba(255,255,255,0)'"
       :isTransparent="true"
       :showSelectBlock="true"
-      :title="场馆详情"
     />
-    <view class="pageContainer">
+    <view class="page-container" hover-class="none" hover-stop-propagation="false">
 
     </view>
   </view>

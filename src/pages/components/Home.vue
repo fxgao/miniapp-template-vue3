@@ -2,54 +2,101 @@
   <view class="page">
     <nav-bar
       ref="navbar"
-      :backgroundColor="'rgba(255,255,255,0)'"
-      :isTransparent="true"
       :showSelectBlock="true"
+      :isTransparent="true"
+      :titleColor="navTitleColor"
+      :backgroundColor="navBarBackgroundColor"
     />
     <view class="pageContainer">
-      <!-- banner位 -->
-      <view class="bannerBlock">
-        <swiper class="bannerSwiper" circular="true" @change="bannerChange">
-          <swiper-item v-for="item in banner" :key="item.id">
-            <image class="bannerImg" :src="item.bannerUrl" />
-          </swiper-item>
-        </swiper>
-        <view class="indicatorBlock">
-          <view
-            :class="{ dot: true, active: index === curIndex }"
-            v-for="(item, index) in banner"
-            :key="item.id"
-          ></view>
-        </view>
-      </view>
-      <!-- 金刚位 -->
-      <view class="kingkongBlock">
-        <view
-          class="kingkongItem"
-          v-for="item in kingkongList"
-          :key="item.id"
-          @click="handleKingkongClick(item)"
-        >
-          <image class="kingkongImg" :src="item.image" />
-          <view class="kingkongText">{{ item.name }}</view>
-        </view>
-      </view>
-      <!-- 附近热门场馆 -->
-      <view class="stadiumBlock" v-if="stadiumList.length > 0">
-        <view
-          :class="{ stadiumItem: true, hot: item.hot }"
-          v-for="item in stadiumList"
-          :key="item.id"
-          @click="handleStadiumClick(item)"
-        >
-          <view class="name">{{ item.stadiumName }}</view>
-          <view class="remark">{{ item.stadiumRemark }}</view>
-          <view class="labelBlock">
-            <view class="labelItem">室内</view>
-            <view class="labelItem">承认</view>
-            <view class="labelItem">标签</view>
+      <!-- 热门活动 -->
+      <view class="activityBlock" v-if="hotActivityList.length > 0">
+        <view class="topBlock">
+          <view class="titleBg"> 热门活动 </view>
+          <view class="moreText" @click="handleGoMore('activity')">
+            查看更多
+            <image
+              class="icon"
+              src="https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/icon/right-arrow-icon.png"
+            />
           </view>
         </view>
+        <view class="list">
+          <activity-card
+            :info="item"
+            v-for="item in hotActivityList"
+            :key="item.id"
+            @click="goActivityDetail(item)"
+          ></activity-card>
+        </view>
+      </view>
+      <!-- 热门课程 -->
+      <view class="courseBlock" v-if="hotCourseList.length > 0">
+        <view class="topBlock">
+          <view class="titleBg"> 热门课程 </view>
+          <view class="moreText" @click="handleGoMore('course')">
+            查看更多
+            <image
+              class="icon"
+              src="https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/icon/right-arrow-icon.png"
+            />
+          </view>
+        </view>
+        <scroll-view class="courseListScroll" :scroll-x="true">
+          <course-card
+            :info="item"
+            :style="'margin-left: 32rpx;display: inline-block;'"
+            v-for="item in hotCourseList"
+            :key="item.id"
+            @click="goCourseDetail(item)"
+          ></course-card>
+        </scroll-view>
+      </view>
+      <!-- 经典活动 -->
+      <view class="matchBlock" v-if="classicMatchList.length > 0">
+        <view class="topBlock">
+          <view class="titleBg"> 经典赛事 </view>
+          <view class="moreText" @click="handleGoMore('match')">
+            查看更多
+            <image
+              class="icon"
+              src="https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/icon/right-arrow-icon.png"
+            />
+          </view>
+        </view>
+        <view class="list">
+          <match-card
+            :info="item"
+            v-for="item in classicMatchList"
+            :key="item.id"
+            @click="goMatchDetail(item)"
+          ></match-card>
+        </view>
+      </view>
+      <!-- 明星教练 -->
+      <view class="coachBlock" v-if="starCoachList.length > 0">
+        <view class="topBlock">
+          <view class="titleBg"> 明星教练 </view>
+          <view class="moreText" @click="handleGoMore('coach')">
+            查看更多
+            <image
+              class="icon"
+              src="https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/icon/right-arrow-icon.png"
+            />
+          </view>
+        </view>
+        <scroll-view class="coachListScroll" :scroll-x="true">
+          <coach-card
+            v-for="item in starCoachList"
+            :key="item.id"
+            :id="item.id"
+            :name="item.userName"
+            :img="item.photo"
+            :level="item.level"
+            :content="item.remark"
+            :style="'margin-left: 32rpx;display: inline-block;'"
+            @click="goCoachDetail(item)"
+          ></coach-card>
+        </scroll-view>
       </view>
     </view>
   </view>
@@ -59,55 +106,346 @@
 import { ref } from 'vue';
 import api from '@/api';
 import { onLoad } from '@dcloudio/uni-app';
-import { useAppInstance } from '@/hooks';
+import { useAppInstance, useNav } from '@/hooks';
+import ActivityCard from '@/components/list-card/activity-card';
+import CourseCard from '@/components/list-card/course-card';
+import MatchCard from '@/components/list-card/match-card';
+import CoachCard from '@/components/list-card/coach-card';
 
 const { $onLaunched } = useAppInstance();
-
-// 定义
+const { to } = useNav();
 
 // 变量
-const banner = ref([]);
-const curIndex = ref(0);
-const kingkongList = ref([]);
-const stadiumList = ref([null, null]);
+const navTitleColor = ref('color: rgba(255,255,255,0)');
+const navBarBackgroundColor = ref('rgba(255,255,255,0)');
 
 // 方法
-const getBannerList = () => {
-  api.common.getBanner().then((res) => {
-    console.log('getBannerList res', res);
-    banner.value = res || [];
+const pageScroll = (e) => {
+  const scrollTop = e.scrollTop;
+  const transparent = scrollTop / 36 >= 1 ? 1 : scrollTop / 36;
+  navTitleColor.value = `color:rgba(0,0,0,${transparent})`;
+  navBarBackgroundColor.value = `rgba(255,255,255,${transparent})`;
+  if (transparent >= 1) {
+    uni.setNavigationBarColor({
+      frontColor: '#000000',
+      backgroundColor: '#ffffff'
+    });
+  } else {
+    uni.setNavigationBarColor({
+      frontColor: '#ffffff',
+      backgroundColor: '#ffffff'
+    });
+  }
+};
+
+const hotActivityList = ref([]);
+
+// 获取热门活动
+const getHotActivity = () => {
+  api.homePage.getHotActivityList().then((res) => {
+    console.log('getHotActivity res', res);
+    hotActivityList.value = [
+      {
+        activeEndTime: '2022-09-20 16:00:00',
+        activeName: '测试活动',
+        activeRemark: '我的活动',
+        activeRule: '活动规则',
+        activeStartTime: '2022-09-20 16:00:00',
+        activeStatus: 1,
+        activityPrice: 11,
+        activityPriceType: 1,
+        coachId: 1,
+        completePersonCount: 4,
+        id: 2,
+        imageVoList: [
+          {
+            functionId: 2,
+            functionType: 4,
+            id: 18,
+            imageUrl: 'http://baidu.com'
+          }
+        ],
+        labelList: [
+          {
+            businessId: '2',
+            businessType: '4',
+            id: 30,
+            labelLabel: 'demoData',
+            labelSort: 1,
+            labelValue: 'demoData'
+          }
+        ],
+        officeId: 1,
+        placeId: 1,
+        stadiumId: 1
+      },
+      {
+        activeEndTime: '2022-09-20 16:00:00',
+        activeName: '测试活动',
+        activeRemark: '我的活动',
+        activeRule: '活动规则',
+        activeStartTime: '2022-09-20 16:00:00',
+        activeStatus: 1,
+        activityPrice: 11,
+        activityPriceType: 1,
+        coachId: 1,
+        completePersonCount: 4,
+        id: 2,
+        imageVoList: [
+          {
+            functionId: 2,
+            functionType: 4,
+            id: 18,
+            imageUrl: 'http://baidu.com'
+          }
+        ],
+        labelList: [
+          {
+            businessId: '2',
+            businessType: '4',
+            id: 30,
+            labelLabel: 'demoData',
+            labelSort: 1,
+            labelValue: 'demoData'
+          }
+        ],
+        officeId: 1,
+        placeId: 1,
+        stadiumId: 1
+      }
+    ];
   });
 };
 
-const getKingKongPosition = () => {
-  api.common.getKingKongPosition().then((res) => {
-    console.log('getKingKongPosition res', res);
-    kingkongList.value = res.concat(res) || [];
+const hotCourseList = ref([]);
+
+// 获取热门课程
+const getHotCourse = () => {
+  api.homePage.getHotCourseList().then((res) => {
+    console.log('getHotCourseList res', res);
+    hotCourseList.value = [
+      {
+        id: 1,
+        officeId: 'mixed',
+        courseName: '课程一',
+        courseDesc: '课程一描述',
+        applicablePeople: 1,
+        applicableLevel: 1,
+        assessmentLevel: 1,
+        classType: 1,
+        multiPersonCourseType: 1,
+        courseFee: 1,
+        courseHeadFigure: 'imgurl',
+        supplementaryInformation: '课程一补充信息',
+        courseInstructorId: 1,
+        contactPhone: '185013427819',
+        courseRemark: '课程一备注',
+        imageVoList: [],
+        labelList: [
+          {
+            creator: 'mixed',
+            createTime: 'mixed',
+            updateUser: 'mixed',
+            updateTime: 'mixed',
+            remark: 'mixed',
+            id: 43,
+            officeId: 'mixed',
+            labelSort: 2,
+            labelLabel: 'demoData',
+            labelValue: 'test2',
+            businessId: '1',
+            businessType: '6',
+            status: '0',
+            createBy: 'mock',
+            updateBy: 'mock'
+          },
+          {
+            creator: 'mixed',
+            createTime: 'mixed',
+            updateUser: 'mixed',
+            updateTime: 'mixed',
+            remark: 'mixed',
+            id: 44,
+            officeId: 'mixed',
+            labelSort: 1,
+            labelLabel: 'demoData',
+            labelValue: 'test',
+            businessId: '1',
+            businessType: '6',
+            status: '0',
+            createBy: 'mock',
+            updateBy: 'mock'
+          }
+        ]
+      },
+      {
+        id: 1,
+        officeId: 'mixed',
+        courseName: '课程一',
+        courseDesc: '课程一描述',
+        applicablePeople: 1,
+        applicableLevel: 1,
+        assessmentLevel: 1,
+        classType: 1,
+        multiPersonCourseType: 1,
+        courseFee: 1,
+        courseHeadFigure: 'imgurl',
+        supplementaryInformation: '课程一补充信息',
+        courseInstructorId: 1,
+        contactPhone: '185013427819',
+        courseRemark: '课程一备注',
+        imageVoList: [],
+        labelList: [
+          {
+            creator: 'mixed',
+            createTime: 'mixed',
+            updateUser: 'mixed',
+            updateTime: 'mixed',
+            remark: 'mixed',
+            id: 43,
+            officeId: 'mixed',
+            labelSort: 2,
+            labelLabel: 'demoData',
+            labelValue: 'test2',
+            businessId: '1',
+            businessType: '6',
+            status: '0',
+            createBy: 'mock',
+            updateBy: 'mock'
+          },
+          {
+            creator: 'mixed',
+            createTime: 'mixed',
+            updateUser: 'mixed',
+            updateTime: 'mixed',
+            remark: 'mixed',
+            id: 44,
+            officeId: 'mixed',
+            labelSort: 1,
+            labelLabel: 'demoData',
+            labelValue: 'test',
+            businessId: '1',
+            businessType: '6',
+            status: '0',
+            createBy: 'mock',
+            updateBy: 'mock'
+          }
+        ]
+      }
+    ];
   });
 };
 
-const getHotStadiumList = () => {
-  api.common.getHotStadiumList().then((res) => {
-    console.log('getHotStadiumList res', res);
-    stadiumList.value[1] = res[0] || {};
+const classicMatchList = ref([]);
+
+// 获取经典赛事
+const getClassicMatch = () => {
+  api.homePage.getClassicMatchList().then((res) => {
+    console.log('getClassicMatchList res', res);
+    classicMatchList.value = res || [];
   });
 };
 
-const getNearbyStadiumList = () => {
-  const data = {
-    lng: 123,
-    lat: 456
-  };
-  api.common.getNearbyStadiumList(data).then((res) => {
-    console.log('getNearbyStadiumList res', res);
-    stadiumList.value[0] = res[0] || {};
+const starCoachList = ref([]);
+
+// 获取明星教练
+const getStartCoach = () => {
+  api.homePage.getStarCoachList().then((res) => {
+    console.log('getStartCoach res', res);
+    starCoachList.value = [
+      {
+        creator: 112,
+        createTime: '2022-10-06 14:23:19',
+        updateUser: 112,
+        updateTime: '2022-10-06 14:23:37',
+        remark: 'mixed',
+        id: 120,
+        officeId: '2',
+        stadiumId: 'mixed',
+        userName: 'delecoach100601',
+        nickName: 'delecoach100601',
+        useable: '0',
+        password: '$2a$10$PszFI7kutF2m.5Dqg69tVOmmfwyqO4BJ3kmc8KHAXKECl3cKjn8nW',
+        no: 'mixed',
+        companyId: 'mixed',
+        sex: '1',
+        email: 'delecoach100601@163.com',
+        phone: '18977777771',
+        isDesensitize: '',
+        mobile: 'mixed',
+        userType: '0',
+        photo: 'photophotophotophotophotophotophotophoto',
+        loginIp: 'mixed',
+        loginDate: 'mixed',
+        loginFlag: 'mixed',
+        age: 20,
+        seniority: 20,
+        goodDirection: 'mixed',
+        level: '1',
+        hiredate: 'mixed',
+        departuredate: 'mixed',
+        expirationTime: 'mixed',
+        remarks: 'remarks',
+        isDel: 0
+      },
+      {
+        creator: 112,
+        createTime: '2022-10-06 14:23:19',
+        updateUser: 112,
+        updateTime: '2022-10-06 14:23:37',
+        remark: 'mixed',
+        id: 120,
+        officeId: '2',
+        stadiumId: 'mixed',
+        userName: 'delecoach100601',
+        nickName: 'delecoach100601',
+        useable: '0',
+        password: '$2a$10$PszFI7kutF2m.5Dqg69tVOmmfwyqO4BJ3kmc8KHAXKECl3cKjn8nW',
+        no: 'mixed',
+        companyId: 'mixed',
+        sex: '1',
+        email: 'delecoach100601@163.com',
+        phone: '18977777771',
+        isDesensitize: '',
+        mobile: 'mixed',
+        userType: '0',
+        photo: 'photophotophotophotophotophotophotophoto',
+        loginIp: 'mixed',
+        loginDate: 'mixed',
+        loginFlag: 'mixed',
+        age: 20,
+        seniority: 20,
+        goodDirection: 'mixed',
+        level: '1',
+        hiredate: 'mixed',
+        departuredate: 'mixed',
+        expirationTime: 'mixed',
+        remarks: 'remarks',
+        isDel: 0
+      }
+    ];
   });
 };
 
-const bannerChange = (e) => {
-  console.log('bannerChange', e);
-  const { current } = e.detail;
-  curIndex.value = current;
+const handleBannerJump = (item) => {
+  const { stationJumpType, jumpType, data } = item;
+  if (stationJumpType === 1) {
+    let url = '';
+    switch (jumpType) {
+      case 4: // 活动
+        url = '';
+        break;
+      case 6: // 课程
+        url = '';
+        break;
+      case 8: // 比赛
+        url = '';
+        break;
+    }
+    url && to();
+  } else if (stationJumpType === 2) {
+    to();
+  }
 };
 
 const handleKingkongClick = (item) => {
@@ -118,12 +456,58 @@ const handleStadiumClick = (item) => {
   console.log('handleStadiumClick', item);
 };
 
+// 处理所有查看更多
+const handleGoMore = (type) => {
+  switch (type) {
+    case 'activity':
+      to();
+      break;
+    case 'course':
+      to();
+      break;
+    case 'match':
+      to();
+      break;
+    case 'coach':
+      to();
+      break;
+  }
+};
+
+// 跳转活动详情页
+const goActivityDetail = (item) => {
+  console.log('goActivityDetail', item);
+  to();
+};
+
+// 跳转课程详情页
+const goCourseDetail = (item) => {
+  console.log('goCourseDetail', item);
+  to();
+};
+
+// 跳转赛事详情页
+const goMatchDetail = (item) => {
+  console.log('goMatchDetail', item);
+  to();
+};
+
+// 跳转教练详情
+const goCoachDetail = (item) => {
+  console.log('goCoachDetail', item);
+  to();
+};
+
 onLoad(async (options) => {
   await $onLaunched;
-  getBannerList(); // banner列表
-  getKingKongPosition(); // 金刚位列表
-  getHotStadiumList(); // 热门场馆
-  getNearbyStadiumList(); // 附近场馆
+  getHotActivity(); // 热门活动
+  getHotCourse(); // 热门课程
+  getClassicMatch(); // 经典赛事
+  getStartCoach(); // 明星教练
+});
+
+defineExpose({
+  pageScroll
 });
 </script>
 
@@ -132,105 +516,74 @@ onLoad(async (options) => {
   min-height: 100vh;
   width: 100%;
   background: #f5f5f5;
+  overflow: hidden;
 }
 .pageContainer {
-  min-height: 720rpx;
-  padding: 0 40rpx;
-  background: url('https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/home/home-top-bg.png')
-    no-repeat;
-  background-size: contain;
-  .bannerBlock {
-    position: relative;
-    padding-top: 208rpx;
-    .bannerSwiper {
-      height: 304rpx;
-      border-radius: 16rpx;
-      overflow: hidden;
-      .bannerImg {
-        width: 100%;
-        height: 304rpx;
+  background: #f5f5f5;
+  .topBlock {
+    @include flex-between;
+    .titleBg {
+      &::before {
+        content: '';
+        position: absolute;
+        z-index: -1;
+        top: 0;
+        left: -8rpx;
+        width: 32rpx;
+        height: 32rpx;
+        border-radius: 50%;
+        background: linear-gradient(319deg, rgba(255, 255, 255, 0) 0%, #ff6829 100%);
       }
+      &::after {
+        content: '';
+        position: absolute;
+        z-index: -1;
+        bottom: 2rpx;
+        left: 20rpx;
+        width: 16rpx;
+        height: 16rpx;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #ffcb8a 0%, #ffffff 100%);
+      }
+      font-size: 36rpx;
+      font-weight: 600;
+      color: #333333;
+      line-height: 52rpx;
+      position: relative;
+      z-index: 1;
     }
-    .indicatorBlock {
+    .moreText {
       @include flex-center;
-      position: absolute;
-      right: 16rpx;
-      bottom: 16rpx;
-      .dot {
-        &.active {
-          width: 16rpx;
-          background: #ff6829;
-        }
-        width: 8rpx;
-        height: 4rpx;
-        background: rgba(255, 255, 255, 0.6);
-        border-radius: 4rpx;
-        margin-left: 4rpx;
-        transition: all 0.2s linear;
+      font-size: 28rpx;
+      color: #a0a0a0;
+      line-height: 32rpx;
+      .icon {
+        height: 32rpx;
+        width: 32rpx;
+        margin-left: 8rpx;
       }
     }
   }
-  .kingkongBlock {
-    @include flex-between;
-    position: relative;
-    margin-top: 32rpx;
-    padding: 0 24rpx;
-    .kingkongItem {
-      .kingkongImg {
-        width: 88rpx;
-        height: 88rpx;
-      }
-      .kingkongText {
-        margin-top: 16rpx;
-        font-size: 24rpx;
-        color: #333333;
-        line-height: 40rpx;
-        text-align: center;
-      }
-    }
+
+  .activityBlock,
+  .matchBlock,
+  .courseBlock,
+  .coachBlock {
+    margin-top: 48rpx;
+    padding: 0 40rpx;
   }
-  .stadiumBlock {
-    @include flex-between;
-    position: relative;
-    margin-top: 32rpx;
-    .stadiumItem {
-      &.hot {
-        background: url('https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/home/stadium-bg-hot.png')
-          no-repeat;
-        background-size: contain;
-      }
-      .name {
-        font-size: 32rpx;
-        font-weight: 500;
-        color: #ffab00;
-        line-height: 48rpx;
-      }
-      .remark {
-        margin-top: 16rpx;
-        font-size: 28rpx;
-        font-weight: 500;
-        color: #666666;
-        line-height: 44rpx;
-      }
-      .labelBlock {
-        @include flex-start;
-        margin-top: 16rpx;
-        .labelItem {
-          border-radius: 4rpx;
-          border: 1rpx solid #979797;
-          padding: 4rpx 8rpx;
-          font-size: 24rpx;
-          color: #a0a0a0;
-          line-height: 24rpx;
-          margin-right: 8rpx;
-        }
-      }
-      width: 320rpx;
-      height: 196rpx;
-      background: url('https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/home/stadium-bg.png')
-        no-repeat;
-      background-size: contain;
-      padding: 24rpx;
+  .coachBlock,
+  .courseBlock {
+    padding: 0 !important;
+    padding-bottom: 32rpx;
+    .topBlock {
+      padding: 0 40rpx;
+    }
+    .coachListScroll,
+    .courseListScroll {
+      width: 100%;
+      white-space: nowrap;
+      margin-top: 32rpx;
     }
   }
 }

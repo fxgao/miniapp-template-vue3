@@ -58,7 +58,7 @@
         </view>
       </view>
 
-      <view class="nav-bar__center">
+      <view class="nav-bar__center" :style="'justify-content:' + navCenterStyle">
         <!-- 地址选择区 -->
         <view v-if="showSelectBlock" class="nav-bar__center-location">
           <image
@@ -72,7 +72,7 @@
               range-key="name"
               :value="locationIndex"
             >
-              <view class="picker"> 北京 {{locationArr[locationIndex].name}}</view>
+              <view class="picker">北京{{locationArr[locationIndex].name}}</view>
             </picker>
           </view>
         </view>
@@ -149,6 +149,10 @@ const props = defineProps({
   titleColor: {
     type: String,
     default: 'color:#2F2E3B;'
+  },
+  navCenterStyle: {
+    type: String,
+    default: 'flex-start'
   },
   enableFlash: {
     type: Boolean,
@@ -396,7 +400,7 @@ onMounted(() => {
       .locationIcon {
         width: 48rpx;
         height: 48rpx;
-        margin-right: 8rpx;
+        margin-right: 4rpx;
       }
       .locationChoose {
         font-size: 36rpx;

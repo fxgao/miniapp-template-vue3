@@ -1,0 +1,78 @@
+<template>
+  <view class="matchCardContainer">
+    <BaseList
+      :title="info.gameName"
+      :subTitle="subTitle"
+      :img="coverImg"
+      :labelList="info.labelList"
+    >
+      <view class="matchInfo">
+        <view class="place">{{info.stadiumName}}</view>
+        <view class="btns">
+          <view class="btn" v-if="info.gameStatus === 1">报名</view>
+          <view class="btn grey" v-else>报名</view>
+        </view>
+      </view>
+    </BaseList>
+  </view>
+</template>
+
+<script setup>
+import { computed, toRefs } from 'vue';
+import BaseList from './base';
+
+const props = defineProps({
+  info: {
+    type: Object,
+    default: () => {}
+  }
+});
+const { info } = toRefs(props);
+
+const subTitle = computed(() => {
+  return info.value.startTime;
+});
+
+const coverImg = computed(() => {
+  return info.value?.gameImageUrl || '';
+});
+
+const priceTypeText = computed(() => {
+  return info.activityPriceType === 1 ? 'AA' : '/人均';
+});
+
+</script>
+
+<style lang="scss" scoped>
+.matchCardContainer {
+  margin-top: 32rpx;
+  .matchInfo {
+    position: relative;
+    .place {
+      @include text-ellipsis;
+      font-size: 24rpx;
+      color: #A0A0A0;
+      line-height: 40rpx;
+      width: 300rpx;
+    }
+    .btns {
+      position: absolute;
+      top: -38rpx;
+      right: 0;
+      .btn {
+        &.grey {
+          background: #C0C0C0;
+          color: #FFFFFF;
+        }
+        padding: 16rpx 32rpx;
+        font-size: 24rpx;
+        font-weight: 500;
+        color: #FFFFFF;
+        line-height: 34rpx;
+        background: linear-gradient(135deg, #FFAB43 0%, #FF6829 100%);
+        border-radius: 32rpx;
+      }
+    }
+  }
+}
+</style>
