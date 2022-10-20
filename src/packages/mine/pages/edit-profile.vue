@@ -72,7 +72,13 @@
         <view class="setting_block">
           <view class="text">性别</view>
           <view class="content">
-            <picker class="inputBlock" :range="sexOptionList" range-key="label" :value="sex" @change="sexChange">
+            <picker
+              class="inputBlock"
+              :range="sexOptionList"
+              range-key="label"
+              :value="sex"
+              @change="sexChange"
+            >
               {{ sex !== null ? sexValue2String[sex] : '请选择性别' }}
             </picker>
           </view>
@@ -105,6 +111,7 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { onLoad } from '@dcloudio/uni-app';
+import { storeToRefs } from 'pinia';
 import { useSystemInfoStore } from '@/stores/systemInfo';
 import { useLoginInfoStore } from '@/stores/loginInfo';
 import { useAppInstance } from '@/hooks';
@@ -112,7 +119,8 @@ import api from '@/api';
 import { debounce, randomString } from '@/utils';
 import uploadImage from '@/lib/upload-img';
 const systemInfo = useSystemInfoStore();
-const { loginInfoData } = useLoginInfoStore();
+const loginInfoStore = useLoginInfoStore();
+const { loginInfoData } = storeToRefs(loginInfoStore);
 const { $onLaunched } = useAppInstance();
 
 // 规则
@@ -121,9 +129,7 @@ const pattern = /^[\uD800-\uDBFF-\uDC00-\uDFFF-\u4E00-\u9FA5A-Za-z0-9_+~]+$/;
 const pageMode = ref('new');
 const pageTitle = ref('个人信息');
 
-const avatar = ref(
-  'https://thirdwx.qlogo.cn/mmopen/vi_32/UqNoIVrACVXJJBDZXBicDJ5Gn9TCOwiavp369Otq4yj2XwMtPqaf9CcpRI89RloLzpXL55qiaKdJqbfrEQXqdPzng/132'
-);
+const avatar = ref('');
 const isChoose = ref(false);
 // 选择头像
 const onChooseAvatar = (e) => {
@@ -146,7 +152,7 @@ const onChooseAvatar = (e) => {
 };
 // 上传图片
 const uploadImg = () => {
-  const key = `${loginInfoData.id}${randomString(10, true)}.${
+  const key = `${loginInfoData.value.id}${randomString(10, true)}.${
     avatar.value.split('.')[avatar.value.split('.').length - 1]
   }`;
 
@@ -162,7 +168,7 @@ const uploadImg = () => {
             width: res.width,
             height: res.height,
             key,
-            player_id: loginInfoData.id
+            player_id: loginInfoData.value.id
           };
           console.log('uploadImage before', data);
           uploadImage(data).then(({ status, files }) => {
@@ -310,7 +316,7 @@ const validateFormData = () => {
 
 // 确认按钮点击
 const confirm = () => {
-  console.log('confirm  >>>>>>>>>', loginInfoData);
+  console.log('confirm  >>>>>>>>>', loginInfoData.value);
   // if (validateFormData()) return;
 
   if (!isChoose.value) {
@@ -324,9 +330,9 @@ const handleConfirm = debounce(confirm, 2000, true);
 
 // 保存信息
 const handleSave = async (lastAvatarImg = '') => {
-  console.log(loginInfoData);
+  console.log(loginInfoData.value);
   const params = {
-    id: loginInfoData.id,
+    id: loginInfoData.value.id,
     photo: lastAvatarImg || avatar.value,
     nickname: nickName.value,
     tel: telPhone.value,
@@ -340,28 +346,26 @@ const handleSave = async (lastAvatarImg = '') => {
   console.log('updateUserInfo', result);
   // 结果更新
   if (result.code === 200) {
-    // 更新loginInfo
-    const loginInfoStore = useLoginInfoStore();
     loginInfoStore.setLoginInfo(result.data);
   }
 };
 
 onLoad(async (option) => {
   await $onLaunched;
-  if (!loginInfoData.tel) {
+  if (!loginInfoData.value.tel) {
     pageTitle.value = '创建个人信息';
     pageMode.value = 'new';
   } else {
     pageTitle.value = '编辑个人信息';
     pageMode.value = 'edit';
     // 初始化信息
-    avatar.value = loginInfoData.photo;
-    nickName.value = loginInfoData.nickname;
-    telPhone.value = loginInfoData.tel;
-    birthDay.value = loginInfoData.birthDay;
-    level.value = loginInfoData.level;
-    sex.value = loginInfoData.sex;
-    demand.value = loginInfoData.demand;
+    avatar.value = loginInfoData.value.photo;
+    nickName.value = loginInfoData.value.nickname;
+    telPhone.value = loginInfoData.value.tel;
+    birthDay.value = loginInfoData.value.birthDay;
+    level.value = loginInfoData.value.level;
+    sex.value = loginInfoData.value.sex === '男' ? 1 : loginInfoData.value.sex === '女' ? 0 : '';
+    demand.value = loginInfoData.value.demand;
   }
   isChoose.value = false;
 });
