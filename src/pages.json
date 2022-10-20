@@ -9,6 +9,15 @@
   ],
   "subPackages": [
     {
+      "name": "mine",
+      "root": "packages/mine/",
+      "pages": [
+        {
+          "path": "pages/edit-profile"
+        }
+      ]
+    },
+    {
       "name": "mp-html",
       "root": "packages/mp-html/",
       "pages": [

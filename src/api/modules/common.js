@@ -59,8 +59,33 @@ const common = {
         }
       }
     });
+  },
+  // 获取手机号
+  getPhoneNumber(data) {
+    return request({
+      requestParams: {
+        url: '/wx/user/getNumber',
+        method: 'POST',
+        header: {
+          'content-type': 'application/json'
+        },
+        data
+      }
+    });
+  },
+  // 编辑用户信息
+  updateUserInfo(data) {
+    return request({
+      requestParams: {
+        url: '/wx/user/edit',
+        method: 'POST',
+        header: {
+          'content-type': 'application/json'
+        },
+        data
+      }
+    });
   }
-
 };
 
 export default common;

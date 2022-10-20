@@ -2,6 +2,8 @@ const REDIRECT_URL = {
   '/webview': '/pages/transfer_station',
   '/index:home': '/pages/index?key=home',
   '/index:mine': '/pages/index?key=mine',
+  '/index:course': '/pages/index?key=course',
+  '/index:activity': '/pages/index?key=activity',
   '/setting-page': '/packages/setting/pages/setting-page'
 };
 

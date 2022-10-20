@@ -52,7 +52,7 @@ const homePage = {
         url: '/wx/course/list',
         method: 'GET',
         data: {
-          hot: true
+          hot: 1
         }
       }
     });

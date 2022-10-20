@@ -34,6 +34,8 @@ const slientLogin = (successFunc = null) => {
         } finally {
           console.log('slientLoginslientLogin');
           successFunc && successFunc();
+          // 获取用户位置信息
+          getUserLocation();
           // 登录后阻塞放开
           $isResolve && $isResolve();
         }
@@ -45,14 +47,14 @@ const slientLogin = (successFunc = null) => {
     },
     (err) => {
       // 登录后阻塞放开
-      $reject && $reject(res);
+      $reject && $reject(err);
     }
   );
 };
 
 // 获取登录信息
 const getUserLocation = () => {
-  const locationInfoStore = useLocationInfoStore()
+  const locationInfoStore = useLocationInfoStore();
   uni.getLocation({
     type: 'gcj02', //返回可以用于uni.openLocation的经纬度
     geocode: true,
@@ -69,7 +71,7 @@ const getUserLocation = () => {
         name: positionInfo.name,
         areaList: positionInfo.areaList,
         locationInfo: res
-      })
+      });
     },
     fail: async (err) => {
       console.log('getLocation fail', err);
@@ -82,7 +84,7 @@ const getUserLocation = () => {
         code: positionInfo.code,
         name: positionInfo.name,
         areaList: positionInfo.areaList
-      })
+      });
     }
   });
 };
@@ -112,8 +114,6 @@ onLaunch(() => {
   checkClientVersion();
   // 静默登录
   slientLogin();
-  // 获取用户位置信息
-  getUserLocation();
   // 加载字体
   loadFont();
 });

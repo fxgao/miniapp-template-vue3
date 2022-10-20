@@ -1,16 +1,20 @@
 <template>
-  <view class="marquee-container">
+  <view class="marquee-container" :style="{background: bgColor}">
     <swiper
       class="swiper"
       indicator-dots="false"
       autoplay="true"
       :interval="interval"
       circular="true"
-      vertical="true"
+      :vertical="true"
+      :style="{background: innerColor}"
     >
       <swiper-item v-for="(item, index) in list" :key="index">
         <view class="innerContent">
-          {{ item.text }}
+          <image class="avatar" :src="item.avatar" />
+          <view class="text">
+            {{ item.text }}
+          </view>
         </view>
       </swiper-item>
     </swiper>
@@ -35,7 +39,7 @@ const props = defineProps({
   },
   innerColor: {
     type: String,
-    default: '#fff'
+    default: '#f5f5f5'
   }
 });
 
@@ -45,5 +49,11 @@ const { list, interval, bgColor, innerColor } = toRefs(props);
 
 <style lang="scss" scoped>
 .marquee-container {
+  padding: 16rpx 42rpx;
+  .swiper {
+    border-radius: 30rpx;
+    height: 60rpx;
+    padding: 10rpx 16rpx;
+  }
 }
 </style>

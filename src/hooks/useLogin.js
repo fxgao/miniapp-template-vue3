@@ -74,6 +74,7 @@ const useLogin = () => {
         completeFunc(res);
       },
       fail: (err) => {
+        console.log('callLogin', err);
         if (RetryTimes) {
           retryFn(params, completeFunc, failFunc, err);
         } else {

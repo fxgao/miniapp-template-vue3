@@ -61,3 +61,14 @@
   align-items: center;
   justify-content: flex-end;
 }
+
+@mixin btn-normal {
+  height: 88rpx;
+  background: linear-gradient(135deg, #FFAB43 0%, #FF6829 100%);
+  border-radius: 50rpx;
+  color: #ffffff;
+  font-size: 32rpx;
+  font-weight: 600;
+  line-height: 88rpx;
+  text-align: center;
+}

@@ -9,7 +9,7 @@
       <view class="activityInfo">
         <view class="joinInfo">
           <view class="avatarBlock">
-            <image class="avatarItem" :style="{'zIndex': index + 1, 'transform': `translateX(-${index * 16}rpx)`}" :src="item.imageUrl" mode="aspectFix" v-for="(item,index) in [{},{},{}]" :key="index" />
+            <image class="avatarItem" :style="{'zIndex': index + 1, 'transform': `translateX(-${index * 16}rpx)`}" :src="item.imageUrl" mode="aspectFix" v-for="(item,index) in info.avatarList" :key="index" />
           </view>
           <view class="signUpText">{{info.completePersonCount}}人报名/{{info.completePersonCount}}满</view>
         </view>
@@ -34,11 +34,11 @@ const props = defineProps({
 const { info } = toRefs(props);
 
 const subTitle = computed(() => {
-  return '截止报名' + info.value.activeEndTime;
+  return '截止报名 ' + info.value.activeEndTime;
 });
 
 const coverImg = computed(() => {
-  return info.value?.imageVoList[0]?.imageUrl || '';
+  return info.value?.activeHeadFigure || '';
 });
 
 const priceTypeText = computed(() => {

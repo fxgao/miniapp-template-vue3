@@ -4,8 +4,8 @@
       <!-- banner位 -->
       <view class="bannerBlock" v-if="current !== 'mine'">
         <swiper class="bannerSwiper" circular="true" @change="bannerChange">
-          <swiper-item v-for="item in banner" :key="item.id" @click="handleBannerJump(item)">
-            <image class="bannerImg" :src="item.bannerUrl" />
+          <swiper-item v-for="item in banner" :key="item.id">
+            <image class="bannerImg" :src="item.bannerUrl" @tap="handleBannerJump(item)"/>
           </swiper-item>
         </swiper>
         <view class="indicatorBlock">
@@ -181,6 +181,42 @@ const getNearbyStadiumList = () => {
   });
 };
 
+const handleBannerJump = (item) => {
+  console.log('handleBannerJump', item);
+  const { stationJumpType, jumpType, data } = item;
+  if (stationJumpType === 1) {
+    let url = '';
+    switch (jumpType) {
+      case 4: // 活动
+        url = '';
+        break;
+      case 6: // 课程
+        url = '';
+        break;
+      case 8: // 比赛
+        url = '';
+        break;
+    }
+    url && to(url);
+  } else if (stationJumpType === 2) {
+    to();
+  }
+};
+
+const handleKingkongClick = (item) => {
+  console.log('handleKingkongClick', item);
+  const { path } = item;
+  if (path.indexOf('/index:') !== -1) {
+    current.value = path.split(':')[1];
+  } else {
+    to(path);
+  };
+};
+
+const handleStadiumClick = (item) => {
+  console.log('handleStadiumClick', item);
+};
+
 onPageScroll((e) => {
   if (current.value === 'home') {
     homeRef.value.pageScroll(e);
@@ -202,12 +238,16 @@ onReachBottom(() => {
   }
 });
 
-onLoad(async () => {
+onLoad(async (options) => {
   await $onLaunched;
   getBannerList(); // banner列表
   getKingKongPosition(); // 金刚位列表
   getHotStadiumList(); // 热门场馆
   getNearbyStadiumList(); // 附近场馆
+
+  if (options.key && options.key !== current.value) {
+    current.value = options.key;
+  }
 });
 </script>
 
@@ -267,7 +307,6 @@ onLoad(async () => {
         .kingkongImg {
           width: 88rpx;
           height: 88rpx;
-          background: #ccc;
         }
         .kingkongText {
           margin-top: 16rpx;

@@ -427,35 +427,6 @@ const getStartCoach = () => {
   });
 };
 
-const handleBannerJump = (item) => {
-  const { stationJumpType, jumpType, data } = item;
-  if (stationJumpType === 1) {
-    let url = '';
-    switch (jumpType) {
-      case 4: // 活动
-        url = '';
-        break;
-      case 6: // 课程
-        url = '';
-        break;
-      case 8: // 比赛
-        url = '';
-        break;
-    }
-    url && to();
-  } else if (stationJumpType === 2) {
-    to();
-  }
-};
-
-const handleKingkongClick = (item) => {
-  console.log('handleKingkongClick', item);
-};
-
-const handleStadiumClick = (item) => {
-  console.log('handleStadiumClick', item);
-};
-
 // 处理所有查看更多
 const handleGoMore = (type) => {
   switch (type) {
