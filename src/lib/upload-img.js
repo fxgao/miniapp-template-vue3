@@ -1,8 +1,9 @@
 import dataApi from '@/api';
 import crypto from 'crypto-js';
 import { Base64 } from 'js-base64';
+import Constant from '@/lib/constant';
 
-const OSS_HOST = 'https://boxonline-player.paquapp.com';
+const OSS_HOST = 'https://htennis1.oss-cn-beijing.aliyuncs.com';
 
 const getExpiration = () => {
   const date = new Date();
@@ -36,15 +37,16 @@ export default function (_files) {
   const policy = computePolicy(expiration);
   const files = Array.isArray(_files) ? [..._files] : [{ ..._files }];
 
-  return dataApi.login
-    .getUploadSTSToken(_files.player_id)
+  return dataApi.common
+    .getUploadSTSToken()
     .then((r) => {
+      const { accessKeyId, accessKeySecret, expiration, securityToken } = r;
       return {
-        OSSAccessKeyId: r.AccessKeyId,
+        OSSAccessKeyId: accessKeyId,
         policy,
-        Signature: computeSignature(r.AccessKeySecret, policy),
-        'x-oss-security-token': r.SecurityToken,
-        dir: r.Path
+        Signature: computeSignature(accessKeySecret, policy),
+        'x-oss-security-token': securityToken,
+        dir: `user-avatar_${Constant.PROCESS_ENV}/`
       };
     })
     .then((params) => {

@@ -85,6 +85,16 @@ const common = {
         data
       }
     });
+  },
+  // 获取OSS STS信息
+  getUploadSTSToken() {
+    const requestParams = {
+      url: '/wx/oss/ailiyunToken',
+      method: 'GET'
+    };
+    return request({
+      requestParams
+    });
   }
 };
 

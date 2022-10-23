@@ -167,8 +167,7 @@ const uploadImg = () => {
             path: r.tempFilePath,
             width: res.width,
             height: res.height,
-            key,
-            player_id: loginInfoData.value.id
+            key
           };
           console.log('uploadImage before', data);
           uploadImage(data).then(({ status, files }) => {
@@ -179,6 +178,7 @@ const uploadImg = () => {
 
             const lastAvatarImg = files[0].imgUrl;
             handleSave(lastAvatarImg); // 保存用户信息
+            isChoose.value = false;
           });
         },
         fail: (err) => {
@@ -209,8 +209,8 @@ const getPhoneNumber = async (res) => {
   const result = await api.common.getPhoneNumber({
     code: res.detail.code
   });
-  telPhone.value = result.tel;
-  return result.tel;
+  telPhone.value = result;
+  return result;
 };
 
 const birthDay = ref('');
@@ -237,8 +237,8 @@ const levelChange = (e) => {
 
 const sex = ref(1);
 const sexOptionList = ref([
-  { value: 1, label: '男' },
-  { value: 0, label: '女' }
+  { value: 0, label: '女' },
+  { value: 1, label: '男' }
 ]);
 const sexValue2String = ref({
   0: '女',
@@ -272,7 +272,7 @@ const validateFormData = () => {
   // 报名人验证
   const str = nickName.value;
   // 规则
-  const pattern = /^[\uD800-\uDBFF-\uDC00-\uDFFF-\u4E00-\u9FA5A-Za-z0-9_]+$/;
+  const pattern = /^[\uD800-\uDBFF-\uDC00-\uDFFF-\u4E00-\u9FA5A-Za-z0-9_~]+$/;
   // 长度（按字符） <2 或 >20 非法
   let len = 0;
   for (const char of str) {
@@ -316,8 +316,7 @@ const validateFormData = () => {
 
 // 确认按钮点击
 const confirm = () => {
-  console.log('confirm  >>>>>>>>>', loginInfoData.value);
-  // if (validateFormData()) return;
+  if (validateFormData()) return;
 
   if (!isChoose.value) {
     handleSave(); // 没有头像更改，直接保存用户信息
@@ -330,7 +329,6 @@ const handleConfirm = debounce(confirm, 2000, true);
 
 // 保存信息
 const handleSave = async (lastAvatarImg = '') => {
-  console.log(loginInfoData.value);
   const params = {
     id: loginInfoData.value.id,
     photo: lastAvatarImg || avatar.value,
@@ -352,6 +350,7 @@ const handleSave = async (lastAvatarImg = '') => {
 
 onLoad(async (option) => {
   await $onLaunched;
+  console.log('edit-profile onload', loginInfoData.value);
   if (!loginInfoData.value.tel) {
     pageTitle.value = '创建个人信息';
     pageMode.value = 'new';

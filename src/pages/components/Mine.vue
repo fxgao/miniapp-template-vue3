@@ -7,7 +7,7 @@
       :backgroundColor="navBarBackgroundColor"
     />
     <view class="pageContainer">
-      <view class="userInfoBlock">
+      <view class="userInfoBlock" @click="goEditProfile">
         <image
           class="userAvatar"
           :src="
@@ -152,6 +152,10 @@ const settingList = ref([
     path: ''
   }
 ]);
+
+const goEditProfile = () => {
+  to('/edit-profile');
+};
 
 const goJoinPath = (item) => {
   console.log('goJoinPath', item.path);

@@ -4,7 +4,7 @@ const REDIRECT_URL = {
   '/index:mine': '/pages/index?key=mine',
   '/index:course': '/pages/index?key=course',
   '/index:activity': '/pages/index?key=activity',
-  '/setting-page': '/packages/setting/pages/setting-page'
+  '/edit-profile': '/packages/mine/pages/edit-profile'
 };
 
 const useNavigate = () => {
