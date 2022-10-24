@@ -9,6 +9,18 @@
   ],
   "subPackages": [
     {
+      "name": "stadium",
+      "root": "packages/stadium/",
+      "pages": [
+        {
+          "path": "pages/index"
+        },
+        {
+          "path": "pages/detail"
+        }
+      ]
+    },
+    {
       "name": "mine",
       "root": "packages/mine/",
       "pages": [

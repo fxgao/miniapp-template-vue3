@@ -2,7 +2,7 @@
   <view class="marquee-container" :style="{background: bgColor}">
     <swiper
       class="swiper"
-      indicator-dots="false"
+      :indicator-dots="false"
       autoplay="true"
       :interval="interval"
       circular="true"
@@ -11,9 +11,9 @@
     >
       <swiper-item v-for="(item, index) in list" :key="index">
         <view class="innerContent">
-          <image class="avatar" :src="item.avatar" />
+          <image class="avatar" :src="item.photo" />
           <view class="text">
-            {{ item.text }}
+            {{ item.nickName }}正在活动中 | 已有{{total}}人参与活动
           </view>
         </view>
       </swiper-item>
@@ -22,13 +22,10 @@
 </template>
 
 <script setup>
-import { ref, toRefs } from 'vue';
+import { ref, toRefs, onMounted } from 'vue';
+import api from '@/api';
 
 const props = defineProps({
-  list: {
-    type: Array,
-    default: () => []
-  },
   interval: {
     type: Number || Number,
     default: 5000
@@ -43,7 +40,16 @@ const props = defineProps({
   }
 });
 
-const { list, interval, bgColor, innerColor } = toRefs(props);
+const { interval, bgColor, innerColor } = toRefs(props);
+
+const list = ref([]);
+const total = ref(0);
+
+onMounted(async () => {
+  const res = await api.activity.getMarqueeList();
+  list.value = res.headCountConsumer;
+  total.value = res.headCount;
+});
 
 </script>
 
@@ -54,6 +60,23 @@ const { list, interval, bgColor, innerColor } = toRefs(props);
     border-radius: 30rpx;
     height: 60rpx;
     padding: 10rpx 16rpx;
+    .innerContent {
+      @include flex-start;
+      .avatar {
+        width: 40rpx;
+        height: 40rpx;
+        border-radius: 50%;
+        background: #fff;
+        flex:none;
+      }
+      .text {
+        @include text-ellipsis;
+        font-size: 24rpx;
+        color: #FF6829;
+        line-height: 40rpx;
+        margin-left: 16rpx;
+      }
+    }
   }
 }
 </style>

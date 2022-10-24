@@ -4,6 +4,8 @@ const REDIRECT_URL = {
   '/index:mine': '/pages/index?key=mine',
   '/index:course': '/pages/index?key=course',
   '/index:activity': '/pages/index?key=activity',
+  '/stadium/index': '/packages/stadium/pages/index',
+  '/stadium/detail': '/packages/stadium/pages/detail',
   '/edit-profile': '/packages/mine/pages/edit-profile'
 };
 

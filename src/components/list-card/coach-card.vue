@@ -1,5 +1,5 @@
 <template>
-  <view class="coach-card-container" :style="style">
+  <view class="coach-card-container" :class="{small: size === 'small'}" :style="style">
     <view class="info">
       <image class="avatar" :src="img" />
       <view class="right">
@@ -43,10 +43,14 @@ const props = defineProps({
   style: {
     type: String,
     default: ''
+  },
+  size: {
+    type: String,
+    default: 'large'
   }
 });
 
-const { id, name, img, content, level, style } = toRefs(props);
+const { id, name, img, content, level, style, size } = toRefs(props);
 
 const goCoachDetail = () => {
   to();
@@ -55,6 +59,18 @@ const goCoachDetail = () => {
 
 <style lang="scss" scoped>
 .coach-card-container {
+  &.small {
+    width: 318rpx;
+    height: 264rpx;
+    background: url('https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/bg/coach-bg-small.png') 0 0 no-repeat;
+    background-size: contain;
+    .info .right .name {
+      max-width: 96rpx;
+    }
+    .content {
+      @include text-ellipsis-2;
+    }
+  }
   width: 350rpx;
   height: 304rpx;
   background: url('https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/bg/coach-bg.png') 0 0 no-repeat;
