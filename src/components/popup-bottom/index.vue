@@ -179,7 +179,8 @@ const moveHandle = () => {};
 defineExpose({
   hide,
   show,
-  showForce
+  showForce,
+  topSlotHeight
 });
 
 onReady(() => {
@@ -189,7 +190,6 @@ onReady(() => {
     topSlotHeight.value = res[0] ? res[0].height + 'px' : 0;
   });
 });
-
 </script>
 
 <style lang="scss">
@@ -203,9 +203,9 @@ onReady(() => {
   transition: height 1s;
   .popup-top-tips {
     position: absolute;
-    top: -60rpx;
+    top: -54rpx;
     width: 100vw;
-    max-height: 54rpx;
+    max-height: 60rpx;
     color: #ff9e42;
     // font-weight: 500;
     font-size: 24rpx;

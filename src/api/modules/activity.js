@@ -1,7 +1,16 @@
 import request from '../request';
 
 const activity = {
-  // 教练列表默认
+  // 获取活动详情
+  getActivityDetail(id) {
+    return request({
+      requestParams: {
+        url: `/wx/activity/${id}`,
+        method: 'GET'
+      }
+    });
+  },
+  // 活动参与人跑马灯列表
   getMarqueeList() {
     return request({
       requestParams: {

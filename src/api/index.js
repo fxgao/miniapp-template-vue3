@@ -3,11 +3,15 @@ import homePage from './modules/home';
 import coach from './modules/coach';
 import stadium from './modules/stadium';
 import activity from './modules/activity';
+import course from './modules/course';
+import match from './modules/match';
 
 export default {
   common,
   homePage,
   coach,
   stadium,
-  activity
+  activity,
+  course,
+  match
 };

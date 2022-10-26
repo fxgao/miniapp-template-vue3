@@ -7,7 +7,7 @@
       :labelList="info.labelList"
     >
       <view class="stadiumInfo">
-        <view class="time">{{info.stadiumName}}</view>
+        <view class="time">营业中{{info.operatStartTime}} - {{info.operatEndTime}}</view>
       </view>
     </BaseList>
   </view>

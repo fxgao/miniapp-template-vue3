@@ -95,6 +95,20 @@ const common = {
     return request({
       requestParams
     });
+  },
+  // 反馈建议
+  feedBack(data) {
+    const requestParams = {
+      url: '/wx/feedback/add',
+      method: 'POST',
+      header: {
+        'content-type': 'application/json'
+      },
+      data
+    };
+    return request({
+      requestParams
+    });
   }
 };
 

@@ -21,9 +21,42 @@
       ]
     },
     {
+      "name": "activity",
+      "root": "packages/activity/",
+      "pages": [
+        {
+          "path": "pages/index"
+        },
+        {
+          "path": "pages/detail"
+        }
+      ]
+    },
+    {
+      "name": "course",
+      "root": "packages/course/",
+      "pages": [
+        {
+          "path": "pages/detail"
+        }
+      ]
+    },
+    {
+      "name": "match",
+      "root": "packages/match/",
+      "pages": [
+        {
+          "path": "pages/detail"
+        }
+      ]
+    },
+    {
       "name": "mine",
       "root": "packages/mine/",
       "pages": [
+        {
+          "path": "pages/suggest"
+        },
         {
           "path": "pages/edit-profile"
         }
