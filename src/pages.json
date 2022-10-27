@@ -17,6 +17,12 @@
         },
         {
           "path": "pages/detail"
+        },
+        {
+          "path": "pages/coach-list"
+        },
+        {
+          "path": "pages/coach-detail"
         }
       ]
     },
@@ -45,6 +51,9 @@
       "name": "match",
       "root": "packages/match/",
       "pages": [
+        {
+          "path": "pages/index"
+        },
         {
           "path": "pages/detail"
         }

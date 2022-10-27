@@ -11,7 +11,9 @@
     <view class="pageContainer" :style="popup1 ? 'padding-bottom:' + popup1.topSlotHeight : ''">
       <view class="infoBlock">
         <detail-header :title="activityInfo.activeName" :labelList="labelList"></detail-header>
-        <report-info :total="activityInfo.completePersonCount"></report-info>
+        <view class="reportInfoBlock">
+          <report-info :total="activityInfo.completePersonCount"></report-info>
+        </view>
       </view>
       <view class="infoBlock">
         <view class="title">基本信息</view>
@@ -180,6 +182,9 @@ onLoad(async (options) => {
     }
     background: #fff;
     padding: 32rpx 40rpx;
+    .reportInfoBlock {
+      margin-top: 32rpx;
+    }
     .title {
       font-size: 36rpx;
       font-weight: 500;

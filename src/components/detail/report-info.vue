@@ -80,6 +80,7 @@ const list = computed(() => {
           transform: rotateX(-90deg);
         }
       }
+      @include flex-start;
       font-size: 28rpx;
       color: #A0A0A0;
       line-height: 44rpx;

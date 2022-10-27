@@ -4,33 +4,28 @@
       ref="navbar"
       :backgroundColor="'rgba(255,255,255,1)'"
       :showBackIcon="'black'"
-      title="教练"
+      title="赛事"
       :navCenterStyle="'flex-end'"
     />
     <view class="pageContainer">
       <!-- 搜索 -->
       <view class="filterContainer">
-        <view class="filterItem">校区</view>
-        <view class="filterItem">级别</view>
-        <view class="filterItem">性别</view>
+        <view class="filterItem">全城</view>
+        <view class="filterItem">赛事类型</view>
+        <view class="filterItem">成人</view>
+        <view class="filterItem">未开始</view>
       </view>
       <!-- 列表 -->
       <view class="listContainer">
         <List
-          v-model:dataList="coachList"
-          url="/wx/user/coach/listPage"
-          ref="coachListRef"
+          v-model:dataList="matchList"
+          url="/wx/game/listPage"
+          ref="matchListRef"
+          :listType="'column'"
         >
           <template v-slot="{ data }">
-            <view @click="goCoachDetail(data)">
-              <coach-card
-                :id="data.id"
-                :name="data.nickName"
-                :img="data.photo"
-                :level="data.level"
-                :content="data.remarks"
-                :size="'small'"
-              ></coach-card>
+            <view @click="goMatchDetail(data)">
+              <match-card :info="data"></match-card>
             </view>
           </template>
           <template v-slot:loading>
@@ -48,12 +43,12 @@
 <script setup>
 import { ref } from 'vue';
 import List from '@/components/list';
-import CoachCard from '@/components/list-card/coach-card';
+import MatchCard from '@/components/list-card/match-card';
 import { useAppInstance, useNav } from '@/hooks';
 
 const { to } = useNav();
 
-const coachList = ref([]);
+const matchList = ref([]);
 
 const goMatchDetail = (data) => {
   console.log('goMatchDetail', data);
