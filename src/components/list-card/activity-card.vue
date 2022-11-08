@@ -8,7 +8,7 @@
     >
       <view class="activityInfo">
         <view class="joinInfo">
-          <view class="avatarBlock">
+          <view class="avatarBlock" v-if="info.avatarList?.length">
             <image class="avatarItem" :style="{'zIndex': index + 1, 'transform': `translateX(-${index * 16}rpx)`}" :src="item.imageUrl" mode="aspectFix" v-for="(item,index) in info.avatarList" :key="index" />
           </view>
           <view class="signUpText">{{info.completePersonCount}}人报名/{{info.completePersonCount}}满</view>
@@ -57,6 +57,7 @@ const priceTypeText = computed(() => {
       @include flex-start;
       .avatarBlock {
         @include flex-center;
+        margin-right: -16rpx;
         .avatarItem {
           position: relative;
           width: 40rpx;
@@ -71,7 +72,6 @@ const priceTypeText = computed(() => {
         font-size: 24rpx;
         color: #A0A0A0;
         line-height: 40rpx;
-        margin-left: -16rpx;
       }
     }
     .price {

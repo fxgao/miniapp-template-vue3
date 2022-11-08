@@ -9,62 +9,16 @@
       :navCenterStyle="'flex-end'"
     />
     <view class="pageContainer">
-      <view class="filterBlock">
-        <view class="tabsListBlock">
-          <view
-            :class="{ tabsItem: true, active: listType === item.value }"
-            @click="changeListType(item.value)"
-            v-for="(item, index) in listTypeList"
-            :key="index"
-          >
-            {{ item.label }}
-          </view>
-        </view>
-        <view :class="{ moreChoose: true, active: isMoreFilterShow }" @click="showMoreFilter"
-          >更多筛选</view
-        >
-      </view>
-      <view class="filterMainBlock" v-if="isMoreFilterShow">
-        <view class="mask" @click="showMoreFilter"></view>
-        <view class="filterMainContainer">
-          <scroll-view class="filterMain" scroll-y="true">
-            <view class="filterBlockList" v-for="(item, index) in filterData" :key="index">
-              <view class="title">
-                {{ item.title }}
-              </view>
-              <view class="content">
-                <template v-if="item.type === 'block'">
-                  <view
-                    :class="{ filterItemBlock: true, active: item.checked }"
-                    v-for="(itemChild, indexChild) in item.list"
-                    :key="indexChild"
-                  >
-                    {{ itemChild.label }}
-                  </view>
-                </template>
-                <template v-if="item.type === 'checkBox'">
-                  <view
-                    class="filterItemCheckBox"
-                    v-for="(itemChild, indexChild) in item.list"
-                    :key="indexChild"
-                  >
-                    <view class="label">
-                      {{ itemChild.label }}
-                    </view>
-                    <image class="checkbox" :src="itemChild.checked ? '' : ''" />
-                  </view>
-                </template>
-              </view>
-            </view>
-          </scroll-view>
-          <view class="bottom">
-            <view class="actionBtn reset" @click="resetFilter">重置</view>
-            <view class="actionBtn" @click="confirmSelect">确定</view>
-          </view>
-        </view>
-      </view>
+      <multi-filter
+        tabType="page"
+        :tabList="filterTabList"
+        :filterData="filterData"
+        :bgColor="filterBgColor"
+        @change="filterChange"
+        @onShow="filterShow"
+      ></multi-filter>
       <view class="list">
-        <List v-model:dataList="courseList" url="/wx/course/listByLabel" ref="courseListRef">
+        <List v-model:dataList="courseList" url="/wx/publish/courseList" ref="courseListRef">
           <template v-slot="{ data }">
             <course-card
               :info="data"
@@ -91,6 +45,7 @@ import { onLoad, onReachBottom } from '@dcloudio/uni-app';
 import { useAppInstance, useNav } from '@/hooks';
 import List from '@/components/list';
 import CourseCard from '@/components/list-card/course-card';
+import MultiFilter from '@/components/multi-filter';
 
 import api from '@/api';
 
@@ -99,6 +54,7 @@ const { to } = useNav();
 
 const navTitleColor = ref('color: rgba(0,0,0,1);');
 const navBarBackgroundColor = ref('rgba(255,255,255,0)');
+const filterBgColor = ref('rgba(255,255,255,0)');
 
 const pageScroll = (e) => {
   const scrollTop = e.scrollTop;
@@ -108,8 +64,10 @@ const pageScroll = (e) => {
     return;
   }
   const transparent = scrollTop / 36 >= 1 ? 1 : scrollTop / 36;
+  const transparent2 = scrollTop / 198 >= 1 ? 1 : scrollTop / 198;
   navTitleColor.value = `color:rgba(0,0,0,${transparent});`;
   navBarBackgroundColor.value = `rgba(255,255,255,${transparent})`;
+  filterBgColor.value = `rgba(255,255,255,${transparent2})`;
   if (transparent >= 1) {
     uni.setNavigationBarColor({
       frontColor: '#000000',
@@ -123,88 +81,100 @@ const pageScroll = (e) => {
   }
 };
 
-const listType = ref(1);
-
-const listTypeList = ref([
+const filterTabList = ref([
   {
     label: '幼少儿',
-    value: 1
+    value: 1,
+    linkKey: 'course',
+    selected: true,
+    key: 'applicablePeople'
   },
   {
     label: '青少年',
-    value: 2
+    value: 2,
+    linkKey: 'course',
+    key: 'applicablePeople'
   },
   {
     label: '成人',
-    value: 3
+    value: 3,
+    linkKey: 'course',
+    key: 'applicablePeople'
   }
 ]);
 
-const changeListType = (value) => {
-  listType.value = value;
+const filterData = reactive({
+  course: [
+    {
+      title: '课程类型',
+      type: 'block',
+      multiple: true,
+      key: 'courseType',
+      list: [
+        {
+          label: '不限',
+          value: '',
+          checked: true,
+          reset: true
+        },
+        {
+          label: '班课',
+          value: 1
+        },
+        {
+          label: '体验课',
+          value: 2
+        }
+      ]
+    },
+    {
+      title: '班级类型',
+      type: 'block',
+      multiple: true,
+      key: 'classType',
+      list: [
+        {
+          label: '不限',
+          value: '',
+          checked: true,
+          reset: true
+        },
+        {
+          label: '一对一',
+          value: 1
+        },
+        {
+          label: '一对多',
+          value: 2
+        }
+      ]
+    },
+    {
+      title: '校区',
+      type: 'checkBox',
+      multiple: true,
+      key: 'campus',
+      list: [
+        {
+          label: '得乐网球（新媒体网球馆）',
+          value: '1'
+        },
+        {
+          label: '得乐网球（新媒体网球馆）',
+          value: '2'
+        }
+      ]
+    }
+  ]
+});
+const filterChange = (data) => {
+  console.log('filterChange', data);
 };
 
-const isMoreFilterShow = ref(false);
-
-const showMoreFilter = () => {
-  isMoreFilterShow.value = !isMoreFilterShow.value;
+const filterShow = (flag) => {
+  console.log('filterShow', flag);
+  if (flag) uni.pageScrollTo({ scrollTop: 198, duration: 300 });
 };
-
-const filterData = reactive([
-  {
-    title: '课程类型',
-    type: 'block',
-    list: [
-      {
-        label: '不限',
-        value: '',
-        checked: true
-      },
-      {
-        label: '班课',
-        value: 1,
-        checked: false
-      },
-      {
-        label: '体验课',
-        value: 2,
-        checked: false
-      }
-    ]
-  },
-  {
-    title: '班级类型',
-    type: 'block',
-    list: [
-      {
-        label: '不限',
-        value: '',
-        checked: true
-      },
-      {
-        label: '一对一',
-        value: 1,
-        checked: false
-      },
-      {
-        label: '一对多',
-        value: 2,
-        checked: false
-      }
-    ]
-  },
-  {
-    title: '小区',
-    type: 'checkbox',
-    list: [
-      {
-        label: '得乐网球（新媒体网球馆）',
-        value: '',
-        checked: false
-      }
-    ]
-  }
-]);
 
 const courseList = ref([]);
 const courseListRef = ref(null);
@@ -231,7 +201,6 @@ defineExpose({
 <style lang="scss" scoped>
 .page {
   .pageContainer {
-    padding: 0 40rpx;
     .filterBlock {
       position: sticky;
       top: 0;
@@ -297,9 +266,12 @@ defineExpose({
         background: rgba(0, 0, 0, 0.4);
       }
     }
+    .list {
+      padding: 0 40rpx;
+    }
     .listBottomText {
       font-size: 28rpx;
-      color: #A0A0A0;
+      color: #a0a0a0;
       line-height: 28rpx;
       text-align: center;
       padding: 20rpx 0;

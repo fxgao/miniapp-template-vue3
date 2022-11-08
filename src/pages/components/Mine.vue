@@ -13,7 +13,7 @@
           :src="
             loginInfoData?.photo
               ? loginInfoData.photo
-              : 'https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/icon/setting-about-icon.png'
+              : 'https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/icon/default-avatar.png'
           "
           mode="aspectFit"
         />
@@ -109,17 +109,17 @@ const pageScroll = (e) => {
 
 const joinList = ref([
   {
-    path: '',
+    path: '/mine/join-activity',
     text: '活动',
     img: 'https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/bg/join-activity-bg.png'
   },
   {
-    path: '',
+    path: '/mine/join-match',
     text: '赛事',
     img: 'https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/bg/join-game-bg.png'
   },
   {
-    path: '',
+    path: '/mine/join-course',
     text: '课程',
     img: 'https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/bg/join-course-bg.png'
   }
@@ -129,7 +129,7 @@ const settingList = ref([
   {
     title: '我的订单',
     icon: 'https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/icon/setting-order-icon.png',
-    path: ''
+    path: '/mine/order-list'
   },
   {
     title: '等级说明',
@@ -149,7 +149,7 @@ const settingList = ref([
   {
     title: '建议反馈',
     icon: 'https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/icon/setting-question-icon.png',
-    path: ''
+    path: '/suggest'
   }
 ]);
 

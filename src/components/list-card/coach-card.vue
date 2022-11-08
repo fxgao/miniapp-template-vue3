@@ -7,7 +7,7 @@
           {{ name }}
         </view>
         <view class="labels">
-          <view class="label-item red" v-if="level === 1">高级</view>
+          <view class="label-item red" v-if="level == 1">高级</view>
           <view class="label-item">外教</view>
         </view>
       </view>
@@ -77,6 +77,7 @@ const goCoachDetail = () => {
   background-size: contain;
   padding: 24rpx;
   margin-bottom: 32rpx;
+  overflow: hidden;
   .info {
     @include flex-between;
     .avatar {
@@ -99,7 +100,7 @@ const goCoachDetail = () => {
         color: #FFFFFF;
         line-height: 48rpx;
         text-align: center;
-        max-width: 124rpx;
+        width: 124rpx;
         align-self: flex-end;
       }
       .labels {

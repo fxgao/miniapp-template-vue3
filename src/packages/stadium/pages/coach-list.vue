@@ -3,7 +3,7 @@
     <nav-bar
       ref="navbar"
       :backgroundColor="'rgba(255,255,255,1)'"
-      :showBackIcon="'black'"
+      showBackIcon="'black'"
       title="教练"
       :navCenterStyle="'flex-end'"
     />
@@ -55,10 +55,10 @@ const { to } = useNav();
 
 const coachList = ref([]);
 
-const goMatchDetail = (data) => {
+const goCoachDetail = (data) => {
   console.log('goMatchDetail', data);
   const { id } = data;
-  to('/match/detail', { id });
+  to('/coach/detail', { id });
 };
 </script>
 

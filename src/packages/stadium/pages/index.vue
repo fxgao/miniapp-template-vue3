@@ -11,12 +11,13 @@
       <!-- 顶部滚动信息 -->
       <Marquee></Marquee>
       <!-- 搜索 -->
-      <view class="filterContainer">
-        <view class="filterItem">全城</view>
-        <view class="filterItem">场地类型</view>
-        <view class="filterItem">材质</view>
-        <view class="filterItem">全部人群</view>
-      </view>
+      <multi-filter
+        ref="filter"
+        :tabList="filterTabList"
+        :filterData="filterData"
+        @change="filterChange"
+        :tabsHeight="96"
+      ></multi-filter>
       <!-- 列表 -->
       <view class="listContainer">
         <List
@@ -43,23 +44,176 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, reactive, computed, watch } from 'vue';
+import { storeToRefs } from 'pinia';
 import List from '@/components/list';
 import StadiumCard from '@/components/list-card/stadium-card';
 import Marquee from '@/components/marquee';
+import MultiFilter from '@/components/multi-filter';
 import { useAppInstance, useNav } from '@/hooks';
 
+import { useLocationInfoStore } from '@/stores/location';
+const locationInfoStore = useLocationInfoStore();
+const { getAreaList } = storeToRefs(locationInfoStore);
+
 const { to } = useNav();
-// const marqueeList = ref([
-//   {
-//     avatar: '',
-//     text: 'YY小果*** 正在活动中 | 已有3349人参与活动'
-//   },
-//   {
-//     avatar: '',
-//     text: 'YY小果*** 正在活动中 | 已有3349人参与活动'
-//   }
-// ]);
+const filter = ref(null);
+const filterTabList = ref([
+  {
+    label: '全城',
+    value: 1,
+    linkKey: 'area',
+    showMore: true
+  },
+  {
+    label: '场地类型',
+    value: 2,
+    linkKey: 'stadiumType',
+    showMore: true
+  },
+  {
+    label: '场地材质',
+    value: 3,
+    linkKey: 'placeType',
+    showMore: true
+  },
+  {
+    label: '全部人群',
+    value: 4,
+    linkKey: 'applicablePeople',
+    showMore: true
+  }
+]);
+
+const filterData = reactive({
+  area: [
+    {
+      title: '',
+      type: 'checkBox',
+      multiple: true,
+      key: 'areaId',
+      list: [
+        {
+          label: '全城',
+          value: '',
+          checked: true,
+          reset: true
+        }
+      ]
+    }
+  ],
+  stadiumType: [
+    {
+      title: '',
+      type: 'checkBox',
+      multiple: true,
+      key: 'stadiumType',
+      list: [
+        {
+          label: '不限',
+          value: '',
+          checked: true,
+          reset: true
+        },
+        {
+          label: '室内',
+          value: '1'
+        },
+        {
+          label: '室外',
+          value: '2'
+        }
+      ]
+    }
+  ],
+  placeType: [
+    {
+      title: '',
+      type: 'checkBox',
+      multiple: true,
+      key: 'placeType',
+      list: [
+        {
+          label: '不限',
+          value: '',
+          checked: true,
+          reset: true
+        },
+        {
+          label: '红地',
+          value: '1'
+        },
+        {
+          label: '草地',
+          value: '2'
+        },
+        {
+          label: '混凝土',
+          value: '3'
+        }
+      ]
+    }
+  ],
+  applicablePeople: [
+    {
+      title: '',
+      type: 'checkBox',
+      multiple: true,
+      key: 'applicablePeople',
+      list: [
+        {
+          label: '不限',
+          value: '',
+          checked: true,
+          reset: true
+        },
+        {
+          label: '幼少儿',
+          value: '1'
+        },
+        {
+          label: '青少年',
+          value: '2'
+        },
+        {
+          label: '成人',
+          value: '3'
+        }
+      ]
+    }
+  ]
+});
+
+const filterChange = (data) => {
+  console.log('filterChange', data);
+};
+
+watch(
+  getAreaList,
+  (val) => {
+    const resList = val.map((item) => {
+      return {
+        label: item.name,
+        value: item.code
+      };
+    });
+    resList.unshift({
+      label: '全城',
+      value: '',
+      checked: true,
+      reset: true
+    });
+    filterData.area = [{
+      title: '',
+      type: 'checkBox',
+      multiple: true,
+      key: 'areaId',
+      list: resList
+    }];
+    filter.value && filter.value.handleReset();
+  },
+  { immediate: true }
+);
 
 const stadiumList = ref([]);
 

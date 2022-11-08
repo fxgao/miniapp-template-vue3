@@ -7,12 +7,12 @@ import api from '@/api';
 
 const { systemInfo, getSystemInfo } = useSystemInfo();
 const { checkClientVersion } = useCheckVersion();
+const { $loginMP, $isResolve, $reject, $userLocationResolve } = useAppInstance();
 
 // 静默登录
 const slientLogin = (successFunc = null) => {
   const params = {};
   const loginInfoStore = useLoginInfoStore();
-  const { $loginMP, $isResolve, $reject } = useAppInstance();
 
   params.everyLogin = true;
   params.timeout = 10000;
@@ -72,6 +72,7 @@ const getUserLocation = () => {
         areaList: positionInfo.areaList,
         locationInfo: res
       });
+      $userLocationResolve && $userLocationResolve();
     },
     fail: async (err) => {
       console.log('getLocation fail', err);
@@ -85,6 +86,7 @@ const getUserLocation = () => {
         name: positionInfo.name,
         areaList: positionInfo.areaList
       });
+      $userLocationResolve && $userLocationResolve();
     }
   });
 };

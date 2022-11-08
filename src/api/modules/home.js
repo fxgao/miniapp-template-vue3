@@ -33,36 +33,8 @@ const homePage = {
     return request({
       requestParams: {
         url: '/wx/stadium/stadiumListByGeopoint',
-        method: 'GET'
-      }
-    });
-  },
-  // 获取热门活动
-  getHotActivityList() {
-    return request({
-      requestParams: {
-        url: '/wx/activity/list',
-        method: 'GET'
-      }
-    });
-  },
-  getHotCourseList() {
-    return request({
-      requestParams: {
-        url: '/wx/course/list',
         method: 'GET',
-        data: {
-          hot: 1
-        }
-      }
-    });
-  },
-  // 获取经典赛事
-  getClassicMatchList() {
-    return request({
-      requestParams: {
-        url: '/wx/game/list',
-        method: 'GET'
+        data
       }
     });
   },

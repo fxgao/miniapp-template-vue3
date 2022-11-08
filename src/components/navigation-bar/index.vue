@@ -187,7 +187,7 @@ const showAddMiniProgram = ref(false);
 const locationIndex = ref(0);
 const locationArr = computed(() => locationStore.getAreaList);
 const locationCode = computed(() => locationStore.getCode);
-// 只会在首次store被赋值时触发，正好用来init初始值
+// 只会在首次store被赋值时触发，用来init初始值
 watch(locationCode, (newVal, oldVal) => {
   locationIndex.value = locationArr.value.findIndex(item => {
     return item.code === newVal;

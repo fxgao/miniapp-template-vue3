@@ -14,8 +14,8 @@ const OSS_URL_PREFIX_ENV_CONFIG = {
 
 // 接口地址配置
 const REQUEST_URL_PREFIX_ENV_CONFIG = {
-  production: 'http://abcd',
-  development: 'https://moth-admin-vue.webdyc.com/mothApi/little-moth-wx-api'
+  production: 'https://dele.htennis.net/mothApi/little-moth-wx-api',
+  development: 'https://dele.htennis.net/mothApi/little-moth-wx-api'
 };
 
 const REQUEST_URL_PREFIX =

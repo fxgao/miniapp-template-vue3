@@ -4,8 +4,8 @@
     <view class="info">
       <view class="title">{{ info.courseName }}</view>
       <view class="labelList">
-        <view class="labelItem" v-for="item in info.labelList" :key="item.id">
-          {{item.labelLabel}}
+        <view class="labelItem" v-for="(item, index) in labelList" :key="index">
+          {{item}}
         </view>
       </view>
       <view class="content">
@@ -36,6 +36,22 @@ const { info, style, size } = toRefs(props);
 
 const bgImg = computed(() => {
   return info.value?.courseHeadFigure || '';
+});
+
+const labelList = computed(() => {
+  const resList = [];
+  if (info.value.courseType == 1) {
+    resList.push('体验课');
+  } else {
+    resList.push('正式课');
+  }
+  if (info.value.applicablePeopleValue) {
+    resList.push(info.value.applicablePeopleValue);
+  }
+  if (info.value.applicableLevelValue) {
+    resList.push(info.value.applicableLevelValue);
+  }
+  return resList;
 });
 </script>
 
@@ -80,14 +96,15 @@ const bgImg = computed(() => {
       height: 36rpx;
       .labelItem {
         &:not(:last-child) {
-          margin-right: 8rpx;
+          margin-right: 6rpx;
         }
         border-radius: 4rpx;
         border: 1rpx solid #979797;
-        padding: 4rpx 8rpx;
+        padding: 4rpx 6rpx;
         font-size: 24rpx;
         color: #A0A0A0;
         line-height: 24rpx;
+        flex: none;
       }
     }
     .content {

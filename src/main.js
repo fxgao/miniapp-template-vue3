@@ -34,9 +34,9 @@ export function createApp() {
       app.config.globalProperties.$reject = reject;
     });
   };
-  // 阻塞默认地址数据
-  app.config.globalProperties.$userDefaultAddress = new Promise((resolve) => {
-    app.config.globalProperties.$userDefaultAddressResolve = resolve;
+  // 阻塞用户位置数据
+  app.config.globalProperties.$userLocation = new Promise((resolve) => {
+    app.config.globalProperties.$userLocationResolve = resolve;
   });
   // 全局组件注册
   app.component('tab-bar', tabBar);

@@ -21,12 +21,9 @@
           </view>
         </view>
         <view class="list">
-          <activity-card
-            :info="item"
-            v-for="item in hotActivityList"
-            :key="item.id"
-            @click="goActivityDetail(item)"
-          ></activity-card>
+          <view v-for="item in hotActivityList" :key="item.id" @click="goActivityDetail(item)">
+            <activity-card :info="item"></activity-card>
+          </view>
         </view>
       </view>
       <!-- 热门课程 -->
@@ -42,13 +39,12 @@
           </view>
         </view>
         <scroll-view class="courseListScroll" :scroll-x="true">
-          <course-card
-            :info="item"
-            :style="'margin-left: 32rpx;display: inline-block;'"
-            v-for="item in hotCourseList"
-            :key="item.id"
-            @click="goCourseDetail(item)"
-          ></course-card>
+          <span v-for="item in hotCourseList" :key="item.id" @click="goCourseDetail(item)">
+            <course-card
+              :info="item"
+              :style="'margin-left: 32rpx;display: inline-block;'"
+            ></course-card>
+          </span>
         </scroll-view>
       </view>
       <!-- 经典活动 -->
@@ -64,12 +60,9 @@
           </view>
         </view>
         <view class="list">
-          <match-card
-            :info="item"
-            v-for="item in classicMatchList"
-            :key="item.id"
-            @click="goMatchDetail(item)"
-          ></match-card>
+          <span v-for="item in classicMatchList" :key="item.id" @click="goMatchDetail(item)">
+            <match-card :info="item"></match-card>
+          </span>
         </view>
       </view>
       <!-- 明星教练 -->
@@ -85,17 +78,16 @@
           </view>
         </view>
         <scroll-view class="coachListScroll" :scroll-x="true">
-          <coach-card
-            v-for="item in starCoachList"
-            :key="item.id"
-            :id="item.id"
-            :name="item.userName"
-            :img="item.photo"
-            :level="item.level"
-            :content="item.remark"
-            :style="'margin-left: 32rpx;display: inline-block;'"
-            @click="goCoachDetail(item)"
-          ></coach-card>
+          <span v-for="item in starCoachList" :key="item.id" @click="goCoachDetail(item)">
+            <coach-card
+              :id="item.id"
+              :name="item.nickName"
+              :img="item.photo"
+              :level="item.level"
+              :content="item.remarks"
+              :style="'margin-left: 32rpx;display: inline-block;'"
+            ></coach-card>
+          </span>
         </scroll-view>
       </view>
     </view>
@@ -142,208 +134,228 @@ const hotActivityList = ref([]);
 
 // 获取热门活动
 const getHotActivity = () => {
-  api.homePage.getHotActivityList().then((res) => {
-    console.log('getHotActivity res', res);
-    hotActivityList.value = [
-      {
-        activeEndTime: '2022-09-20 16:00:00',
-        activeName: '测试活动',
-        activeRemark: '我的活动',
-        activeRule: '活动规则',
-        activeStartTime: '2022-09-20 16:00:00',
-        activeStatus: 1,
-        activityPrice: 11,
-        activityPriceType: 1,
-        coachId: 1,
-        completePersonCount: 4,
-        id: 2,
-        imageVoList: [
-          {
-            functionId: 2,
-            functionType: 4,
-            id: 18,
-            imageUrl: 'http://baidu.com'
-          }
-        ],
-        labelList: [
-          {
-            businessId: '2',
-            businessType: '4',
-            id: 30,
-            labelLabel: 'demoData',
-            labelSort: 1,
-            labelValue: 'demoData'
-          }
-        ],
-        officeId: 1,
-        placeId: 1,
-        stadiumId: 1
-      },
-      {
-        activeEndTime: '2022-09-20 16:00:00',
-        activeName: '测试活动',
-        activeRemark: '我的活动',
-        activeRule: '活动规则',
-        activeStartTime: '2022-09-20 16:00:00',
-        activeStatus: 1,
-        activityPrice: 11,
-        activityPriceType: 1,
-        coachId: 1,
-        completePersonCount: 4,
-        id: 2,
-        imageVoList: [
-          {
-            functionId: 2,
-            functionType: 4,
-            id: 18,
-            imageUrl: 'http://baidu.com'
-          }
-        ],
-        labelList: [
-          {
-            businessId: '2',
-            businessType: '4',
-            id: 30,
-            labelLabel: 'demoData',
-            labelSort: 1,
-            labelValue: 'demoData'
-          }
-        ],
-        officeId: 1,
-        placeId: 1,
-        stadiumId: 1
-      }
-    ];
-  });
+  api.activity
+    .getActivityList({
+      pageNum: 4,
+      pageSize: 1,
+      hot: 1
+    })
+    .then((res) => {
+      console.log('getHotActivity res', res);
+      hotActivityList.value = [
+        {
+          activeEndTime: '2022-09-20 16:00:00',
+          activeName: '测试活动',
+          activeRemark: '我的活动',
+          activeRule: '活动规则',
+          activeStartTime: '2022-09-20 16:00:00',
+          activeStatus: 1,
+          activityPrice: 11,
+          activityPriceType: 1,
+          coachId: 1,
+          completePersonCount: 4,
+          id: 2,
+          imageVoList: [
+            {
+              functionId: 2,
+              functionType: 4,
+              id: 18,
+              imageUrl: 'http://baidu.com'
+            }
+          ],
+          labelList: [
+            {
+              businessId: '2',
+              businessType: '4',
+              id: 30,
+              labelLabel: 'demoData',
+              labelSort: 1,
+              labelValue: 'demoData'
+            }
+          ],
+          officeId: 1,
+          placeId: 1,
+          stadiumId: 1
+        },
+        {
+          activeEndTime: '2022-09-20 16:00:00',
+          activeName: '测试活动',
+          activeRemark: '我的活动',
+          activeRule: '活动规则',
+          activeStartTime: '2022-09-20 16:00:00',
+          activeStatus: 1,
+          activityPrice: 11,
+          activityPriceType: 1,
+          coachId: 1,
+          completePersonCount: 4,
+          id: 2,
+          imageVoList: [
+            {
+              functionId: 2,
+              functionType: 4,
+              id: 18,
+              imageUrl: 'http://baidu.com'
+            }
+          ],
+          labelList: [
+            {
+              businessId: '2',
+              businessType: '4',
+              id: 30,
+              labelLabel: 'demoData',
+              labelSort: 1,
+              labelValue: 'demoData'
+            }
+          ],
+          officeId: 1,
+          placeId: 1,
+          stadiumId: 1
+        }
+      ];
+    });
 };
 
 const hotCourseList = ref([]);
 
 // 获取热门课程
 const getHotCourse = () => {
-  api.homePage.getHotCourseList().then((res) => {
-    console.log('getHotCourseList res', res);
-    hotCourseList.value = [
-      {
-        id: 1,
-        officeId: 'mixed',
-        courseName: '课程一',
-        courseDesc: '课程一描述',
-        applicablePeople: 1,
-        applicableLevel: 1,
-        assessmentLevel: 1,
-        classType: 1,
-        multiPersonCourseType: 1,
-        courseFee: 1,
-        courseHeadFigure: 'imgurl',
-        supplementaryInformation: '课程一补充信息',
-        courseInstructorId: 1,
-        contactPhone: '185013427819',
-        courseRemark: '课程一备注',
-        imageVoList: [],
-        labelList: [
-          {
-            creator: 'mixed',
-            createTime: 'mixed',
-            updateUser: 'mixed',
-            updateTime: 'mixed',
-            remark: 'mixed',
-            id: 43,
-            officeId: 'mixed',
-            labelSort: 2,
-            labelLabel: 'demoData',
-            labelValue: 'test2',
-            businessId: '1',
-            businessType: '6',
-            status: '0',
-            createBy: 'mock',
-            updateBy: 'mock'
-          },
-          {
-            creator: 'mixed',
-            createTime: 'mixed',
-            updateUser: 'mixed',
-            updateTime: 'mixed',
-            remark: 'mixed',
-            id: 44,
-            officeId: 'mixed',
-            labelSort: 1,
-            labelLabel: 'demoData',
-            labelValue: 'test',
-            businessId: '1',
-            businessType: '6',
-            status: '0',
-            createBy: 'mock',
-            updateBy: 'mock'
-          }
-        ]
-      },
-      {
-        id: 1,
-        officeId: 'mixed',
-        courseName: '课程一',
-        courseDesc: '课程一描述',
-        applicablePeople: 1,
-        applicableLevel: 1,
-        assessmentLevel: 1,
-        classType: 1,
-        multiPersonCourseType: 1,
-        courseFee: 1,
-        courseHeadFigure: 'imgurl',
-        supplementaryInformation: '课程一补充信息',
-        courseInstructorId: 1,
-        contactPhone: '185013427819',
-        courseRemark: '课程一备注',
-        imageVoList: [],
-        labelList: [
-          {
-            creator: 'mixed',
-            createTime: 'mixed',
-            updateUser: 'mixed',
-            updateTime: 'mixed',
-            remark: 'mixed',
-            id: 43,
-            officeId: 'mixed',
-            labelSort: 2,
-            labelLabel: 'demoData',
-            labelValue: 'test2',
-            businessId: '1',
-            businessType: '6',
-            status: '0',
-            createBy: 'mock',
-            updateBy: 'mock'
-          },
-          {
-            creator: 'mixed',
-            createTime: 'mixed',
-            updateUser: 'mixed',
-            updateTime: 'mixed',
-            remark: 'mixed',
-            id: 44,
-            officeId: 'mixed',
-            labelSort: 1,
-            labelLabel: 'demoData',
-            labelValue: 'test',
-            businessId: '1',
-            businessType: '6',
-            status: '0',
-            createBy: 'mock',
-            updateBy: 'mock'
-          }
-        ]
-      }
-    ];
-  });
+  api.course
+    .getCourseList({
+      pageNum: 4,
+      pageSize: 1,
+      hot: 1
+    })
+    .then((res) => {
+      console.log('getHotCourseList res', res);
+      hotCourseList.value = res || [
+        {
+          id: 1,
+          officeId: 'mixed',
+          courseName: '课程一',
+          courseDesc: '课程一描述',
+          applicablePeople: 1,
+          applicableLevel: 1,
+          assessmentLevel: 1,
+          classType: 1,
+          multiPersonCourseType: 1,
+          courseFee: 1,
+          courseHeadFigure:
+            'https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/demo1.png',
+          supplementaryInformation: '课程一补充信息',
+          courseInstructorId: 1,
+          contactPhone: '185013427819',
+          courseRemark: '课程一备注',
+          imageVoList: [],
+          labelList: [
+            {
+              creator: 'mixed',
+              createTime: 'mixed',
+              updateUser: 'mixed',
+              updateTime: 'mixed',
+              remark: 'mixed',
+              id: 43,
+              officeId: 'mixed',
+              labelSort: 2,
+              labelLabel: 'demoData',
+              labelValue: 'test2',
+              businessId: '1',
+              businessType: '6',
+              status: '0',
+              createBy: 'mock',
+              updateBy: 'mock'
+            },
+            {
+              creator: 'mixed',
+              createTime: 'mixed',
+              updateUser: 'mixed',
+              updateTime: 'mixed',
+              remark: 'mixed',
+              id: 44,
+              officeId: 'mixed',
+              labelSort: 1,
+              labelLabel: 'demoData',
+              labelValue: 'test',
+              businessId: '1',
+              businessType: '6',
+              status: '0',
+              createBy: 'mock',
+              updateBy: 'mock'
+            }
+          ]
+        },
+        {
+          id: 1,
+          officeId: 'mixed',
+          courseName: '课程一',
+          courseDesc: '课程一描述',
+          applicablePeople: 1,
+          applicableLevel: 1,
+          assessmentLevel: 1,
+          classType: 1,
+          multiPersonCourseType: 1,
+          courseFee: 1,
+          courseHeadFigure:
+            'https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/demo1.png',
+          supplementaryInformation: '课程一补充信息',
+          courseInstructorId: 1,
+          contactPhone: '185013427819',
+          courseRemark: '课程一备注',
+          imageVoList: [],
+          labelList: [
+            {
+              creator: 'mixed',
+              createTime: 'mixed',
+              updateUser: 'mixed',
+              updateTime: 'mixed',
+              remark: 'mixed',
+              id: 43,
+              officeId: 'mixed',
+              labelSort: 2,
+              labelLabel: 'demoData',
+              labelValue: 'test2',
+              businessId: '1',
+              businessType: '6',
+              status: '0',
+              createBy: 'mock',
+              updateBy: 'mock'
+            },
+            {
+              creator: 'mixed',
+              createTime: 'mixed',
+              updateUser: 'mixed',
+              updateTime: 'mixed',
+              remark: 'mixed',
+              id: 44,
+              officeId: 'mixed',
+              labelSort: 1,
+              labelLabel: 'demoData',
+              labelValue: 'test',
+              businessId: '1',
+              businessType: '6',
+              status: '0',
+              createBy: 'mock',
+              updateBy: 'mock'
+            }
+          ]
+        }
+      ];
+    });
 };
 
 const classicMatchList = ref([]);
 
 // 获取经典赛事
 const getClassicMatch = () => {
-  api.homePage.getClassicMatchList().then((res) => {
-    console.log('getClassicMatchList res', res);
-    classicMatchList.value = res || [];
-  });
+  api.match
+    .getMatchList({
+      pageNum: 4,
+      pageSize: 1,
+      hot: 1
+    })
+    .then((res) => {
+      console.log('getClassicMatchList res', res);
+      classicMatchList.value = res || [];
+    });
 };
 
 const starCoachList = ref([]);
@@ -352,78 +364,7 @@ const starCoachList = ref([]);
 const getStartCoach = () => {
   api.homePage.getStarCoachList().then((res) => {
     console.log('getStartCoach res', res);
-    starCoachList.value = [
-      {
-        creator: 112,
-        createTime: '2022-10-06 14:23:19',
-        updateUser: 112,
-        updateTime: '2022-10-06 14:23:37',
-        remark: 'mixed',
-        id: 120,
-        officeId: '2',
-        stadiumId: 'mixed',
-        userName: 'delecoach100601',
-        nickName: 'delecoach100601',
-        useable: '0',
-        password: '$2a$10$PszFI7kutF2m.5Dqg69tVOmmfwyqO4BJ3kmc8KHAXKECl3cKjn8nW',
-        no: 'mixed',
-        companyId: 'mixed',
-        sex: '1',
-        email: 'delecoach100601@163.com',
-        phone: '18977777771',
-        isDesensitize: '',
-        mobile: 'mixed',
-        userType: '0',
-        photo: 'photophotophotophotophotophotophotophoto',
-        loginIp: 'mixed',
-        loginDate: 'mixed',
-        loginFlag: 'mixed',
-        age: 20,
-        seniority: 20,
-        goodDirection: 'mixed',
-        level: '1',
-        hiredate: 'mixed',
-        departuredate: 'mixed',
-        expirationTime: 'mixed',
-        remarks: 'remarks',
-        isDel: 0
-      },
-      {
-        creator: 112,
-        createTime: '2022-10-06 14:23:19',
-        updateUser: 112,
-        updateTime: '2022-10-06 14:23:37',
-        remark: 'mixed',
-        id: 120,
-        officeId: '2',
-        stadiumId: 'mixed',
-        userName: 'delecoach100601',
-        nickName: 'delecoach100601',
-        useable: '0',
-        password: '$2a$10$PszFI7kutF2m.5Dqg69tVOmmfwyqO4BJ3kmc8KHAXKECl3cKjn8nW',
-        no: 'mixed',
-        companyId: 'mixed',
-        sex: '1',
-        email: 'delecoach100601@163.com',
-        phone: '18977777771',
-        isDesensitize: '',
-        mobile: 'mixed',
-        userType: '0',
-        photo: 'photophotophotophotophotophotophotophoto',
-        loginIp: 'mixed',
-        loginDate: 'mixed',
-        loginFlag: 'mixed',
-        age: 20,
-        seniority: 20,
-        goodDirection: 'mixed',
-        level: '1',
-        hiredate: 'mixed',
-        departuredate: 'mixed',
-        expirationTime: 'mixed',
-        remarks: 'remarks',
-        isDel: 0
-      }
-    ];
+    starCoachList.value = res || [];
   });
 };
 
@@ -448,25 +389,33 @@ const handleGoMore = (type) => {
 // 跳转活动详情页
 const goActivityDetail = (item) => {
   console.log('goActivityDetail', item);
-  to();
+  to('/activity/detail', {
+    id: item.id
+  });
 };
 
 // 跳转课程详情页
 const goCourseDetail = (item) => {
   console.log('goCourseDetail', item);
-  to();
+  to('/course/detail', {
+    id: item.id
+  });
 };
 
 // 跳转赛事详情页
 const goMatchDetail = (item) => {
   console.log('goMatchDetail', item);
-  to();
+  to('/match/detail', {
+    id: item.id
+  });
 };
 
 // 跳转教练详情
 const goCoachDetail = (item) => {
   console.log('goCoachDetail', item);
-  to();
+  to('/coach/detail', {
+    id: item.id
+  });
 };
 
 onLoad(async (options) => {

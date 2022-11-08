@@ -11,6 +11,14 @@ export const useSystemInfoStore = defineStore('systemInfo', {
       } else {
         return state.systemInfo?.safeBottomHeight || 4;
       }
+    },
+    navHeight: (state) => {
+      if (!state.systemInfo) {
+        return 4;
+      } else {
+        const { navBarHeight = 0, navBarExtendHeight = 0, statusBarHeight = 0 } = state.systemInfo;
+        return `${navBarHeight + navBarExtendHeight + statusBarHeight}px`;
+      }
     }
   },
   actions: {

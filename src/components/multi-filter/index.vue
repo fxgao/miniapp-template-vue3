@@ -1,67 +1,108 @@
 <template>
   <view
-    class="dropdown-container"
-    :class="{ isSticky: isSticky, isFixed: isFixed, overHidden: !show }"
-    :style="{ top: isSticky || isFixed ? stickyTop : 0 }"
+    id="filterContainer"
+    class="filterContainer"
+    :class="{ isSticky: isSticky }"
+    :style="{ top: isSticky ? (stickyTop ? stickyTop : navHeight) : 0 }"
   >
-    <view class="dropdow">
-      <view v-if="maskVisibility">
-        <view
-          class="mock"
-          :class="{ show: show, hide: maskVisibility != true }"
-          @click="handClose"
-        ></view>
-      </view>
+    <view class="tabsContainer" :style="{ height: tabsHeight + 'rpx', background: bgColor}">
       <view
-        class="content"
-        :style="{ height: maskVisibility ? maxHei : '78rpx' }"
+        class="tabsListBlock"
+        :class="{ list: tabType === 'list', page: tabType === 'page' }"
+        v-if="tabList.length > 0"
       >
-        <view class="tabs flex align-center">
-          <view
-            class="tab flex align-center justify-center"
-            v-for="(item, index) in tableData"
-            :key="index"
-            @click.stop="handEnum(index)"
-          >
-            <text :class="{ active: show && curren === index }">{{ getTitleName(item) }}</text>
-            <text
-              :class="{ 'active-icon': show && curren === index }"
-              class="cuIcon-usefullfill"
-            ></text>
-          </view>
-          <slot name="right"></slot>
+        <view
+          :class="{ tabsItem: true, active: item.selected }"
+          @click="changeTab(item)"
+          v-for="(item, index) in tabListData"
+          :key="index"
+        >
+          {{ item.showLabel || item.label }}
+          <template v-if="tabType === 'list'">
+            <view v-if="item.selected" class="iconfont icon-arrow-down"></view>
+            <view v-else class="iconfont icon-arrow-up"></view>
+          </template>
         </view>
-        <view class="mains" :class="{ open: show }" :style="{ height: mainsHeight }">
-          <scroll-view :scroll-y="true" style="height: 100%">
-            <view class="radios">
-              <view
-                class="radio"
-                v-for="(item, index) in child.submenu"
-                :key="index"
-                @click="handSelect(item, index)"
-              >
-                <text :class="{ 'radio-active': child.select === index }">{{ item.label }}</text>
-                <image v-if="child.select === index" class="checked" src="" />
-                <image v-else class="nocheck" src="" />
-              </view>
+      </view>
+      <view v-if="tabType === 'page'" class="moreChoose" :class="{ active: show }" @click="showMoreFilter">更多筛选</view>
+    </view>
+    <view class="dropContainer" v-show="show">
+      <view class="mock" @click="handClose"></view>
+      <view class="content">
+        <scroll-view
+          :scroll-y="true"
+          class="mains"
+          :class="{ open: show }"
+          :style="{ height: maxHei }"
+        >
+          <view :class="{ chooseItem: true, noMgt: !item.title }" v-for="(item, index) in nowFilterData" :key="index">
+            <view class="title" v-if="item.title">{{ item.title }}</view>
+            <view class="chooseContent" :class="{ column: item.type === 'checkBox', noMgt: !item.title }">
+              <template v-if="item.type === 'block'">
+                <view
+                  :class="{ filterItemBlock: true, active: itemChild.checked }"
+                  v-for="(itemChild, indexChild) in item.list"
+                  :key="indexChild"
+                  @click="selectData(itemChild, item, index)"
+                >
+                  {{ itemChild.label }}
+                </view>
+              </template>
+              <template v-if="item.type === 'checkBox'">
+                <view
+                  :class="{ filterItemCheckBox: true, active: itemChild.checked }"
+                  v-for="(itemChild, indexChild) in item.list"
+                  :key="indexChild"
+                  @click="selectData(itemChild, item, index)"
+                >
+                  <view class="label">
+                    {{ itemChild.label }}
+                  </view>
+                  <image
+                    class="checkbox"
+                    :src="
+                      itemChild.checked
+                        ? 'https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/icon/checkbox-checked.png'
+                        : 'https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/icon/checkbox-disable.png'
+                    "
+                  />
+                </view>
+              </template>
             </view>
-          </scroll-view>
-          <view class="bottom">
-            <view class="actionBtn reset" @click="resetFilter">重置</view>
-            <view class="actionBtn" @click="confirmSelect">确定</view>
           </view>
+        </scroll-view>
+        <view class="bottom">
+          <view class="actionBtn reset" @click="handleReset">重置</view>
+          <view class="actionBtn confirm" @click="handleConfirm">确定</view>
         </view>
       </view>
     </view>
   </view>
 </template>
 <script setup>
-import { ref, watch, toRaw, computed, nextTick } from 'vue';
+import { ref, watch, toRaw, computed, reactive, nextTick, toRefs, onMounted, getCurrentInstance } from 'vue';
+import { storeToRefs } from 'pinia';
+import { useSystemInfoStore } from '@/stores/systemInfo';
+const systemInfoStore = useSystemInfoStore();
+const { safeBottom, navHeight } = storeToRefs(systemInfoStore);
+
+const _this = getCurrentInstance();
+
 const props = defineProps({
-  // 数据
-  filterData: {
+  // 类型  list , page
+  tabType: {
+    type: String,
+    default: 'list'
+  },
+  // tabbar展示数据
+  tabList: {
     type: Array,
     default: () => []
+  },
+  // 数据
+  filterData: {
+    type: Object,
+    default: () => {}
   },
   // 选择区域最大高度
   maxHeight: {
@@ -71,32 +112,22 @@ const props = defineProps({
   // tabs 高度
   tabsHeight: {
     type: Number,
-    default: 80
+    default: 160
   },
   // 是否吸顶
   isSticky: {
     type: Boolean,
-    default: false
-  },
-  // 是否固定
-  isFixed: {
-    type: Boolean,
-    default: false
+    default: true
   },
   // 吸顶距离顶部高度
   stickyTop: {
     type: String,
-    default: '0rpx'
+    default: ''
   },
   // tabs背景颜色
   bgColor: {
     type: String,
     default: '#fff'
-  },
-  // tabs类型 normal 正常 list 特殊样式
-  tabType: {
-    type: String,
-    default: 'normal'
   },
   // 选择区域背景颜色
   mainBgColor: {
@@ -106,7 +137,7 @@ const props = defineProps({
   // 字体选中颜色
   activeColor: {
     type: String,
-    default: '#4EC65E'
+    default: '#ff6829'
   },
   // 字体默认颜色
   color: {
@@ -115,108 +146,262 @@ const props = defineProps({
   }
 });
 
-const emits = defineEmits(['change']);
+const { tabType, tabList, filterData, isSticky, stickyTop, activeColor } = toRefs(props);
 
-const tableData = ref([]);
-const tableDataBak = ref([]);
+const emits = defineEmits(['change', 'onShow']);
 
-watch(
-  () => props.filterData,
-  (val) => {
-    tableData.value = val;
-    tableDataBak.value = val;
-  },
-  {
-    immediate: true
-  }
-);
+const tabListData = ref([]); // tabList区域数据
+const allFilterData = ref({}); // 选择区域数据
 
-const getTitleName = computed(() => {
-  return function (item) {
-    const info = item.submenu[item.select];
-    if (info) {
-      return info.label;
-    }
-    return item.label;
-  };
+const show = ref(false); // 是否展示选择区域
+
+// 当前tabList选中的数据
+const nowTabListData = computed(() => {
+  return tabListData.value.filter((item) => item.selected);
 });
 
+// 当前选择区域数据
+const nowFilterData = computed(() => {
+  const linkKey = nowTabListData.value[0]?.linkKey;
+  return allFilterData.value[linkKey] || [];
+});
+
+// tabbar高度
 const tabsHei = computed(() => {
   return `${props.tabsHeight}rpx`;
 });
 
+// 内容区域最大高度
 const maxHei = computed(() => {
   return `${props.maxHeight}rpx`;
+});
+
+// sticky顶部高度
+const stickyTopHei = computed(() => {
+  if (isSticky.value) {
+    return stickyTop.value ? stickyTop.value : navHeight.value;
+  } else {
+    return 0;
+  }
 });
 
 const mainsHeight = computed(() => {
   return `${props.maxHeight - props.tabsHeight}rpx`;
 });
 
-const show = ref(false);
-const maskVisibility = ref(false);
-const curren = ref(0);
-const child = ref({});
+// 监听tabList数据变化
+watch(
+  () => props.tabList,
+  (val) => {
+    console.log('watch tabList');
+    const list = val.map((item) => {
+      return {
+        ...item,
+        showLabel: item.label,
+        selected: item.selected || false,
+        showMore: item.showMore || false
+      };
+    });
+    tabListData.value = list;
+  },
+  {
+    immediate: true
+  }
+);
+
+// 监听filterData数据变化
+watch(
+  () => props.filterData,
+  (val) => {
+    console.log('filterData watch', val);
+    const resObj = {};
+    for (const key in val) {
+      resObj[key] = val[key].map((item) => {
+        const list = item.list.map((itemChild) => {
+          return {
+            ...itemChild,
+            checked: itemChild.checked || false
+          };
+        });
+        return {
+          ...item,
+          list
+        };
+      });
+    }
+    allFilterData.value = resObj;
+  },
+  {
+    immediate: true
+  }
+);
+
+// 切换tab
+const changeTab = (item) => {
+  if (item.showMore) {
+    show.value = true;
+    emits('onShow', true);
+  }
+  if (item.selected) return;
+  console.log('changeTab', item);
+  tabListData.value = tabListData.value.map((itemChild) => {
+    return {
+      ...itemChild,
+      selected: itemChild.value === item.value
+    };
+  });
+};
+
+// 选择数据
+const selectData = (listData, data, index) => {
+  const linkKey = nowTabListData.value[0]?.linkKey;
+  const { value, reset = false } = listData;
+  const { multiple = false } = data;
+  let num = 0;
+  let list = [];
+  if (multiple && !reset) {
+    list = allFilterData.value[linkKey][index].list.map((item) => {
+      if (item.value === value) {
+        if (!item.checked) {
+          num++;
+        }
+        return {
+          ...item,
+          checked: !item.checked
+        };
+      } else {
+        if (item.checked && !item.reset) {
+          num++;
+        }
+        return item;
+      }
+    });
+    list = list.map((item) => {
+      if (item.reset) {
+        return {
+          ...item,
+          checked: num === 0
+        };
+      } else {
+        return item;
+      }
+    });
+  } else {
+    list = allFilterData.value[linkKey][index].list.map((item) => {
+      if (item.value === value) {
+        return {
+          ...item,
+          checked: true
+        };
+      } else {
+        return {
+          ...item,
+          checked: false
+        };
+      }
+    });
+  }
+
+  if (tabType.value === 'list') {
+    if (num > 0) {
+      tabListData.value = tabListData.value.map((item) => {
+        if (item.linkKey === linkKey) {
+          return {
+            ...item,
+            showLabel: `${item.label}(${num})`
+          };
+        } else {
+          return item;
+        }
+      });
+    } else {
+      tabListData.value = tabListData.value.map((item) => {
+        if (item.linkKey === linkKey) {
+          return {
+            ...item,
+            showLabel: item.label
+          };
+        } else {
+          return item;
+        }
+      });
+    }
+  }
+  console.log('selectData', tabListData.value);
+  allFilterData.value[linkKey][index].list = list;
+};
+
+// 展开更多搜索
+const showMoreFilter = () => {
+  console.log('showMoreFilter', !show.value);
+  !show.value && emits('onShow', true);
+  show.value = !show.value;
+};
+
+// 处理确定按钮
+const handleConfirm = () => {
+  const result = {};
+  // 返回格式化之后的数据
+  if (tabType.value === 'page') {
+    // tab区域
+    const { value: tabValue, key: tabKey } = nowTabListData.value[0];
+    result[tabKey] = tabValue;
+  }
+  // 选择区域
+  for (const key in allFilterData.value) {
+    const element = allFilterData.value[key];
+    element.forEach((item) => {
+      const { key } = item;
+      const list = item.list.filter((itemChild) => itemChild.checked);
+      if (list.length > 0) {
+        result[key] = list.map((itemChild) => itemChild.value).join(',');
+      }
+    });
+  }
+  emits('change', result);
+  show.value = false;
+};
+
+// 处理重置按钮
+const handleReset = () => {
+  const tabListReset = tabListData.value.map((item) => {
+    console.log('tabListReset map', item);
+    return {
+      ...item,
+      showLabel: item.label,
+      selected: item.selected
+    };
+  });
+
+  const filterDataReset = {};
+  for (const key in filterData.value) {
+    filterDataReset[key] = filterData.value[key].map((item) => {
+      const list = item.list.map((itemChild) => {
+        return {
+          ...itemChild,
+          checked: itemChild.checked || false
+        };
+      });
+      return {
+        ...item,
+        list
+      };
+    });
+  }
+  tabListData.value = tabListReset;
+  allFilterData.value = filterDataReset;
+};
 
 const handClose = () => {
   show.value = false;
-  maskVisibility.value = false;
-};
-let loading = false;
-const handEnum = (index) => {
-  if (loading) return;
-  loading = true;
-  setTimeout(() => {
-    loading = false;
-  }, 500);
-  if (show.value && curren.value === index) {
-    show.value = false;
-    setTimeout(() => {
-      maskVisibility.value = false;
-    }, 200);
-    return;
-  }
-  curren.value = index;
-  child.value = tableData.value[index];
-  maskVisibility.value = true;
-  nextTick(() => {
-    show.value = true;
-  });
 };
 
-const handSelect = (item, index) => {
-  const arr = tableData.value;
-  arr[curren.value].select = index;
-};
-
-const confirmSelect = () => {
-  const arr = tableData.value;
-  show.value = false;
-  setTimeout(() => {
-    maskVisibility.value = false;
-  }, 200);
-  const select = toRaw(arr).map((el) => {
-    return {
-      labelKey: el.key,
-      ...el.submenu[el.select]
-    };
-  });
-  emits('change', select);
-};
-
-const resetFilter = () => {
-  tableData.value = toRaw(tableDataBak.value);
-};
+defineExpose({
+  handClose,
+  handleReset
+});
 </script>
 <style lang="scss">
-.cuIcon-usefullfill:before {
-  content: '\e7cf';
-}
-
-.cuIcon-check:before {
-  content: '\e645';
-}
-
 $selectColor: v-bind('activeColor');
 
 .flex {
@@ -231,128 +416,195 @@ $selectColor: v-bind('activeColor');
   justify-content: center;
 }
 
-.mock {
-  z-index: 2;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 750rpx;
-  background-color: rgba(0, 0, 0, 0);
-  transition: background-color 0.15s linear;
-
-  &.show {
-    background-color: rgba(0, 0, 0, 0.5);
-  }
-
-  &.hide {
-    display: none;
-  }
-}
-
-.dropdown-container {
-  min-height: 78rpx;
-}
-
-.dropdow {
-  position: relative;
-  height: v-bind('tabsHei');
-  z-index: 2;
-
-  .content {
-    position: relative;
-    z-index: 5;
-    overflow: hidden;
-    height: v-bind('maxHei');
-  }
-
-  .tabs {
-    background-color: v-bind('bgColor');
-    position: relative;
-    z-index: 4;
-    height: v-bind('tabsHei');
-
-    .tab {
-      flex: 1;
-      padding: 25rpx 0;
-      font-size: 28rpx;
-      color: v-bind('color');
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      .active {
-        color: $selectColor;
-      }
-
-      .cuIcon-usefullfill {
-        font-size: 22rpx;
-        margin-left: 10rpx;
-        transform: rotate(180deg);
-        transition: all 0.3s;
-      }
-
-      .active-icon {
-        transform: rotate(0deg);
-        color: $selectColor;
-      }
-    }
-  }
-
-  .mains {
-    transition: height 0.2s;
-    position: absolute;
-    z-index: 3;
-    left: 0;
-    width: 750rpx;
-    overflow: hidden;
-    transform: translateY(-100%);
-    transition: all 0.3s;
-    height: v-bind('mainsHeight');
-
-    .radios {
-      background-color: v-bind('mainBgColor');
-    }
-
-    .radio {
-      width: 750rpx;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 20rpx;
-      box-sizing: border-box;
-      font-size: 28rpx;
-
-      &-active {
-        color: $selectColor;
-      }
-
-      .cuIcon-check {
-        color: $selectColor;
-        font-weight: bold;
-        font-size: 30rpx;
-      }
-    }
-  }
-
-  .open {
-    transform: translateY(0);
-  }
-}
-
 .overHidden {
   overflow: hidden;
 }
 
-.isSticky {
-  position: sticky;
-  // top: v-bind("stickyTop");
-}
-
-.isFixed {
-  position: fixed;
-  width: 100%;
-  top: v-bind('stickyTop');
+.filterContainer {
+  &.isSticky {
+    position: sticky;
+    top: v-bind('stickyTop');
+  }
+  width: 100vw;
+  position: relative;
+  z-index: 1;
+  .tabsContainer {
+    padding: 0 40rpx;
+    @include flex-between;
+    .tabsListBlock {
+      &.list {
+        @include flex-between;
+        width: 100%;
+        .tabsItem {
+          &.active {
+            font-size: 28rpx;
+            font-weight: 500;
+            color: v-bind('activeColor');
+            line-height: 44rpx;
+          }
+          font-size: 28rpx;
+          color: #333333;
+          line-height: 44rpx;
+          position: relative;
+        }
+      }
+      &.page {
+        @include flex-start;
+        .tabsItem {
+          &:not(:last-child) {
+            margin-right: 48rpx;
+          }
+          &.active {
+            &::after {
+              content: '';
+              position: absolute;
+              z-index: 1;
+              bottom: 0;
+              left: 50%;
+              transform: translateX(-50%);
+              width: 72rpx;
+              height: 16rpx;
+              background: linear-gradient(
+                270deg,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0) 20%,
+                #ff6829 100%
+              );
+              border-radius: 10rpx;
+            }
+            font-size: 36rpx;
+            font-weight: 500;
+            color: #333333;
+            line-height: 52rpx;
+          }
+          font-size: 28rpx;
+          font-weight: 500;
+          color: #a0a0a0;
+          line-height: 44rpx;
+          position: relative;
+        }
+      }
+    }
+    .moreChoose {
+      &.active {
+        color: $selectColor;
+      }
+      font-size: 28rpx;
+      color: #333333;
+      line-height: 44rpx;
+    }
+  }
+  .dropContainer {
+    .mock {
+      position: absolute;
+      z-index: -1;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: 750rpx;
+      height: calc(100vh - v-bind('tabsHei') - v-bind('stickyTopHei'));
+      background-color: rgba(0, 0, 0, 0.5);
+      transition: background-color 0.15s linear;
+    }
+    .content {
+      position: relative;
+      background: #fff;
+      .mains {
+        padding: 0rpx 40rpx 32rpx;
+        transition: height 0.2s;
+        overflow: hidden;
+        transition: all 0.3s;
+        height: v-bind('mainsHeight');
+        .chooseItem {
+          &.noMgt {
+            margin-top: 0rpx;
+          }
+          margin-top: 48rpx;
+          .title {
+            font-size: 32rpx;
+            font-weight: 600;
+            color: #333333;
+            line-height: 48rpx;
+          }
+          .chooseContent {
+            &.column {
+              display: flex;
+              flex-direction: column;
+            }
+            @include flex-start;
+            margin-top: 24rpx;
+            .filterItemBlock {
+              &.active {
+                color: $selectColor;
+              }
+              background: #f5f5f5;
+              border-radius: 8rpx;
+              padding: 10rpx 50rpx;
+              font-size: 28rpx;
+              color: #333333;
+              line-height: 44rpx;
+              margin-right: 20rpx;
+            }
+            .filterItemCheckBox {
+              @include flex-between;
+              width: 100%;
+              &:not(:first-child) {
+                margin-top: 48rpx;
+              }
+              &.active {
+                .label {
+                  color: $selectColor;
+                  font-weight: 600;
+                }
+              }
+              .label {
+                font-size: 28rpx;
+                color: #333333;
+                line-height: 44rpx;
+              }
+              .checkbox {
+                width: 28rpx;
+                height: 28rpx;
+                border-radius: 8rpx;
+              }
+            }
+          }
+        }
+      }
+      .bottom {
+        @include flex-between;
+        width: 100%;
+        height: 120rpx;
+        padding: 14rpx 38rpx;
+        background: #fff;
+        position: relative;
+        z-index: 5;
+        border-top: 1rpx solid #eee;
+        .actionBtn {
+          width: 324rpx;
+          height: 92rpx;
+          border-radius: 44rpx;
+          font-size: 32rpx;
+          color: #ff6829;
+          line-height: 90rpx;
+          font-weight: 600;
+          text-align: center;
+          &.reset {
+            border: 2px solid #ff6829;
+          }
+          &.confirm {
+            background: linear-gradient(135deg, #ffab43 0%, #ff6829 100%);
+            color: #fff;
+          }
+        }
+      }
+    }
+    position: absolute;
+    z-index: 10;
+    top: v-bind('tabsHei');
+    left: 0;
+    right: 0;
+  }
 }
 </style>

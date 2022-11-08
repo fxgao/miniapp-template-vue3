@@ -68,11 +68,12 @@
 </template>
 
 <script setup>
+import { readonly, ref, nextTick, computed } from 'vue';
+import { storeToRefs } from 'pinia';
 import Activity from './components/Activity';
 import Course from './components/Course';
 import Home from './components/Home';
 import Mine from './components/Mine';
-import { readonly, ref, nextTick, computed } from 'vue';
 import api from '@/api';
 import { onLoad, onPageScroll, onReachBottom } from '@dcloudio/uni-app';
 import { useSystemInfoStore } from '@/stores/systemInfo';
@@ -80,8 +81,8 @@ import { useLocationInfoStore } from '@/stores/location';
 import { useAppInstance, useNav } from '@/hooks';
 import Config from '@/api/config';
 const locationStore = useLocationInfoStore();
-const locationCode = computed(() => locationStore.locationInfo.code);
-const { $onLaunched } = useAppInstance();
+const { getCode, locationInfo } = storeToRefs(locationStore);
+const { $onLaunched, $userLocation } = useAppInstance();
 const { to } = useNav();
 
 const systemInfo = useSystemInfoStore();
@@ -141,7 +142,7 @@ const tabChange = (key) => {
 const banner = ref([]);
 const curIndex = ref(0);
 const kingkongList = ref([]);
-const stadiumList = ref([null, null]);
+const stadiumList = ref([]);
 
 const bannerChange = (e) => {
   console.log('bannerChange', e);
@@ -166,17 +167,20 @@ const getKingKongPosition = () => {
 const getHotStadiumList = () => {
   api.homePage.getHotStadiumList().then((res) => {
     console.log('getHotStadiumList res', res);
+    if (!res.length) return;
     stadiumList.value[1] = res[0] || {};
   });
 };
 
-const getNearbyStadiumList = () => {
+const getNearbyStadiumList = async () => {
+  await $userLocation;
   const data = {
-    lng: 123,
-    lat: 456
+    lng: locationInfo.value.lng || 0,
+    lat: locationInfo.value.lat || 0
   };
   api.homePage.getNearbyStadiumList(data).then((res) => {
     console.log('getNearbyStadiumList res', res);
+    if (!res.length) return;
     stadiumList.value[0] = res[0] || {};
   });
 };
@@ -188,18 +192,20 @@ const handleBannerJump = (item) => {
     let url = '';
     switch (jumpType) {
       case 4: // 活动
-        url = '';
+        url = `/activity/detail?id=${data}`;
         break;
       case 6: // 课程
-        url = '';
+        url = `/course/detail?id=${data}`;
         break;
       case 8: // 比赛
-        url = '';
+        url = `/match/detail?id=${data}`;
         break;
     }
     url && to(url);
   } else if (stationJumpType === 2) {
-    to();
+    to(data);
+  } else {
+    to(data);
   }
 };
 
@@ -233,7 +239,7 @@ onReachBottom(() => {
   if (current.value === 'course') {
     courseRef.value.reachBottom();
   }
-  if (current.value === 'course') {
+  if (current.value === 'activity') {
     activityRef.value.reachBottom();
   }
 });
@@ -253,7 +259,7 @@ onLoad(async (options) => {
 
 <style lang="scss" scoped>
 .main {
-  @include text-ellipsis();
+  width: 100%;
 }
 .pageContainer {
   width: 100%;

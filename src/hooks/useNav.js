@@ -1,12 +1,24 @@
 const REDIRECT_URL = {
-  '/webview': '/pages/transfer_station',
+  '/webview': '/pages/webview',
   '/index:home': '/pages/index?key=home',
   '/index:mine': '/pages/index?key=mine',
   '/index:course': '/pages/index?key=course',
   '/index:activity': '/pages/index?key=activity',
   '/stadium/index': '/packages/stadium/pages/index',
   '/stadium/detail': '/packages/stadium/pages/detail',
-  '/edit-profile': '/packages/mine/pages/edit-profile'
+  '/coach/list': '/packages/stadium/pages/coach-list',
+  '/coach/detail': '/packages/stadium/pages/coach-detail',
+  '/course/detail': '/packages/course/pages/detail',
+  '/match/index': '/packages/match/pages/index',
+  '/match/detail': '/packages/match/pages/detail',
+  '/activity/detail': '/packages/activity/pages/detail',
+  '/edit-profile': '/packages/mine/pages/edit-profile',
+  '/suggest': '/packages/mine/pages/suggest',
+  '/mine/join-activity': '/packages/mine/pages/join-activity',
+  '/mine/join-match': '/packages/mine/pages/join-match',
+  '/mine/join-course': '/packages/mine/pages/join-course',
+  '/mine/order-list': '/packages/mine/pages/order-list',
+  '/mine/order-detail': '/packages/mine/pages/order-detail'
 };
 
 const useNavigate = () => {
