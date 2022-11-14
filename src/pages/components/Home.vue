@@ -16,7 +16,7 @@
             查看更多
             <image
               class="icon"
-              src="https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/icon/right-arrow-icon.png"
+              src="https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/right-arrow-icon.png"
             />
           </view>
         </view>
@@ -34,17 +34,17 @@
             查看更多
             <image
               class="icon"
-              src="https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/icon/right-arrow-icon.png"
+              src="https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/right-arrow-icon.png"
             />
           </view>
         </view>
         <scroll-view class="courseListScroll" :scroll-x="true">
-          <span v-for="item in hotCourseList" :key="item.id" @click="goCourseDetail(item)">
+          <view class="componentItem" v-for="item in hotCourseList" :key="item.id" @click="goCourseDetail(item)">
             <course-card
               :info="item"
               :style="'margin-left: 32rpx;display: inline-block;'"
             ></course-card>
-          </span>
+          </view>
         </scroll-view>
       </view>
       <!-- 经典活动 -->
@@ -55,7 +55,7 @@
             查看更多
             <image
               class="icon"
-              src="https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/icon/right-arrow-icon.png"
+              src="https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/right-arrow-icon.png"
             />
           </view>
         </view>
@@ -73,12 +73,12 @@
             查看更多
             <image
               class="icon"
-              src="https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/icon/right-arrow-icon.png"
+              src="https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/right-arrow-icon.png"
             />
           </view>
         </view>
         <scroll-view class="coachListScroll" :scroll-x="true">
-          <span v-for="item in starCoachList" :key="item.id" @click="goCoachDetail(item)">
+          <view class="componentItem" v-for="item in starCoachList" :key="item.id" @click="goCoachDetail(item)">
             <coach-card
               :id="item.id"
               :name="item.nickName"
@@ -87,7 +87,7 @@
               :content="item.remarks"
               :style="'margin-left: 32rpx;display: inline-block;'"
             ></coach-card>
-          </span>
+          </view>
         </scroll-view>
       </view>
     </view>
@@ -142,76 +142,7 @@ const getHotActivity = () => {
     })
     .then((res) => {
       console.log('getHotActivity res', res);
-      hotActivityList.value = [
-        {
-          activeEndTime: '2022-09-20 16:00:00',
-          activeName: '测试活动',
-          activeRemark: '我的活动',
-          activeRule: '活动规则',
-          activeStartTime: '2022-09-20 16:00:00',
-          activeStatus: 1,
-          activityPrice: 11,
-          activityPriceType: 1,
-          coachId: 1,
-          completePersonCount: 4,
-          id: 2,
-          imageVoList: [
-            {
-              functionId: 2,
-              functionType: 4,
-              id: 18,
-              imageUrl: 'http://baidu.com'
-            }
-          ],
-          labelList: [
-            {
-              businessId: '2',
-              businessType: '4',
-              id: 30,
-              labelLabel: 'demoData',
-              labelSort: 1,
-              labelValue: 'demoData'
-            }
-          ],
-          officeId: 1,
-          placeId: 1,
-          stadiumId: 1
-        },
-        {
-          activeEndTime: '2022-09-20 16:00:00',
-          activeName: '测试活动',
-          activeRemark: '我的活动',
-          activeRule: '活动规则',
-          activeStartTime: '2022-09-20 16:00:00',
-          activeStatus: 1,
-          activityPrice: 11,
-          activityPriceType: 1,
-          coachId: 1,
-          completePersonCount: 4,
-          id: 2,
-          imageVoList: [
-            {
-              functionId: 2,
-              functionType: 4,
-              id: 18,
-              imageUrl: 'http://baidu.com'
-            }
-          ],
-          labelList: [
-            {
-              businessId: '2',
-              businessType: '4',
-              id: 30,
-              labelLabel: 'demoData',
-              labelSort: 1,
-              labelValue: 'demoData'
-            }
-          ],
-          officeId: 1,
-          placeId: 1,
-          stadiumId: 1
-        }
-      ];
+      hotActivityList.value = res || [];
     });
 };
 
@@ -227,118 +158,7 @@ const getHotCourse = () => {
     })
     .then((res) => {
       console.log('getHotCourseList res', res);
-      hotCourseList.value = res || [
-        {
-          id: 1,
-          officeId: 'mixed',
-          courseName: '课程一',
-          courseDesc: '课程一描述',
-          applicablePeople: 1,
-          applicableLevel: 1,
-          assessmentLevel: 1,
-          classType: 1,
-          multiPersonCourseType: 1,
-          courseFee: 1,
-          courseHeadFigure:
-            'https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/demo1.png',
-          supplementaryInformation: '课程一补充信息',
-          courseInstructorId: 1,
-          contactPhone: '185013427819',
-          courseRemark: '课程一备注',
-          imageVoList: [],
-          labelList: [
-            {
-              creator: 'mixed',
-              createTime: 'mixed',
-              updateUser: 'mixed',
-              updateTime: 'mixed',
-              remark: 'mixed',
-              id: 43,
-              officeId: 'mixed',
-              labelSort: 2,
-              labelLabel: 'demoData',
-              labelValue: 'test2',
-              businessId: '1',
-              businessType: '6',
-              status: '0',
-              createBy: 'mock',
-              updateBy: 'mock'
-            },
-            {
-              creator: 'mixed',
-              createTime: 'mixed',
-              updateUser: 'mixed',
-              updateTime: 'mixed',
-              remark: 'mixed',
-              id: 44,
-              officeId: 'mixed',
-              labelSort: 1,
-              labelLabel: 'demoData',
-              labelValue: 'test',
-              businessId: '1',
-              businessType: '6',
-              status: '0',
-              createBy: 'mock',
-              updateBy: 'mock'
-            }
-          ]
-        },
-        {
-          id: 1,
-          officeId: 'mixed',
-          courseName: '课程一',
-          courseDesc: '课程一描述',
-          applicablePeople: 1,
-          applicableLevel: 1,
-          assessmentLevel: 1,
-          classType: 1,
-          multiPersonCourseType: 1,
-          courseFee: 1,
-          courseHeadFigure:
-            'https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/demo1.png',
-          supplementaryInformation: '课程一补充信息',
-          courseInstructorId: 1,
-          contactPhone: '185013427819',
-          courseRemark: '课程一备注',
-          imageVoList: [],
-          labelList: [
-            {
-              creator: 'mixed',
-              createTime: 'mixed',
-              updateUser: 'mixed',
-              updateTime: 'mixed',
-              remark: 'mixed',
-              id: 43,
-              officeId: 'mixed',
-              labelSort: 2,
-              labelLabel: 'demoData',
-              labelValue: 'test2',
-              businessId: '1',
-              businessType: '6',
-              status: '0',
-              createBy: 'mock',
-              updateBy: 'mock'
-            },
-            {
-              creator: 'mixed',
-              createTime: 'mixed',
-              updateUser: 'mixed',
-              updateTime: 'mixed',
-              remark: 'mixed',
-              id: 44,
-              officeId: 'mixed',
-              labelSort: 1,
-              labelLabel: 'demoData',
-              labelValue: 'test',
-              businessId: '1',
-              businessType: '6',
-              status: '0',
-              createBy: 'mock',
-              updateBy: 'mock'
-            }
-          ]
-        }
-      ];
+      hotCourseList.value = res || [];
     });
 };
 
@@ -504,6 +324,12 @@ defineExpose({
       width: 100%;
       white-space: nowrap;
       margin-top: 32rpx;
+      @include flex-start;
+      align-items: flex-start;
+      .componentItem {
+        width: auto;
+        display: inline-block;
+      }
     }
   }
 }

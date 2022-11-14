@@ -4,7 +4,7 @@
     <view class="modal-main">
       <view class="main-header">
         <view class="title" v-if="title">{{title}}</view>
-        <image class="close-icon" src="https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/icon/model-close-icon.png" @click="handelClose" />
+        <image class="close-icon" src="https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/model-close-icon.png" @click="handelClose" />
       </view>
       <view class="main-content">
         <slot></slot>

@@ -63,7 +63,7 @@
         <view v-if="showSelectBlock" class="nav-bar__center-location">
           <image
             class="locationIcon"
-            src="https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/icon/location-icon.png"
+            src="https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/location-icon.png"
           />
           <view class="locationChoose">
             <picker

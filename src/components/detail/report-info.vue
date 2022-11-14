@@ -6,7 +6,7 @@
         {{ showAll ? '收起' : '展开' }}
         <image
           class="icon"
-          src="https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/icon/right-arrow-icon.png"
+          src="https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/right-arrow-icon.png"
         />
       </view>
     </view>
@@ -18,8 +18,8 @@
           class="sex"
           :src="
             item?.sex === '男'
-              ? 'https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/icon/sex-male.png'
-              : 'https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/icon/sex-female.png'
+              ? 'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/sex-male.png'
+              : 'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/sex-female.png'
           "
           mode="aspectFit"
         />

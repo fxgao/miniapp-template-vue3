@@ -12,7 +12,7 @@
       <view class="listContainer">
         <List
           v-model:dataList="orderList"
-          url="/wx/stadium/list"
+          url="/wx/order/searchAllOrder"
           ref="activityListRef"
           :listType="'column'"
         >
@@ -60,6 +60,7 @@ const goOrderDetail = (data) => {
 .pageContainer {
   .listContainer {
     padding: 0 38rpx;
+    margin-top: 32rpx;
   }
   .listBottomText {
     font-size: 28rpx;

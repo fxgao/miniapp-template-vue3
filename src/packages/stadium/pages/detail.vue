@@ -52,7 +52,7 @@
             全部活动
             <image
               class="icon"
-              src="https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/icon/right-arrow-icon.png"
+              src="https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/right-arrow-icon.png"
             />
           </view>
         </view>
@@ -275,19 +275,19 @@ onLoad(async (options) => {
         @include flex-start;
         .iconItem {
           &.map {
-            background: url('https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/icon/navigation-icon.png')
+            background: url('https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/navigation-icon.png')
               0 0 no-repeat;
             background-size: contain;
             margin-right: 32rpx;
           }
           &.share {
-            background: url('https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/icon/wechat-icon.png')
+            background: url('https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/wechat-icon.png')
               0 0 no-repeat;
             background-size: contain;
             margin-right: 32rpx;
           }
           &.phone {
-            background: url('https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/icon/phone-icon.png')
+            background: url('https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/phone-icon.png')
               0 0 no-repeat;
             background-size: contain;
           }

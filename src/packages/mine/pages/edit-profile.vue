@@ -53,7 +53,7 @@
             等级
             <image
               class="icon"
-              src="https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/icon/i-icon.png"
+              src="https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/i-icon.png"
               mode="aspectFit"
             />
           </view>
@@ -131,6 +131,7 @@ const pageTitle = ref('个人信息');
 
 const avatar = ref('');
 const isChoose = ref(false);
+const isNavBack = ref(false);
 // 选择头像
 const onChooseAvatar = (e) => {
   console.log('onChooseAvatar', e);
@@ -336,7 +337,7 @@ const handleSave = async (lastAvatarImg = '') => {
     tel: telPhone.value,
     birthday: birthDay.value,
     level: level.value,
-    sex: sex.value,
+    sex: sexValue2String.value[sex.value],
     demand: demand.value
   };
   // 调用接口
@@ -344,13 +345,24 @@ const handleSave = async (lastAvatarImg = '') => {
   console.log('updateUserInfo', result);
   // 结果更新
   if (result.code === 200) {
-    loginInfoStore.setLoginInfo(result.data);
+    loginInfoStore.setLoginInfo(result);
+    uni.showToast({
+      title: '保存成功！',
+      icon: 'none'
+    });
+    if (isNavBack.value) {
+      setTimeout(() => {
+        uni.navigateBack();
+      }, 1000);
+    }
   }
 };
 
 onLoad(async (option) => {
   await $onLaunched;
   console.log('edit-profile onload', loginInfoData.value);
+  const { navBack = false } = option;
+  isNavBack.value = navBack;
   if (!loginInfoData.value.tel) {
     pageTitle.value = '创建个人信息';
     pageMode.value = 'new';
@@ -363,7 +375,7 @@ onLoad(async (option) => {
     telPhone.value = loginInfoData.value.tel;
     birthDay.value = loginInfoData.value.birthDay;
     level.value = loginInfoData.value.level;
-    sex.value = loginInfoData.value.sex === '男' ? 1 : loginInfoData.value.sex === '女' ? 0 : '';
+    sex.value = loginInfoData.value.sex === '男' ? 1 : loginInfoData.value.sex === '女' ? 0 : 1;
     demand.value = loginInfoData.value.demand;
   }
   isChoose.value = false;
@@ -441,7 +453,7 @@ onLoad(async (option) => {
         width: 92rpx;
         height: 92rpx;
         border-radius: 50%;
-        background: url('https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/bg/upload-avatar-bg.png')
+        background: url('https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/bg/upload-avatar-bg.png')
           0 0 no-repeat;
         background-size: contain;
       }

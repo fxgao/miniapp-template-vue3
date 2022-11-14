@@ -14,17 +14,18 @@
         <view class="title">退款订单</view>
         <view class="orderBlock">
           <view class="orderInfo">
-            <image src="" class="infoImg" />
+            <image :src="actInfo?.activeHeadFigure" class="infoImg" />
             <view class="infoRight">
-              <view class="infoTitle"></view>
-              <view class="infoSub"></view>
-              <view class="infoSub"></view>
+              <view class="infoTitle">{{ actInfo?.activeName }}</view>
+              <view class="infoSub">{{ stadiumInfo?.stadiumName }}</view>
+              <view class="infoSub">活动时间{{ orderInfo.time }}</view>
             </view>
           </view>
           <view class="priceInfo">
-            <view class="priceExplain"></view>
-            <view class="price">
-              <span></span>
+            <view class="priceInfoItem right">
+              <view class="price"
+                >合计支付：<span class="priceText">¥{{ orderInfo?.orderPrice }}</span>
+              </view>
             </view>
           </view>
         </view>
@@ -46,7 +47,7 @@
     <view class="detailPopupBottom">
       <PopupBottom ref="popup1">
         <template v-slot:outer-main>
-          <view class="actionBtn" @click="pay">提交申请</view>
+          <view class="actionBtn" @click="confirm">提交申请</view>
         </template>
       </PopupBottom>
     </view>
@@ -54,12 +55,8 @@
       <Modal v-model:show="successModalShow">
         <view class="modalBlock">
           <image class="successImg" src="" />
-          <view class="text">订单支付成功</view>
+          <view class="text">退款成功</view>
         </view>
-        <template v-slot:bottom>
-          <view class="saveBtn" @click="share">分享给好友/群聊</view>
-          <view class="copyBtn" @click="goOrderDetail">查看订单详情</view>
-        </template>
       </Modal>
     </view>
   </view>
@@ -75,7 +72,6 @@ import { useAppInstance } from '@/hooks';
 import api from '@/api';
 import PopupBottom from '@/components/popup-bottom';
 import Modal from '@/components/modal';
-import MpHtml from '@/components/mp-html/mp-html.vue';
 
 const systemInfo = useSystemInfoStore();
 const loginInfoStore = useLoginInfoStore();

@@ -5,6 +5,7 @@ import stadium from './modules/stadium';
 import activity from './modules/activity';
 import course from './modules/course';
 import match from './modules/match';
+import order from './modules/order';
 
 export default {
   common,
@@ -13,5 +14,6 @@ export default {
   stadium,
   activity,
   course,
-  match
+  match,
+  order
 };

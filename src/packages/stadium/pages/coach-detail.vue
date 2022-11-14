@@ -21,7 +21,7 @@
         </view>
         <view class="stadium">
           <view class="place">得乐网球(朝阳网球场){{}}</view>
-          <image class="rightIcon" src="https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/icon/right-arrow-icon.png" />
+          <image class="rightIcon" src="https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/right-arrow-icon.png" />
         </view>
         <view class="content">
           {{ coachDetail.remarks }}

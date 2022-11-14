@@ -49,7 +49,7 @@
           {{ item.start }}-{{ item.end }} {{ isOverTime(item.start) ? '可报名' : '已结束' }}
           <image
             class="icon"
-            src="https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/icon/right-arrow-icon.png"
+            src="https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/right-arrow-icon.png"
           />
         </view>
       </view>
@@ -252,7 +252,7 @@ onMounted(() => {
       z-index: 0;
       width: 100%;
       height: 1152rpx;
-      background: url('https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/bg/schedule-bg.png')
+      background: url('https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/bg/schedule-bg.png')
         0 0 no-repeat;
       background-size: contain;
     }

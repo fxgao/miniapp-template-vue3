@@ -62,8 +62,8 @@
                     class="checkbox"
                     :src="
                       itemChild.checked
-                        ? 'https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/icon/checkbox-checked.png'
-                        : 'https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/icon/checkbox-disable.png'
+                        ? 'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/checkbox-checked.png'
+                        : 'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/checkbox-disable.png'
                     "
                   />
                 </view>

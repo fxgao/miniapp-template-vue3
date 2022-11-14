@@ -13,7 +13,7 @@
           :src="
             loginInfoData?.photo
               ? loginInfoData.photo
-              : 'https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/icon/default-avatar.png'
+              : 'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/default-avatar.png'
           "
           mode="aspectFit"
         />
@@ -27,8 +27,8 @@
               class="sex"
               :src="
                 loginInfoData?.sex === '男'
-                  ? 'https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/icon/sex-male.png'
-                  : 'https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/icon/sex-female.png'
+                  ? 'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/sex-male.png'
+                  : 'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/sex-female.png'
               "
             />
             <view class="age" v-if="loginInfoData?.age"> {{ loginInfoData.age }}岁 </view>
@@ -67,7 +67,7 @@
               {{ item.title }}
             </view>
           </view>
-          <image class="rightIcon" src="https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/icon/right-arrow-icon.png" />
+          <image class="rightIcon" src="https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/right-arrow-icon.png" />
         </view>
       </view>
     </view>
@@ -111,44 +111,44 @@ const joinList = ref([
   {
     path: '/mine/join-activity',
     text: '活动',
-    img: 'https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/bg/join-activity-bg.png'
+    img: 'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/bg/join-activity-bg.png'
   },
   {
     path: '/mine/join-match',
     text: '赛事',
-    img: 'https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/bg/join-game-bg.png'
+    img: 'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/bg/join-game-bg.png'
   },
   {
     path: '/mine/join-course',
     text: '课程',
-    img: 'https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/bg/join-course-bg.png'
+    img: 'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/bg/join-course-bg.png'
   }
 ]);
 
 const settingList = ref([
   {
     title: '我的订单',
-    icon: 'https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/icon/setting-order-icon.png',
+    icon: 'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/setting-order-icon.png',
     path: '/mine/order-list'
   },
   {
     title: '等级说明',
-    icon: 'https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/icon/setting-level-icon.png',
+    icon: 'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/setting-level-icon.png',
     path: ''
   },
   {
     title: '关于得乐',
-    icon: 'https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/icon/setting-about-icon.png',
+    icon: 'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/setting-about-icon.png',
     path: ''
   },
   {
     title: '联系我们',
-    icon: 'https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/icon/setting-concat-icon.png',
+    icon: 'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/setting-concat-icon.png',
     path: ''
   },
   {
     title: '建议反馈',
-    icon: 'https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/icon/setting-question-icon.png',
+    icon: 'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/setting-question-icon.png',
     path: '/suggest'
   }
 ]);
@@ -178,6 +178,7 @@ defineExpose({
 
 <style lang="scss" scoped>
 .page {
+  min-height: auto;
   .pageContainer {
     padding: 0 40rpx ;
     .userInfoBlock {
@@ -199,7 +200,7 @@ defineExpose({
           height: 32rpx;
           width: 32rpx;
           font-size: 32rpx;
-          background: url('https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/icon/right-arrow-icon.png');
+          background: url('https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/right-arrow-icon.png');
           background-size: contain;
         }
         margin-left: 32rpx;

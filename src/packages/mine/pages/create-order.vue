@@ -1,15 +1,16 @@
 <template>
-  <view class="container">
+  <view class="page">
     <nav-bar
-      ref="navbar"
-      :backgroundColor="'rgba(255,255,255,1)'"
-      :showBackIcon="'black'"
-      title="订单详情"
+      ref="navBar"
+      title="报名"
+      showBackIcon="black"
+      titleColor="color:#2F2E3B;"
+      backgroundColor="rgba(255,255,255,1)"
       :navCenterStyle="'flex-end'"
-    />
+    ></nav-bar>
     <view class="pageContainer" :style="popup1 ? 'padding-bottom:' + popup1.topSlotHeight : ''">
       <!-- 用户信息 -->
-      <view class="userInfoBlock">
+      <view class="userInfoBlock" @click="goEditProfile">
         <view class="title">报名信息</view>
         <view class="content">
           <image
@@ -55,59 +56,34 @@
         <view class="title">订单信息</view>
         <view class="orderBlock">
           <view class="orderInfo">
-            <image :src="actInfo?.activeHeadFigure" class="infoImg" />
+            <image :src="confirmInfo.img" class="infoImg" />
             <view class="infoRight">
-              <view class="infoTitle">{{ actInfo?.activeName }}</view>
-              <view class="infoSub">{{ stadiumInfo?.stadiumName }}</view>
-              <view class="infoSub">活动时间{{ orderInfo.time }}</view>
+              <view class="infoTitle">{{ confirmInfo.name }}</view>
+              <view class="infoSub">{{ confirmInfo.area }}</view>
+              <view class="infoSub">活动时间{{ confirmInfo.time }}</view>
             </view>
           </view>
           <view class="priceInfo">
-            <view class="priceInfoItem">
-              <!-- <view class="priceExplain">{{ priceExplainText }}</view> -->
-              <view class="priceExplain">实付金额</view>
-              <view class="price">¥{{ orderInfo?.goodsPrice }}</view>
-            </view>
-            <view class="priceInfoItem right">
-              <view class="price"
-                >合计支付：<span class="priceText">¥{{ orderInfo?.orderPrice }}</span>
-              </view>
+            <view class="priceExplain">{{ priceExplainText }}</view>
+            <view class="price">
+              定金<span class="priceText">¥{{ price }}</span>
             </view>
           </view>
-          <view class="detailInfo">
-            <view class="detailItem">
-              <view class="detailTitle">订单编号</view>
-              <view class="detailContent">{{ orderInfo?.orderSn }}</view>
-            </view>
-            <view class="detailItem">
-              <view class="detailTitle">支付状态</view>
-              <view class="detailContent">{{ orderInfo?.orderStatus }}</view>
-            </view>
-            <view class="detailItem">
-              <view class="detailTitle">支付时间</view>
-              <view class="detailContent">{{ orderInfo?.payTime }}</view>
-            </view>
-            <view class="detailItem">
-              <view class="detailTitle">支付方式</view>
-              <view class="detailContent">微信支付</view>
-            </view>
-            <view class="detailItem">
-              <view class="detailTitle">商家全称</view>
-              <view class="detailContent">得乐体育</view>
-            </view>
-            <view class="detailItem">
-              <view class="detailTitle">订单金额</view>
-              <view class="detailContent">{{ orderInfo?.orderPrice }}</view>
-            </view>
-            <view class="detailItem">
-              <view class="detailTitle">手机号</view>
-              <view class="detailContent">{{ orderInfo?.orderNo }}</view>
-            </view>
-            <view class="detailItem">
-              <view class="detailTitle">订单备注</view>
-              <view class="detailContent">{{ orderInfo?.phone }}</view>
-            </view>
-          </view>
+        </view>
+      </view>
+      <!-- 订单备注 -->
+      <view class="orderRemarkBlock">
+        <view class="title">订单备注</view>
+        <view class="content">
+          <textarea
+            class="textArea"
+            :value="demand"
+            @blur="demandChange"
+            @input="demandChange"
+            :maxlength="300"
+            placeholder="选填，请输入需备注内容，如：指定教练性别"
+            placeholder-style="color: #C0C0C0;font-size: 14px;"
+          />
         </view>
       </view>
       <!-- 购买须知 -->
@@ -134,9 +110,9 @@
         <template v-slot:outer-main>
           <view class="popupContainer">
             <view class="info">
-              金额（元）： <span class="priceText">{{ orderInfo.orderPrice }}</span>
+              金额（元）： <span class="priceText">{{ price }}</span>
             </view>
-            <view class="payBtn" @click="rePay">去付款</view>
+            <view class="payBtn" @click="pay">去付款</view>
           </view>
         </template>
       </PopupBottom>
@@ -157,32 +133,53 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed } from 'vue';
+import { ref, computed } from 'vue';
 import { onLoad } from '@dcloudio/uni-app';
 import { storeToRefs } from 'pinia';
-import { useAppInstance, useNav } from '@/hooks';
 import { useSystemInfoStore } from '@/stores/systemInfo';
 import { useLoginInfoStore } from '@/stores/loginInfo';
-import PopupBottom from '@/components/popup-bottom';
-import Modal from '@/components/modal';
+import { useAppInstance, useNav } from '@/hooks';
+import payment from '@/lib/payment';
+import { debounce } from '@/utils';
 import api from '@/api';
 import config from '@/api/config';
-import { debounce } from '@/utils';
-import payment from '@/lib/payment';
+import PopupBottom from '@/components/popup-bottom';
+import Modal from '@/components/modal';
+import MpHtml from '@/components/mp-html/mp-html.vue';
 
+const BASE_URL = config.REQUEST_URL_PREFIX;
 const systemInfo = useSystemInfoStore();
-const { safeBottom, navHeight } = storeToRefs(systemInfo);
 const loginInfoStore = useLoginInfoStore();
 const { loginInfoData } = storeToRefs(loginInfoStore);
 const { $onLaunched } = useAppInstance();
 const { to } = useNav();
-const BASE_URL = config.REQUEST_URL_PREFIX;
 
-const orderInfo = ref(null);
-let actInfo = reactive({});
-let stadiumInfo = reactive({});
 const popup1 = ref(null);
 const successModalShow = ref(false);
+
+/**
+ * 正式课程   course_official
+ * 临时课程  course_experience
+ * 比赛 game
+ * 活动--约球 about_ball
+ * 活动--发球机 serve_machine
+ * 活动--陪练 practice_partner
+ * 活动--有痒多球 have_many_goals
+ **/
+const orderType = ref('');
+const actId = ref(0);
+const price = ref(0);
+const confirmInfo = ref({
+  img: '',
+  name: '得乐新媒体馆2号场有氧多球16-18',
+  area: '北京市朝阳区周家庄村111号',
+  time: '2022.09.24 20:00 - 22:00'
+});
+const demand = ref('');
+
+const priceExplainText = computed(() => {
+  return '此活动需支付尾款';
+});
 
 const submit = () => {
   uni.showLoading();
@@ -190,12 +187,15 @@ const submit = () => {
     retry_times: 5
   };
   const data = {
-    orderId: orderInfo.value.orderSn
+    orderType: orderType.value,
+    actId: actId.value,
+    orderAmount: price.value,
+    remark: demand.value || ''
   };
 
   // 支付参数
   const payRequestParams = {
-    url: BASE_URL + '/wx/order/prepayAgain',
+    url: BASE_URL + '/wx/order/prepay',
     method: 'POST',
     header: {
       'content-type': 'application/json'
@@ -249,7 +249,6 @@ const submit = () => {
       uni.hideLoading();
       // 支付成功弹窗
       successModalShow.value = true;
-      initData(orderInfo.value.orderSn);
     },
     (error) => {
       console.log('error=====', error);
@@ -259,71 +258,40 @@ const submit = () => {
         icon: 'none',
         duration: 2000
       });
+      error.orderId &&
+        uni.redirectTo({
+          url: '/pages/order-detail?orderId=' + error.orderId + '&fromWhere=payFail'
+        });
     }
   );
 };
 
-const rePay = debounce(submit, 2000, true);
+const pay = debounce(submit, 2000, true);
 
-const initData = async (id) => {
-  try {
-    const res = await api.order.getOrderDetail(id);
-    console.log('getOrderDetail', res);
-    orderInfo.value = res || {};
-    actInfo = res && res.actJson ? JSON.parse(res.actJson) : {};
-    stadiumInfo = res && res.stadiumJson ? JSON.parse(res.stadiumJson) : {};
-    console.log(actInfo, stadiumInfo);
-  } catch (error) {
-    console.log('getOrderDetail error', error);
-  }
+const goEditProfile = () => {
+  to('/edit-profile', {
+    navBack: true
+  });
 };
 
 onLoad(async (options) => {
-  const { id } = options;
-  console.log('onload', options);
+  const { activityId, type, price: priceValue, info } = options;
+  console.log(activityId, type, priceValue, info);
   await $onLaunched;
-  initData(id);
+  orderType.value = type;
+  actId.value = activityId;
+  price.value = priceValue;
 });
 </script>
 
 <style lang="scss" scoped>
-.container {
+.page {
   width: 100%;
+  min-height: 100vh;
 }
 .pageContainer {
-  width: 100%;
   background: #f5f5f5;
   overflow: hidden;
-  .userInfoBlock,
-  .orderInfoBlock,
-  .buyNoticeBlock {
-    margin-top: 16rpx;
-    padding: 32rpx 40rpx;
-    background: #fff;
-    .title {
-      font-size: 36rpx;
-      font-family: PingFangSC-Medium, PingFang SC;
-      font-weight: 500;
-      color: #333333;
-      line-height: 52rpx;
-    }
-    .content {
-      margin-top: 32rpx;
-      .row {
-        &:not(:first-child) {
-          margin-top: 16rpx;
-        }
-        font-size: 28rpx;
-        color: #a0a0a0;
-        line-height: 44rpx;
-      }
-      .textArea {
-        font-size: 28rpx;
-        line-height: 44rpx;
-        height: 150rpx;
-      }
-    }
-  }
   .userInfoBlock {
     .content {
       @include flex-start;
@@ -336,6 +304,18 @@ onLoad(async (options) => {
         background: #f5f5f5;
       }
       .userInfo {
+        &::after {
+          content: '';
+          position: absolute;
+          right: -32rpx;
+          top: 50%;
+          transform: translateY(-50%);
+          height: 32rpx;
+          width: 32rpx;
+          font-size: 32rpx;
+          background: url('https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/right-arrow-icon.png');
+          background-size: contain;
+        }
         margin-left: 32rpx;
         position: relative;
         .infoRow {
@@ -374,13 +354,42 @@ onLoad(async (options) => {
       }
     }
   }
-
+  .userInfoBlock,
+  .orderInfoBlock,
+  .orderRemarkBlock,
+  .buyNoticeBlock {
+    margin-top: 16rpx;
+    padding: 32rpx 40rpx;
+    background: #fff;
+    .title {
+      font-size: 36rpx;
+      font-family: PingFangSC-Medium, PingFang SC;
+      font-weight: 500;
+      color: #333333;
+      line-height: 52rpx;
+    }
+    .content {
+      margin-top: 32rpx;
+      .row {
+        &:not(:first-child) {
+          margin-top: 16rpx;
+        }
+        font-size: 28rpx;
+        color: #a0a0a0;
+        line-height: 44rpx;
+      }
+      .textArea {
+        font-size: 28rpx;
+        line-height: 44rpx;
+        height: 150rpx;
+      }
+    }
+  }
   .orderInfoBlock {
     .orderBlock {
       margin-top: 32rpx;
       .orderInfo {
         @include flex-start;
-        align-items: flex-start;
         padding-bottom: 32rpx;
         border-bottom: 1rpx solid #eee;
         .infoImg {
@@ -407,51 +416,24 @@ onLoad(async (options) => {
         }
       }
       .priceInfo {
-        padding: 32rpx 0;
-        border-bottom: 1rpx solid #eee;
-        .priceInfoItem {
-          @include flex-between;
-          &.right {
-            @include flex-end;
-          }
-          .priceExplain {
-            font-size: 24rpx;
-            color: #a0a0a0;
-            line-height: 40rpx;
-          }
-          .price {
-            font-size: 24rpx;
-            color: #a0a0a0;
-            line-height: 40rpx;
-            margin-right: 8rpx;
-            .priceText {
-              font-size: 32rpx;
-              font-weight: 600;
-              color: #ff6829;
-              line-height: 48rpx;
-              margin-left: 8rpx;
-            }
-          }
+        @include flex-between;
+        padding-top: 32rpx;
+        .priceExplain {
+          font-size: 24rpx;
+          color: #a0a0a0;
+          line-height: 40rpx;
         }
-      }
-      .detailInfo {
-        padding-top: 16rpx;
-        .detailItem {
-          @include flex-between;
-          align-items: flex-start;
-          padding: 16rpx 0;
-          .detailTitle {
-            font-size: 28rpx;
-            color: #A0A0A0;
-            line-height: 44rpx;
-            flex:none;
-          }
-          .detailContent {
-            font-size: 28rpx;
-            color: #333333;
-            line-height: 44rpx;
-            max-width: 68%;
-            word-break: break-all;
+        .price {
+          font-size: 24rpx;
+          color: #a0a0a0;
+          line-height: 40rpx;
+          margin-right: 8rpx;
+          .priceText {
+            font-size: 32rpx;
+            font-weight: 600;
+            color: #ff6829;
+            line-height: 48rpx;
+            margin-left: 8rpx;
           }
         }
       }
@@ -464,6 +446,41 @@ onLoad(async (options) => {
     line-height: 40rpx;
     .ruleText {
       color: #ff6829;
+    }
+  }
+  .infoBlock {
+    &:not(:first-child) {
+      margin-top: 16rpx;
+    }
+    &.list {
+      background: linear-gradient(180deg, #ffffff 0, #f5f5f5 80rpx, #f5f5f5 100%);
+    }
+    background: #fff;
+    padding: 32rpx 40rpx;
+    .title {
+      font-size: 36rpx;
+      font-weight: 500;
+      color: #333333;
+      line-height: 52rpx;
+      margin-bottom: 32rpx;
+    }
+    .infoItem {
+      &:not(:first-child) {
+        margin-top: 16rpx;
+      }
+      @include flex-start;
+      align-items: flex-start;
+      .leftText {
+        font-size: 28rpx;
+        color: #a0a0a0;
+        line-height: 44rpx;
+        flex: none;
+      }
+      .right {
+        font-size: 28rpx;
+        color: #333333;
+        line-height: 44rpx;
+      }
     }
   }
 }
@@ -492,6 +509,49 @@ onLoad(async (options) => {
     padding: 20rpx 48rpx;
     background: linear-gradient(135deg, #ffab43 0%, #ff6829 100%);
     border-radius: 44rpx;
+  }
+}
+
+.modalContainer {
+  .modalBlock {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .wechatImg {
+      width: 362rpx;
+      height: 362rpx;
+      margin: 0 68rpx;
+    }
+    .text {
+      font-size: 24rpx;
+      color: #a0a0a0;
+      line-height: 40rpx;
+      text-align: center;
+      margin-top: 32rpx;
+    }
+  }
+  .actionBlock {
+    @include flex-between;
+    width: 100%;
+    .saveBtn {
+      border-radius: 40rpx;
+      border: 2rpx solid #ff6829;
+      backdrop-filter: blur(1rpx);
+      font-size: 32rpx;
+      font-weight: 600;
+      color: #ff6829;
+      line-height: 48rpx;
+      padding: 20rpx 36rpx;
+    }
+    .copyBtn {
+      background: linear-gradient(135deg, #ffab43 0%, #ff6829 100%);
+      border-radius: 44rpx;
+      font-size: 32rpx;
+      font-weight: 600;
+      color: #ffffff;
+      line-height: 48rpx;
+      padding: 20rpx 36rpx;
+    }
   }
 }
 </style>

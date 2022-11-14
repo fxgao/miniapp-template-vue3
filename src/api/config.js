@@ -8,8 +8,8 @@ const ENV_ALIAS = {
 
 // oss地址配置
 const OSS_URL_PREFIX_ENV_CONFIG = {
-  production: 'https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/',
-  development: 'https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/'
+  production: 'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp',
+  development: 'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp'
 };
 
 // 接口地址配置
@@ -58,7 +58,9 @@ const RESPONSE_ERROR_MSG = {
 
 // 业务错误信息
 const BUSINESS_ERROR_MSG = {
-  0: '系统错误'
+  500: '系统错误',
+  800: '未查询到订单',
+  801: '价格变动，请重新下单'
 };
 
 export default {

@@ -97,29 +97,29 @@ const tabList = readonly([
   {
     key: 'home',
     url: '/pages/index?key=home',
-    iconPath: Config.OSS_URL_PREFIX + 'mp/tabbar/tabbar-home.png',
-    selectedIconPath: Config.OSS_URL_PREFIX + 'mp/tabbar/tabbar-home-selected.png',
+    iconPath: Config.OSS_URL_PREFIX + '/tabbar/tabbar-home.png',
+    selectedIconPath: Config.OSS_URL_PREFIX + '/tabbar/tabbar-home-selected.png',
     title: '首页'
   },
   {
     key: 'course',
     url: '/pages/index?key=course',
-    iconPath: Config.OSS_URL_PREFIX + 'mp/tabbar/tabbar-course.png',
-    selectedIconPath: Config.OSS_URL_PREFIX + 'mp/tabbar/tabbar-course-selected.png',
+    iconPath: Config.OSS_URL_PREFIX + '/tabbar/tabbar-course.png',
+    selectedIconPath: Config.OSS_URL_PREFIX + '/tabbar/tabbar-course-selected.png',
     title: '课程'
   },
   {
     key: 'activity',
     url: '/pages/index?key=activity',
-    iconPath: Config.OSS_URL_PREFIX + 'mp/tabbar/tabbar-activity.png',
-    selectedIconPath: Config.OSS_URL_PREFIX + 'mp/tabbar/tabbar-activity-selected.png',
+    iconPath: Config.OSS_URL_PREFIX + '/tabbar/tabbar-activity.png',
+    selectedIconPath: Config.OSS_URL_PREFIX + '/tabbar/tabbar-activity-selected.png',
     title: '活动'
   },
   {
     key: 'mine',
     url: '/pages/index?key=mine',
-    iconPath: Config.OSS_URL_PREFIX + 'mp/tabbar/tabbar-mine.png',
-    selectedIconPath: Config.OSS_URL_PREFIX + 'mp/tabbar/tabbar-mine-selected.png',
+    iconPath: Config.OSS_URL_PREFIX + '/tabbar/tabbar-mine.png',
+    selectedIconPath: Config.OSS_URL_PREFIX + '/tabbar/tabbar-mine-selected.png',
     reddot: true,
     title: '我的'
   }
@@ -268,7 +268,7 @@ onLoad(async (options) => {
   .topConatiner {
     min-height: 720rpx;
     padding-top: 208rpx;
-    background: url('https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/home/home-top-bg.png')
+    background: url('https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/home/home-top-bg.png')
       no-repeat;
     background-size: contain;
     .bannerBlock {
@@ -283,6 +283,7 @@ onLoad(async (options) => {
           width: 100%;
           height: 304rpx;
           background: #ccc;
+          border-radius: 16rpx;
         }
       }
       .indicatorBlock {
@@ -330,7 +331,7 @@ onLoad(async (options) => {
       padding: 0 40rpx;
       .stadiumItem {
         &.hot {
-          background: url('https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/home/stadium-bg-hot.png')
+          background: url('https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/home/stadium-bg-hot.png')
             no-repeat;
           background-size: contain;
         }
@@ -362,7 +363,7 @@ onLoad(async (options) => {
         }
         width: 320rpx;
         height: 196rpx;
-        background: url('https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/home/stadium-bg.png')
+        background: url('https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/home/stadium-bg.png')
           no-repeat;
         background-size: contain;
         padding: 24rpx;

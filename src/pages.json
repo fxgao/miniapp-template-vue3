@@ -7,9 +7,6 @@
       }
     },
     {
-      "path": "pages/order"
-    },
-    {
       "path": "pages/webview"
     }
   ],
@@ -85,10 +82,16 @@
           "path": "pages/join-match"
         },
         {
+          "path": "pages/create-order"
+        },
+        {
           "path": "pages/order-list"
         },
         {
           "path": "pages/order-detail"
+        },
+        {
+          "path": "pages/order-refund"
         }
       ]
     },

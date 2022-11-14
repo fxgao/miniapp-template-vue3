@@ -62,17 +62,22 @@ const getUserLocation = () => {
       console.log('getLocation res', res);
       const latitude = res.latitude;
       const lngitude = res.longitude;
-      const positionInfo = await api.common.locationTransPosition(latitude, lngitude);
-      console.log('positionInfo', positionInfo);
-      locationInfoStore.setLocationInfo({
-        lat: latitude,
-        lng: lngitude,
-        code: positionInfo.code,
-        name: positionInfo.name,
-        areaList: positionInfo.areaList,
-        locationInfo: res
-      });
-      $userLocationResolve && $userLocationResolve();
+      try {
+        const positionInfo = await api.common.locationTransPosition(latitude, lngitude);
+        console.log('positionInfo', positionInfo);
+        locationInfoStore.setLocationInfo({
+          lat: latitude,
+          lng: lngitude,
+          code: positionInfo.code,
+          name: positionInfo.name,
+          areaList: positionInfo.areaList,
+          locationInfo: res
+        });
+      } catch (error) {
+        console.log('getUserLocation >>>>>>', error)
+      } finally {
+        $userLocationResolve && $userLocationResolve();
+      }
     },
     fail: async (err) => {
       console.log('getLocation fail', err);

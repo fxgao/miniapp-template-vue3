@@ -18,7 +18,7 @@
             :src="
               loginInfoData?.photo
                 ? loginInfoData.photo
-                : 'https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/icon/default-avatar.png'
+                : 'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/default-avatar.png'
             "
             mode="aspectFit"
           />
@@ -37,8 +37,8 @@
                 class="sex"
                 :src="
                   loginInfoData?.sex === '男'
-                    ? 'https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/icon/sex-male.png'
-                    : 'https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/icon/sex-female.png'
+                    ? 'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/sex-male.png'
+                    : 'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/sex-female.png'
                 "
               />
               <view class="level"> 0基础1级 </view>
@@ -56,17 +56,17 @@
         <view class="title">订单信息</view>
         <view class="orderBlock">
           <view class="orderInfo">
-            <image src="" class="infoImg" />
+            <image :src="confirmInfo.img" class="infoImg" />
             <view class="infoRight">
-              <view class="infoTitle"></view>
-              <view class="infoSub"></view>
-              <view class="infoSub"></view>
+              <view class="infoTitle">{{ confirmInfo.name }}</view>
+              <view class="infoSub">{{ confirmInfo.area }}</view>
+              <view class="infoSub">活动时间{{ confirmInfo.time }}</view>
             </view>
           </view>
           <view class="priceInfo">
-            <view class="priceExplain"></view>
+            <view class="priceExplain">{{ priceExplainText }}</view>
             <view class="price">
-              <span></span>
+              定金<span class="priceText">¥{{ confirmInfo.price }}</span>
             </view>
           </view>
         </view>
@@ -101,7 +101,8 @@
       <!-- 协议 -->
       <view class="rule">
         请您在支付前仔细阅读
-        <span class="ruleText" @click="goPayRule"> 《用户支付协议》 </span> ， 付款即代表您同意此协议。
+        <span class="ruleText" @click="goPayRule"> 《用户支付协议》 </span> ，
+        付款即代表您同意此协议。
       </view>
     </view>
     <view class="detailPopupBottom">
@@ -137,31 +138,147 @@ import { onLoad } from '@dcloudio/uni-app';
 import { storeToRefs } from 'pinia';
 import { useSystemInfoStore } from '@/stores/systemInfo';
 import { useLoginInfoStore } from '@/stores/loginInfo';
-import { useAppInstance } from '@/hooks';
+import { useAppInstance, useNav } from '@/hooks';
+import payment from '@/lib/payment';
+import { debounce } from '@/utils';
 import api from '@/api';
+import config from '@/api/config';
 import PopupBottom from '@/components/popup-bottom';
 import Modal from '@/components/modal';
 import MpHtml from '@/components/mp-html/mp-html.vue';
 
+const BASE_URL = config.REQUEST_URL_PREFIX;
 const systemInfo = useSystemInfoStore();
 const loginInfoStore = useLoginInfoStore();
 const { loginInfoData } = storeToRefs(loginInfoStore);
 const { $onLaunched } = useAppInstance();
+const { to } = useNav();
 
 const popup1 = ref(null);
 const successModalShow = ref(false);
-const confirmInfo = ref({});
+
+/**
+ * 正式课程   course_official
+ * 临时课程  course_experience
+ * 比赛 game
+ * 活动--约球 about_ball
+ * 活动--发球机 serve_machine
+ * 活动--陪练 practice_partner
+ * 活动--有痒多球 have_many_goals
+ **/
+const orderType = ref('');
+const actId = ref(0);
+const confirmInfo = ref({
+  price: 0,
+  img: '',
+  name: '得乐新媒体馆2号场有氧多球16-18',
+  area: '北京市朝阳区周家庄村111号',
+  time: '2022.09.24 20:00 - 22:00'
+});
+const demand = ref('');
+
+const priceExplainText = computed(() => {
+  return '此活动需支付尾款';
+});
+
+const submit = () => {
+  uni.showLoading();
+  const params = {
+    retry_times: 5
+  };
+  const data = {
+    orderType: 'about_ball',
+    actId: 26,
+    orderAmount: 0.01
+  };
+
+  // 支付参数
+  const payRequestParams = {
+    url: BASE_URL + '/wx/order/prepay',
+    method: 'POST',
+    header: {
+      'content-type': 'application/json'
+    },
+    data
+  };
+  params.payParams = payRequestParams;
+
+  // checkorder参数
+  const checkOrderParams = {
+    url: '/wx/order/paySearch',
+    method: 'POST',
+    data: {}
+  };
+
+  // 获取检查订单结果
+  params.getCheckOrderParams = () => {
+    return checkOrderParams;
+  };
+
+  // 处理获取订单结果
+  params.handlePaymentInfoFunc = (res) => {
+    console.log('handlePaymentInfoFunc=====', res);
+    if (res.payStatus === 1) {
+      checkOrderParams.data.orderId = res.orderNo;
+      payment.checkOrder(
+        (params.getCheckOrderParams = () => {
+          return checkOrderParams;
+        }),
+        (checkRes) => {
+          // 0元支付成功
+        },
+        (err) => {
+          console.log('失败===', err);
+        }
+      );
+      return false;
+    }
+    if (res.payParam) {
+      checkOrderParams.data.orderId = res.tradeOrderNum; // 此id用来查询订单状态
+      return res;
+    }
+    return res;
+  };
+
+  // 最终支付结果
+  payment.startPay(
+    params,
+    (successRes) => {
+      console.log('successRes=====', successRes);
+      uni.hideLoading();
+      // 支付成功弹窗
+      successModalShow.value = true;
+    },
+    (error) => {
+      console.log('error=====', error);
+      uni.hideLoading();
+      uni.showToast({
+        title: error.message || '支付失败',
+        icon: 'none',
+        duration: 2000
+      });
+      error.orderId &&
+        uni.redirectTo({
+          url: '/pages/order-detail?orderId=' + error.orderId + '&fromWhere=payFail'
+        });
+    }
+  );
+};
+
+const pay = debounce(submit, 2000, true);
+
+const goEditProfile = () => {
+  to('/edit-profile', {
+    navBack: true
+  });
+};
 
 onLoad(async (options) => {
-  const { confirmInfo } = options;
+  const { activityId, type } = options;
+  console.log(actId, orderType);
   await $onLaunched;
-  console.log(confirmInfo);
-  confirmInfo.value = confirmInfo
-    ? JSON.parse(confirmInfo)
-    : {
-        price: 100,
-        num: 1
-      };
+  orderType.value = type;
+  actId.value = activityId;
 });
 </script>
 
@@ -194,7 +311,7 @@ onLoad(async (options) => {
           height: 32rpx;
           width: 32rpx;
           font-size: 32rpx;
-          background: url('https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/icon/right-arrow-icon.png');
+          background: url('https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/right-arrow-icon.png');
           background-size: contain;
         }
         margin-left: 32rpx;
@@ -235,7 +352,10 @@ onLoad(async (options) => {
       }
     }
   }
-  .userInfoBlock, .orderInfoBlock, .orderRemarkBlock, .buyNoticeBlock {
+  .userInfoBlock,
+  .orderInfoBlock,
+  .orderRemarkBlock,
+  .buyNoticeBlock {
     margin-top: 16rpx;
     padding: 32rpx 40rpx;
     background: #fff;
@@ -253,7 +373,7 @@ onLoad(async (options) => {
           margin-top: 16rpx;
         }
         font-size: 28rpx;
-        color: #A0A0A0;
+        color: #a0a0a0;
         line-height: 44rpx;
       }
       .textArea {
@@ -263,10 +383,64 @@ onLoad(async (options) => {
       }
     }
   }
+  .orderInfoBlock {
+    .orderBlock {
+      margin-top: 32rpx;
+      .orderInfo {
+        @include flex-start;
+        padding-bottom: 32rpx;
+        border-bottom: 1rpx solid #eee;
+        .infoImg {
+          width: 192rpx;
+          height: 192rpx;
+          border-radius: 16rpx;
+          margin-right: 16rpx;
+          flex: none;
+          background: #f5f5f5;
+        }
+        .infoRight {
+          .infoTitle {
+            font-size: 32rpx;
+            font-weight: 500;
+            color: #333333;
+            line-height: 48rpx;
+          }
+          .infoSub {
+            font-size: 24rpx;
+            color: #a0a0a0;
+            line-height: 40rpx;
+            margin-top: 8rpx;
+          }
+        }
+      }
+      .priceInfo {
+        @include flex-between;
+        padding-top: 32rpx;
+        .priceExplain {
+          font-size: 24rpx;
+          color: #a0a0a0;
+          line-height: 40rpx;
+        }
+        .price {
+          font-size: 24rpx;
+          color: #a0a0a0;
+          line-height: 40rpx;
+          margin-right: 8rpx;
+          .priceText {
+            font-size: 32rpx;
+            font-weight: 600;
+            color: #ff6829;
+            line-height: 48rpx;
+            margin-left: 8rpx;
+          }
+        }
+      }
+    }
+  }
   .rule {
     margin: 32rpx 40rpx;
     font-size: 24rpx;
-    color: #A0A0A0;
+    color: #a0a0a0;
     line-height: 40rpx;
     .ruleText {
       color: #ff6829;
@@ -312,7 +486,7 @@ onLoad(async (options) => {
   .popupContainer {
     @include flex-between;
     padding: 16rpx 40rpx;
-    border-top: 2rpx solid #EEEEEE;
+    border-top: 2rpx solid #eeeeee;
   }
   .info {
     font-size: 28rpx;
@@ -321,17 +495,17 @@ onLoad(async (options) => {
     .priceText {
       font-size: 40rpx;
       font-weight: 600;
-      color: #FF6829;
+      color: #ff6829;
       line-height: 56rpx;
     }
   }
   .payBtn {
     font-size: 32rpx;
     font-weight: 600;
-    color: #FFFFFF;
+    color: #ffffff;
     line-height: 48rpx;
     padding: 20rpx 48rpx;
-    background: linear-gradient(135deg, #FFAB43 0%, #FF6829 100%);
+    background: linear-gradient(135deg, #ffab43 0%, #ff6829 100%);
     border-radius: 44rpx;
   }
 }

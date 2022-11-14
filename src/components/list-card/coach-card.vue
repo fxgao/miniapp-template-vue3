@@ -12,7 +12,7 @@
         </view>
       </view>
     </view>
-    <view class="content">{{ content }}</view>
+    <view class="content">{{ content ? content : '教练简介' }}</view>
   </view>
 </template>
 
@@ -62,18 +62,19 @@ const goCoachDetail = () => {
   &.small {
     width: 318rpx;
     height: 264rpx;
-    background: url('https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/bg/coach-bg-small.png') 0 0 no-repeat;
+    background: url('https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/bg/coach-bg-small.png') 0 0 no-repeat;
     background-size: contain;
     .info .right .name {
       max-width: 96rpx;
     }
     .content {
       @include text-ellipsis-2;
+      height: 80rpx;
     }
   }
   width: 350rpx;
   height: 304rpx;
-  background: url('https://moth-admin-vue.webdyc.com/mothApi/little-moth-server/moth/file/mp/bg/coach-bg.png') 0 0 no-repeat;
+  background: url('https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/bg/coach-bg.png') 0 0 no-repeat;
   background-size: contain;
   padding: 24rpx;
   margin-bottom: 32rpx;
@@ -131,6 +132,7 @@ const goCoachDetail = () => {
     font-size: 24rpx;
     color: #A0A0A0;
     line-height: 40rpx;
+    height: 120rpx;
   }
 }
 </style>

@@ -3,6 +3,8 @@ export const PAY_SCREEN = {
   UNKNOWN: 0, // 未知
 };
 
+// 801 未查询订单  10未支付, 默认10 20支付成功 30支付失败 40待退款 50已退款
+
 class PaymentControl {
   constructor() {}
   async startPay(
@@ -50,11 +52,12 @@ class PaymentControl {
       // 处理checkOrder参数
       let checkOrderParams = await getCheckOrderParams();
       this.checkOrderApi({ ...checkOrderParams }).then(async res => {
-        if (res && res.code === 'OK') {
-          if (res.data === 'success') {
+        console.log('checkorder result', res);
+        if (res && res.code === 200) {
+          if (res.data.resultCode === 20) {
             successFunc({...res, orderNo});
             return;
-          } else if (res.data === 'notPay') {
+          } else if (res.data.resultCode === 10) {
             if (retryTimes <= 0) {
               failFunc(res);
             } else {
