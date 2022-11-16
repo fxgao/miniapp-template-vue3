@@ -84,6 +84,7 @@ import api from '@/api';
 const { $onLaunched } = useAppInstance();
 
 const courseId = ref(null);
+const publishId = ref(null);
 const popup1 = ref(null);
 
 const courseInfo = ref({});
@@ -139,9 +140,11 @@ const getHotStadiumList = () => {
 };
 
 onLoad(async (options) => {
-  courseId.value = options.id;
-  await $onLaunched;
   console.log('course detail onload', options);
+  const { id, pubId } = options;
+  courseId.value = id;
+  publishId.value = pubId;
+  await $onLaunched;
   initDetail();
   getHotStadiumList(); // 热门场馆
 });

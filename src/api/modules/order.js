@@ -12,6 +12,15 @@ const order = {
         }
       }
     });
+  },
+  refundOrder(data) {
+    return request({
+      requestParams: {
+        url: '/wx/order/refundPay',
+        method: 'POST',
+        data
+      }
+    });
   }
 };
 

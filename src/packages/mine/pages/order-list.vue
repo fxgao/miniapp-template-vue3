@@ -46,8 +46,8 @@ const orderList = ref([]);
 
 const goOrderDetail = (data) => {
   console.log('goOrderDetail', data);
-  const { id } = data;
-  to('/mine/order-detail', { id });
+  const { orderSn } = data;
+  to('/mine/order-detail', { id: orderSn });
 };
 </script>
 

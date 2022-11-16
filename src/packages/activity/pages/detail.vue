@@ -102,6 +102,7 @@ import api from '@/api';
 const { $onLaunched } = useAppInstance();
 
 const activityId = ref(null);
+const publishId = ref(null);
 const popup1 = ref(null);
 
 const activityInfo = ref({});
@@ -158,7 +159,9 @@ const getHotStadiumList = () => {
 };
 
 onLoad(async (options) => {
-  activityId.value = options.id;
+  const { id, pubId } = options;
+  activityId.value = id;
+  publishId.value = pubId;
   await $onLaunched;
   console.log('activity detail onload', options);
   initDetail();

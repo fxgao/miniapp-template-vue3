@@ -168,6 +168,7 @@ const successModalShow = ref(false);
  **/
 const orderType = ref('');
 const actId = ref(0);
+const pId = ref(0);
 const price = ref(0);
 const confirmInfo = ref({
   img: '',
@@ -189,6 +190,7 @@ const submit = () => {
   const data = {
     orderType: orderType.value,
     actId: actId.value,
+    publishId: pId.value,
     orderAmount: price.value,
     remark: demand.value || ''
   };
@@ -275,11 +277,12 @@ const goEditProfile = () => {
 };
 
 onLoad(async (options) => {
-  const { activityId, type, price: priceValue, info } = options;
+  const { activityId, publishId, type, price: priceValue, info } = options;
   console.log(activityId, type, priceValue, info);
   await $onLaunched;
   orderType.value = type;
   actId.value = activityId;
+  pId.value = publishId;
   price.value = priceValue;
 });
 </script>

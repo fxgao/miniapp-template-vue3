@@ -81,7 +81,7 @@
             </view>
             <view class="detailItem">
               <view class="detailTitle">支付状态</view>
-              <view class="detailContent">{{ orderInfo?.orderStatus }}</view>
+              <view class="detailContent">{{ payStatusStr }}</view>
             </view>
             <view class="detailItem">
               <view class="detailTitle">支付时间</view>
@@ -97,15 +97,15 @@
             </view>
             <view class="detailItem">
               <view class="detailTitle">订单金额</view>
-              <view class="detailContent">{{ orderInfo?.orderPrice }}</view>
+              <view class="detailContent">¥{{ orderInfo?.orderPrice }}</view>
             </view>
             <view class="detailItem">
               <view class="detailTitle">手机号</view>
-              <view class="detailContent">{{ orderInfo?.orderNo }}</view>
+              <view class="detailContent">{{ orderInfo?.phone ? orderInfo?.phone : '暂无手机号' }}</view>
             </view>
             <view class="detailItem">
               <view class="detailTitle">订单备注</view>
-              <view class="detailContent">{{ orderInfo?.phone }}</view>
+              <view class="detailContent">{{ orderInfo?.remark ? orderInfo?.remark : '暂无备注' }}</view>
             </view>
           </view>
         </view>
@@ -165,6 +165,7 @@ import { useSystemInfoStore } from '@/stores/systemInfo';
 import { useLoginInfoStore } from '@/stores/loginInfo';
 import PopupBottom from '@/components/popup-bottom';
 import Modal from '@/components/modal';
+import Constant from '@/lib/constant';
 import api from '@/api';
 import config from '@/api/config';
 import { debounce } from '@/utils';
@@ -177,12 +178,17 @@ const { loginInfoData } = storeToRefs(loginInfoStore);
 const { $onLaunched } = useAppInstance();
 const { to } = useNav();
 const BASE_URL = config.REQUEST_URL_PREFIX;
+const { PAY_STATUS_2STRING } = Constant;
 
 const orderInfo = ref(null);
 let actInfo = reactive({});
 let stadiumInfo = reactive({});
 const popup1 = ref(null);
 const successModalShow = ref(false);
+
+const payStatusStr = computed(() => {
+  return PAY_STATUS_2STRING[orderInfo.value?.orderStatus];
+});
 
 const submit = () => {
   uni.showLoading();
@@ -450,7 +456,7 @@ onLoad(async (options) => {
             font-size: 28rpx;
             color: #333333;
             line-height: 44rpx;
-            max-width: 68%;
+            max-width: 78%;
             word-break: break-all;
           }
         }

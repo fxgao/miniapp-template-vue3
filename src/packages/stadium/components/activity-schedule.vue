@@ -39,7 +39,13 @@
         v-for="(item, index) in activityList"
         :key="index"
       >
-        <view class="title">{{ item.title }}</view>
+        <view
+          class="title"
+          :style="{
+            color: item.textColor
+          }"
+          >{{ item.title }}</view
+        >
         <view
           class="info"
           :style="{
@@ -59,8 +65,10 @@
 
 <script setup>
 import { ref, onMounted, toRefs, computed } from 'vue';
-import { useGenerateDateInfo } from '@/hooks';
+import { useGenerateDateInfo, useNav } from '@/hooks';
 import api from '@/api';
+
+const { to } = useNav();
 
 const props = defineProps({
   stadiumId: {
@@ -130,8 +138,8 @@ const calcTop = (startTime) => {
   const timeArr = startTime.split(':');
   const Hour = Number(timeArr[0]);
   const Minutes = Number(timeArr[1]);
-
-  return (Hour - 6) * 75 + (Minutes / 60) * 75;
+  console.log('calcTop', Hour, Minutes);
+  return 36 + (Hour - 6) * 115.6 + (Minutes / 60) * 115.6;
 };
 
 const calcHeight = (startTime, endTime) => {
@@ -148,6 +156,7 @@ const calcHeight = (startTime, endTime) => {
   const dateEnd = new Date();
   dateEnd.setHours(HourEnd);
   dateEnd.setMinutes(MinutesEnd);
+  const height = ((dateEnd.getTime() - dateStart.getTime()) / 60 / 60 / 1000) * 118;
 
   console.log(
     'calcHeight',
@@ -159,7 +168,7 @@ const calcHeight = (startTime, endTime) => {
     dateStart.getTime()
   );
 
-  return ((dateEnd.getTime() - dateStart.getTime()) / 60 / 60 / 1000) * 72;
+  return height;
 };
 
 const isOverTime = (startTime) => {
@@ -175,9 +184,21 @@ const isOverTime = (startTime) => {
 };
 
 const goDetail = (item) => {
+  /** 用途 4活动  6课程  8比赛 */
   const { useble, resourceId, pubId } = item;
   console.log('goDetail', useble, resourceId, pubId);
-  /** 用途 4   课程6  比赛 8 */
+  let path = '';
+  if (useble === 4) {
+    path = '/activity/detail';
+  } else if (useble === 6) {
+    path = '/course/detail';
+  } else if (useble === 8) {
+    path = '/match/detail';
+  }
+  to(path, {
+    id: resourceId,
+    pubId
+  });
 };
 
 onMounted(() => {
@@ -244,29 +265,40 @@ onMounted(() => {
   }
   .main {
     width: 100%;
-    height: 684rpx;
+    height: 728rpx;
     .scheduleBg {
       position: relative;
       top: 0;
       left: 0;
       z-index: 0;
       width: 100%;
-      height: 1152rpx;
+      height: 2032rpx;
       background: url('https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/bg/schedule-bg.png')
         0 0 no-repeat;
       background-size: contain;
     }
     .activityBlock {
+      // &.inline {
+      //   @include flex-between;
+      //   .title {
+      //     max-width: 218rpx;
+      //   }
+      //   .info {
+      //     margin-top: 0;
+      //   }
+      // }
       position: absolute;
       left: 132rpx;
       z-index: 10;
-      border-radius: 16rpx;
+      border-radius: 8rpx;
       padding: 16rpx 14rpx;
-      width: 578rpx;
+      width: 584rpx;
       .title {
+        @include text-ellipsis;
         font-size: 28rpx;
         font-weight: 600;
         line-height: 44rpx;
+        flex: none;
       }
       .info {
         @include flex-start;

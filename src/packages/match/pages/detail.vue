@@ -94,6 +94,7 @@ import api from '@/api';
 const { $onLaunched } = useAppInstance();
 
 const matchId = ref(null);
+const publishId = ref(null);
 const popup1 = ref(null);
 
 const matchInfo = ref({});
@@ -150,9 +151,11 @@ const getHotStadiumList = () => {
 };
 
 onLoad(async (options) => {
-  matchId.value = options.id;
-  await $onLaunched;
   console.log('match detail onload', options);
+  const { id, pubId } = options;
+  matchId.value = id;
+  publishId.value = pubId;
+  await $onLaunched;
   initDetail();
   getHotStadiumList(); // 热门场馆
 });

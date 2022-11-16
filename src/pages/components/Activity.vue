@@ -9,59 +9,16 @@
       :navCenterStyle="'flex-end'"
     />
     <view class="pageContainer">
-      <view class="filterBlock">
-        <view class="tabsListBlock">
-          <view
-            :class="{ tabsItem: true, active: listType === item.value }"
-            @click="changeListType(item.value)"
-            v-for="(item, index) in listTypeList"
-            :key="index"
-          >
-            {{ item.label }}
-          </view>
-        </view>
-        <view :class="{ moreChoose: true, active: isMoreFilterShow }" @click="showMoreFilter">全城</view>
-      </view>
-      <view class="filterMainBlock" v-if="isMoreFilterShow">
-        <view class="mask" @click="showMoreFilter"></view>
-        <view class="filterMainContainer">
-          <scroll-view class="filterMain" scroll-y="true">
-            <view class="filterBlockList" v-for="(item, index) in filterData" :key="index">
-              <view class="title">
-                {{ item.title }}
-              </view>
-              <view class="content">
-                <template v-if="item.type === 'block'">
-                  <view
-                    :class="{ filterItemBlock: true, active: item.checked }"
-                    v-for="(itemChild, indexChild) in item.list"
-                    :key="indexChild"
-                  >
-                    {{ itemChild.label }}
-                  </view>
-                </template>
-                <template v-if="item.type === 'checkBox'">
-                  <view
-                    class="filterItemCheckBox"
-                    v-for="(itemChild, indexChild) in item.list"
-                    :key="indexChild"
-                  >
-                    <view class="label">
-                      {{ itemChild.label }}
-                    </view>
-                    <image class="checkbox" :src="itemChild.checked ? '' : ''" />
-                  </view>
-                </template>
-              </view>
-            </view>
-          </scroll-view>
-          <view class="bottom">
-            <view class="actionBtn reset" @click="resetFilter">重置</view>
-            <view class="actionBtn" @click="confirmSelect">确定</view>
-          </view>
-        </view>
-      </view>
-      <view class="list">
+      <multi-filter
+        ref="filter"
+        tabType="page"
+        :tabList="filterTabList"
+        :filterData="filterData"
+        :bgColor="filterBgColor"
+        @change="filterChange"
+        @onShow="filterShow"
+      ></multi-filter>
+      <view class="listBlock">
         <List v-model:dataList="activityList" url="/wx/activity/listPage" listType="column" ref="activityListRef">
           <template v-slot="{data}">
             <activity-card
@@ -82,19 +39,26 @@
 </template>
 
 <script setup>
-import { reactive, ref, toRefs } from 'vue';
+import { reactive, ref, toRefs, watch } from 'vue';
+import { storeToRefs } from 'pinia';
 import { onLoad, onReachBottom } from '@dcloudio/uni-app';
 import { useAppInstance, useNav } from '@/hooks';
+import { useLocationInfoStore } from '@/stores/location';
 import List from '@/components/list';
+import MultiFilter from '@/components/multi-filter';
 import ActivityCard from '@/components/list-card/activity-card';
 
 import api from '@/api';
 
+const locationInfoStore = useLocationInfoStore();
+const { getAreaList } = storeToRefs(locationInfoStore);
 const { $onLaunched } = useAppInstance();
 const { to } = useNav();
 
 const navTitleColor = ref('color: rgba(0,0,0,1);');
 const navBarBackgroundColor = ref('rgba(255,255,255,0)');
+const filterBgColor = ref('rgba(255,255,255,0)');
+const filter = ref(null);
 
 const pageScroll = (e) => {
   const scrollTop = e.scrollTop;
@@ -104,8 +68,10 @@ const pageScroll = (e) => {
     return;
   }
   const transparent = scrollTop / 36 >= 1 ? 1 : scrollTop / 36;
+  const transparent2 = scrollTop / 284 >= 1 ? 1 : scrollTop / 284;
   navTitleColor.value = `color:rgba(0,0,0,${transparent});`;
   navBarBackgroundColor.value = `rgba(255,255,255,${transparent})`;
+  filterBgColor.value = `rgba(255,255,255,${transparent2})`;
   if (transparent >= 1) {
     uni.setNavigationBarColor({
       frontColor: '#000000',
@@ -119,92 +85,87 @@ const pageScroll = (e) => {
   }
 };
 
-const listType = ref(1);
-
-const listTypeList = ref([
+const filterTabList = ref([
   {
     label: '约球',
-    value: 1
+    value: 1,
+    linkKey: 'activity',
+    selected: true,
+    key: 'activeType'
   },
   {
     label: '陪练',
-    value: 2
+    value: 2,
+    linkKey: 'activity',
+    key: 'activeType'
   },
   {
     label: '发球机',
-    value: 3
+    value: 3,
+    linkKey: 'activity',
+    key: 'activeType'
   },
   {
     label: '有氧多球',
-    value: 3
+    value: 4,
+    linkKey: 'activity',
+    key: 'activeType'
   }
 ]);
 
-const changeListType = (value) => {
-  listType.value = value;
+const filterData = reactive({
+  activity: [
+    {
+      title: '',
+      type: 'checkBox',
+      multiple: true,
+      key: 'areaId',
+      list: [
+        {
+          label: '全城',
+          value: '',
+          checked: true,
+          reset: true
+        }
+      ]
+    }
+  ]
+});
+const filterChange = (data) => {
+  console.log('filterChange', data);
 };
 
-const isMoreFilterShow = ref(false);
-
-const showMoreFilter = () => {
-  isMoreFilterShow.value = !isMoreFilterShow.value;
+const filterShow = (flag) => {
+  console.log('filterShow', flag);
+  if (flag) uni.pageScrollTo({ scrollTop: 284, duration: 300 });
 };
 
-const filterData = reactive([
-  {
-    title: '课程类型',
-    type: 'block',
-    list: [
-      {
-        label: '不限',
-        value: '',
-        checked: true
-      },
-      {
-        label: '班课',
-        value: 1,
-        checked: false
-      },
-      {
-        label: '体验课',
-        value: 2,
-        checked: false
-      }
-    ]
+watch(
+  getAreaList,
+  (val) => {
+    const resList = val.map((item) => {
+      return {
+        label: item.name,
+        value: item.code
+      };
+    });
+    resList.unshift({
+      label: '全城',
+      value: '',
+      checked: true,
+      reset: true
+    });
+    filterData.activity = [{
+      title: '',
+      type: 'checkBox',
+      multiple: true,
+      key: 'areaId',
+      list: resList
+    }];
+    filter.value && filter.value.handleReset();
   },
-  {
-    title: '班级类型',
-    type: 'block',
-    list: [
-      {
-        label: '不限',
-        value: '',
-        checked: true
-      },
-      {
-        label: '一对一',
-        value: 1,
-        checked: false
-      },
-      {
-        label: '一对多',
-        value: 2,
-        checked: false
-      }
-    ]
-  },
-  {
-    title: '小区',
-    type: 'checkbox',
-    list: [
-      {
-        label: '得乐网球（新媒体网球馆）',
-        value: '',
-        checked: false
-      }
-    ]
-  }
-]);
+  { immediate: true }
+);
 
 const activityList = ref([]);
 const activityListRef = ref(null);
@@ -231,67 +192,8 @@ defineExpose({
 <style lang="scss" scoped>
 .page {
   .pageContainer {
-    padding: 0 40rpx;
-    .filterBlock {
-      position: sticky;
-      top: 0;
-      padding: 48rpx 0 32rpx 0;
-      @include flex-between;
-    }
-    .tabsListBlock {
-      @include flex-start;
-      .tabsItem {
-        &:not(:last-child){
-          margin-right: 48rpx;
-        }
-        &.active {
-          &::after {
-          content: '';
-          position: absolute;
-          z-index: -1;
-          bottom: 0;
-          left: 50%;
-          transform: translateX(-50%);
-          width: 72rpx;
-          height: 16rpx;
-          background: linear-gradient(270deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 20%, #FF6829 100%);
-          border-radius: 10rpx;
-        }
-          font-size: 36rpx;
-          font-weight: 500;
-          color: #333333;
-          line-height: 52rpx;
-        }
-        font-size: 28rpx;
-        font-weight: 500;
-        color: #A0A0A0;
-        line-height: 44rpx;
-        position: relative;
-      }
-
-    }
-    .moreChoose {
-      &.active {
-        color: #FF6829;
-      }
-      font-size: 28rpx;
-      color: #333333;
-      line-height: 44rpx;
-    }
-    .filterMainBlock {
-      position: fixed;
-      width: 100vw;
-      height: 100vh;
-      top: 0;
-      left: 0;
-      z-index: 9001;
-      .mask {
-        width: 100%;
-        height: 100%;
-        position: absolute;
-        z-index: -1;
-        background: rgba(0,0,0,.4);
-      }
+    .listBlock {
+      padding: 0 40rpx;
     }
     .listBottomText {
       font-size: 28rpx;

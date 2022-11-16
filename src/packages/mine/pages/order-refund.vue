@@ -12,28 +12,37 @@
       <!-- 订单信息 -->
       <view class="orderInfo">
         <view class="title">退款订单</view>
-        <view class="orderBlock">
-          <view class="orderInfo">
-            <image :src="actInfo?.activeHeadFigure" class="infoImg" />
-            <view class="infoRight">
-              <view class="infoTitle">{{ actInfo?.activeName }}</view>
-              <view class="infoSub">{{ stadiumInfo?.stadiumName }}</view>
-              <view class="infoSub">活动时间{{ orderInfo.time }}</view>
-            </view>
+        <view class="orderInfoBlock">
+          <image :src="actInfo?.activeHeadFigure" class="infoImg" />
+          <view class="infoRight">
+            <view class="infoTitle">{{ actInfo?.activeName }}</view>
+            <view class="infoSub">{{ stadiumInfo?.stadiumName }}</view>
+            <view class="infoSub">活动时间{{ orderInfo.time }}</view>
           </view>
-          <view class="priceInfo">
-            <view class="priceInfoItem right">
-              <view class="price"
-                >合计支付：<span class="priceText">¥{{ orderInfo?.orderPrice }}</span>
-              </view>
-            </view>
+        </view>
+        <view class="priceInfo">
+          <view class="price"
+            >合计支付：<span class="priceText">¥{{ orderInfo?.orderPrice }}</span>
           </view>
         </view>
       </view>
       <!-- 订单信息 -->
       <view class="refundOrderInfo">
-        <view class="content">
-
+        <view class="refundOrderItem" @click="showRefundReasonPopup">
+          <view class="refundTitle require">退款原因</view>
+          <view class="refundContent">
+            <view class="reasonText">{{ reasonText }}</view>
+            <image
+              src="https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/right-arrow-icon.png"
+              class="arrow"
+            />
+          </view>
+        </view>
+        <view class="refundOrderItem">
+          <view class="refundTitle require">退款金额</view>
+          <view class="refundContent">
+            <view class="refundPriceText">¥{{ orderInfo?.orderPrice }}</view>
+          </view>
         </view>
       </view>
       <!-- 退款说明 -->
@@ -47,51 +56,130 @@
     <view class="detailPopupBottom">
       <PopupBottom ref="popup1">
         <template v-slot:outer-main>
-          <view class="actionBtn" @click="confirm">提交申请</view>
+          <view class="actionBlock">
+            <view class="actionBtn" @click="confirm">提交申请</view>
+          </view>
         </template>
       </PopupBottom>
-    </view>
-    <view class="modalContainer">
-      <Modal v-model:show="successModalShow">
-        <view class="modalBlock">
-          <image class="successImg" src="" />
-          <view class="text">退款成功</view>
-        </view>
-      </Modal>
+      <PopupBottom ref="popup2">
+        <template v-slot:inner-main>
+          <view class="title">退款原因</view>
+          <view
+            class="refundReasonItem"
+            v-for="(item, index) in refundReasonList"
+            :key="index"
+            @click="selectRefundReason(item)"
+          >
+            <view class="refundReasonItemText">{{ item }}</view>
+            <image
+              class="refundReasonItemIcon"
+              :src="
+                refundReason === item
+                  ? 'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/checkbox-checked.png'
+                  : 'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/checkbox-disable.png'
+              "
+            />
+          </view>
+        </template>
+        <template v-slot:inner-main-bottom>
+          <view class="actionBlock">
+            <view class="actionBtn" @click="chooseReason">确定</view>
+          </view>
+        </template>
+      </PopupBottom>
     </view>
   </view>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, reactive } from 'vue';
 import { onLoad } from '@dcloudio/uni-app';
 import { storeToRefs } from 'pinia';
-import { useSystemInfoStore } from '@/stores/systemInfo';
 import { useLoginInfoStore } from '@/stores/loginInfo';
 import { useAppInstance } from '@/hooks';
 import api from '@/api';
 import PopupBottom from '@/components/popup-bottom';
-import Modal from '@/components/modal';
 
-const systemInfo = useSystemInfoStore();
-const loginInfoStore = useLoginInfoStore();
-const { loginInfoData } = storeToRefs(loginInfoStore);
+// const loginInfoStore = useLoginInfoStore();
+// const { loginInfoData } = storeToRefs(loginInfoStore);
 const { $onLaunched } = useAppInstance();
 
 const popup1 = ref(null);
-const successModalShow = ref(false);
-const confirmInfo = ref({});
+const popup2 = ref(null);
+
+const reason = ref('');
+const refundReason = ref('');
+const refundReasonList = ref(['活动时间冲突', '活动内容不符', '活动场地不符']);
+
+const showRefundReasonPopup = () => {
+  popup2.value.show();
+};
+
+const reasonText = computed(() => {
+  return reason.value ? reason.value : '请选择退款原因';
+});
+const chooseReason = () => {
+  reason.value = refundReason.value;
+  popup2.value.hide();
+};
+const selectRefundReason = (item) => {
+  refundReason.value = item;
+};
+
+// 确定退款
+const confirm = () => {
+  if (!reason.value) {
+    uni.showToast({
+      title: '请选择退款原因',
+      icon: 'none'
+    });
+    return;
+  }
+  api.order
+    .refundOrder({
+      orderId: orderInfo.value.orderSn,
+      reason: reason.value
+    })
+    .then(() => {
+      uni.showToast({
+        title: '退款申请已提交',
+        icon: 'success'
+      });
+      setTimeout(() => {
+        uni.navigateBack();
+      }, 1000);
+    })
+    .catch((error) => {
+      uni.showToast({
+        title: '退款申请失败',
+        icon: 'none'
+      });
+      console.log('refund error', error);
+    });
+};
+
+const orderInfo = ref(null);
+let actInfo = reactive({});
+let stadiumInfo = reactive({});
+
+const initData = async (id) => {
+  try {
+    const res = await api.order.getOrderDetail(id);
+    console.log('getOrderDetail', res);
+    orderInfo.value = res || {};
+    actInfo = res && res.actJson ? JSON.parse(res.actJson) : {};
+    stadiumInfo = res && res.stadiumJson ? JSON.parse(res.stadiumJson) : {};
+    console.log(actInfo, stadiumInfo);
+  } catch (error) {
+    console.log('getOrderDetail error', error);
+  }
+};
 
 onLoad(async (options) => {
-  const { confirmInfo } = options;
+  const { id } = options;
+  console.log('onload', options);
   await $onLaunched;
-  console.log(confirmInfo);
-  confirmInfo.value = confirmInfo
-    ? JSON.parse(confirmInfo)
-    : {
-        price: 100,
-        num: 1
-      };
+  initData(id);
 });
 </script>
 
@@ -99,46 +187,155 @@ onLoad(async (options) => {
 .page {
   width: 100%;
   min-height: 100vh;
+  background: #f5f5f5;
 }
 .pageContainer {
-  background: #f5f5f5;
-  .infoBlock {
-    &:not(:first-child) {
-      margin-top: 16rpx;
-    }
-    &.list {
-      background: linear-gradient(180deg, #ffffff 0, #f5f5f5 80rpx, #f5f5f5 100%);
-    }
-    background: #fff;
+  padding-bottom: 32rpx;
+  .orderInfo,
+  .refundOrderInfo,
+  .refundNotice {
     padding: 32rpx 40rpx;
+    margin-top: 16rpx;
+    background: #fff;
     .title {
       font-size: 36rpx;
       font-weight: 500;
       color: #333333;
       line-height: 52rpx;
-      margin-bottom: 32rpx;
     }
-    .infoItem {
-      &:not(:first-child) {
-        margin-top: 16rpx;
-      }
-      @include flex-start;
-      align-items: flex-start;
-      .leftText {
-        font-size: 28rpx;
-        color: #a0a0a0;
-        line-height: 44rpx;
-        flex: none;
-      }
-      .right {
-        font-size: 28rpx;
+    .content {
+      margin-top: 32rpx;
+      font-size: 28rpx;
+      color: #a0a0a0;
+      line-height: 44rpx;
+    }
+  }
+  .orderInfoBlock {
+    @include flex-start;
+    align-items: flex-start;
+    padding-bottom: 32rpx;
+    border-bottom: 1rpx solid #eee;
+    margin: 32rpx 0;
+    .infoImg {
+      width: 192rpx;
+      height: 192rpx;
+      border-radius: 16rpx;
+      margin-right: 16rpx;
+      flex: none;
+      background: #f5f5f5;
+    }
+    .infoRight {
+      .infoTitle {
+        font-size: 32rpx;
+        font-weight: 500;
         color: #333333;
-        line-height: 44rpx;
+        line-height: 48rpx;
+      }
+      .infoSub {
+        font-size: 24rpx;
+        color: #a0a0a0;
+        line-height: 40rpx;
+        margin-top: 8rpx;
+      }
+    }
+  }
+  .priceInfo {
+    @include flex-end;
+    .priceExplain {
+      font-size: 24rpx;
+      color: #a0a0a0;
+      line-height: 40rpx;
+    }
+    .price {
+      font-size: 24rpx;
+      color: #a0a0a0;
+      line-height: 40rpx;
+      margin-right: 8rpx;
+      .priceText {
+        font-size: 32rpx;
+        font-weight: 600;
+        color: #ff6829;
+        line-height: 48rpx;
+        margin-left: 8rpx;
+      }
+    }
+  }
+  .refundOrderInfo {
+    .refundOrderItem {
+      &:not(:last-child) {
+        padding-bottom: 32rpx;
+        margin-bottom: 32rpx;
+        border-bottom: 1rpx solid #eee;
+      }
+      @include flex-between;
+      .refundTitle {
+        &.required {
+          &:after {
+            content: '*';
+            position: absolute;
+            top: 0;
+            left: -8rpx;
+            font-size: 32rpx;
+            color: #ff5a5a;
+            line-height: 48rpx;
+          }
+        }
+        font-size: 32rpx;
+        color: #a0a0a0;
+        line-height: 48rpx;
+        position: relative;
+      }
+      .refundContent {
+        @include flex-start;
+        align-items: center;
+        .reasonText {
+          font-size: 32rpx;
+          color: #a0a0a0;
+          line-height: 48rpx;
+        }
+        .arrow {
+          width: 32rpx;
+          height: 32rpx;
+          margin-left: 8rpx;
+        }
+        .refundPriceText {
+          font-size: 32rpx;
+          font-weight: 600;
+          color: #ff6829;
+          line-height: 48rpx;
+        }
       }
     }
   }
 }
 .detailPopupBottom {
+  .actionBlock {
+    padding: 16rpx 40rpx;
+    .actionBtn {
+      @include btn-normal;
+    }
+  }
+  .title {
+    padding: 32rpx 40rpx;
+    font-size: 32rpx;
+    color: #333333;
+    font-weight: 500;
+    line-height: 48rpx;
+    text-align: center;
+  }
+  .refundReasonItem {
+    @include flex-between;
+    padding: 16rpx 40rpx;
+    .refundReasonItemText {
+      font-size: 32rpx;
+      color: #333333;
+      line-height: 48rpx;
+    }
+    .refundReasonItemIcon {
+      width: 40rpx;
+      height: 40rpx;
+    }
+  }
 }
 
 .modalContainer {
