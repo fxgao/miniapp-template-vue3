@@ -25,9 +25,25 @@ const PAY_STATUS_2STRING = {
   60: '已取消'
 };
 
+const ACTIVITY_TYPE = {
+  1: '约球',
+  2: '发球机',
+  3: '陪练',
+  4: '有氧多球'
+};
+
+const ACTIVITY_TYPE_2PAYTYPE= {
+  1: 'about_ball',
+  2: 'serve_machine',
+  3: 'practice_partner',
+  4: 'have_many_goals'
+};
+
 export default {
   PROCESS_ENV,
   STORAGE_KEYS,
   PAY_STATUS,
-  PAY_STATUS_2STRING
+  PAY_STATUS_2STRING,
+  ACTIVITY_TYPE,
+  ACTIVITY_TYPE_2PAYTYPE
 };

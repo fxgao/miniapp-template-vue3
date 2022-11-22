@@ -6,6 +6,7 @@ import { useLocationInfoStore } from '@/stores/location';
 import api from '@/api';
 
 const { systemInfo, getSystemInfo } = useSystemInfo();
+const locationInfoStore = useLocationInfoStore();
 const { checkClientVersion } = useCheckVersion();
 const { $loginMP, $isResolve, $reject, $userLocationResolve } = useAppInstance();
 
@@ -54,7 +55,6 @@ const slientLogin = (successFunc = null) => {
 
 // 获取登录信息
 const getUserLocation = () => {
-  const locationInfoStore = useLocationInfoStore();
   uni.getLocation({
     type: 'gcj02', //返回可以用于uni.openLocation的经纬度
     geocode: true,

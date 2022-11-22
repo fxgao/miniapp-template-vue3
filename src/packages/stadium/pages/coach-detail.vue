@@ -3,6 +3,7 @@
     <nav-bar
       ref="navbar"
       :isTransparent="true"
+      :showBackIcon="'black'"
       :titleColor="navTitleColor"
       :backgroundColor="navBarBackgroundColor"
     />

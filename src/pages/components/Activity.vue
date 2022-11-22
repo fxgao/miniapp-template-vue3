@@ -19,12 +19,13 @@
         @onShow="filterShow"
       ></multi-filter>
       <view class="listBlock">
-        <List v-model:dataList="activityList" url="/wx/activity/listPage" listType="column" ref="activityListRef">
+        <List v-model:dataList="activityList" url="/wx/publish/activityList" listType="column" ref="activityListRef">
           <template v-slot="{data}">
-            <activity-card
-              :info="data"
-              @click="goActivityDetail(item)"
-            ></activity-card>
+            <view @click="goActivityDetail(data)">
+              <activity-card
+                :info="data"
+              ></activity-card>
+            </view>
           </template>
           <template v-slot:loading>
             <view class="listBottomText"> 加载中... </view>
@@ -133,6 +134,7 @@ const filterData = reactive({
 });
 const filterChange = (data) => {
   console.log('filterChange', data);
+  activityListRef.value.refresh(data);
 };
 
 const filterShow = (flag) => {
@@ -172,7 +174,10 @@ const activityListRef = ref(null);
 
 const goActivityDetail = (item) => {
   console.log('goActivityDetail', item);
-  to();
+  to('/activity/detail', {
+    actId: item.activityId,
+    pubId: item.id
+  });
 };
 
 onLoad(async (options) => {

@@ -44,7 +44,8 @@
       </view>
       <view class="infoBlock">
         <view class="title">比赛说明</view>
-        <mp-html v-model:content="matchInfo.gameIntroduction"></mp-html>
+        <view class="text">{{matchInfo.gameIntroduction}}</view>
+        <mp-html v-model:content="matchInfo.graphicDetails"></mp-html>
       </view>
       <view class="infoBlock list">
         <view class="title">热门场馆</view>
@@ -124,10 +125,7 @@ const initDetail = async (refresh = false) => {
   try {
     const res = await api.match.getMatchDetail(matchId.value);
     console.log('getActivityDetail res', res);
-    res.gameIntroduction = `<h1 style="text-align: left;">Welcome to the TinyMCE demo!</h1>
-<p style="font-size: 15px; text-align: left;"><img src="https://www.baidu.com/img/bd_logo1.png" alt="My alt text" width="540" height="258" /></p >
-<p style="font-size: 15px; text-align: left;">f<strong>adsfdasfas</strong>df</p >
-<p style="font-size: 15px; text-align: left;">fad<em>sfasd</em>fasd</p >`;
+    res.gameIntroduction = res.gameIntroduction || '暂无比赛说明';
     matchInfo.value = res;
   } catch (error) {
     uni.showToast({ title: error, icon: 'none' });
@@ -173,7 +171,7 @@ onLoad(async (options) => {
       margin-top: 16rpx;
     }
     &.list {
-      background: linear-gradient(180deg, #FFFFFF 0, #F5F5F5 80rpx, #F5F5F5 100%);
+      background: linear-gradient(180deg, #FFFFFF 0, #F5F5F5 120rpx, #F5F5F5 100%);
     }
     background: #fff;
     padding: 32rpx 40rpx;
@@ -186,6 +184,11 @@ onLoad(async (options) => {
       color: #333333;
       line-height: 52rpx;
       margin-bottom: 32rpx;
+    }
+    .text {
+      font-size: 28rpx;
+      color: #333333;
+      line-height: 44rpx;
     }
     .infoItem {
       &:not(:first-child) {

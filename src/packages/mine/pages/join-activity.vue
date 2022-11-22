@@ -12,7 +12,7 @@
       <view class="listContainer">
         <List
           v-model:dataList="joinActivityList"
-          url="/wx/stadium/list"
+          url="/wx/publish/activityList"
           ref="activityListRef"
           :listType="'column'"
         >

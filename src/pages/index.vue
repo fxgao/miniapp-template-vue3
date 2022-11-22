@@ -34,16 +34,16 @@
         v-if="stadiumList.length > 0 && (current === 'home' || current === 'activity')"
       >
         <view
-          :class="{ stadiumItem: true, hot: item.hot }"
-          v-for="item in stadiumList"
-          :key="item.id"
+          :class="{ stadiumItem: true, hot: item.hot && index === 1 }"
+          v-for="(item, index) in stadiumList"
+          :key="index"
           @click="handleStadiumClick(item)"
         >
-          <view class="name">{{ item.stadiumName }}</view>
-          <view class="remark">{{ item.stadiumRemark }}</view>
+          <view class="name">{{ index === 0 ? "附近场馆" : "热门场馆" }}</view>
+          <view class="remark">{{ item.stadiumName }}</view>
           <view class="labelBlock">
             <view class="labelItem">室内</view>
-            <view class="labelItem">承认</view>
+            <view class="labelItem">成人</view>
             <view class="labelItem">标签</view>
           </view>
         </view>
@@ -221,6 +221,8 @@ const handleKingkongClick = (item) => {
 
 const handleStadiumClick = (item) => {
   console.log('handleStadiumClick', item);
+  const { id } = item;
+  to('/stadium/detail', { id });
 };
 
 onPageScroll((e) => {

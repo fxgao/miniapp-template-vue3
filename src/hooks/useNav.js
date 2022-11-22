@@ -17,6 +17,7 @@ const REDIRECT_URL = {
   '/mine/join-activity': '/packages/mine/pages/join-activity',
   '/mine/join-match': '/packages/mine/pages/join-match',
   '/mine/join-course': '/packages/mine/pages/join-course',
+  '/mine/create-order': '/packages/mine/pages/create-order',
   '/mine/order-list': '/packages/mine/pages/order-list',
   '/mine/order-detail': '/packages/mine/pages/order-detail'
 };

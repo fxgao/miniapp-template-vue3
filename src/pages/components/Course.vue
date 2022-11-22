@@ -20,12 +20,13 @@
       <view class="list">
         <List v-model:dataList="courseList" url="/wx/publish/courseList" ref="courseListRef">
           <template v-slot="{ data }">
-            <course-card
-              :info="data"
-              :size="'small'"
-              :style="'display: inline-block;'"
-              @click="goCourseDetail(data)"
-            ></course-card>
+            <view @click="goCourseDetail(data)">
+              <course-card
+                :info="data"
+                :size="'small'"
+                :style="'display: inline-block;'"
+              ></course-card>
+            </view>
           </template>
           <template v-slot:loading>
             <view class="listBottomText"> 加载中... </view>
@@ -181,7 +182,9 @@ const courseListRef = ref(null);
 
 const goCourseDetail = (item) => {
   console.log('goCourseDetail', item);
-  to();
+  to('/course/detail', {
+    id: item.id
+  });
 };
 
 onLoad(async (options) => {

@@ -4,14 +4,14 @@
       :title="info.activeName"
       :subTitle="subTitle"
       :img="coverImg"
-      :labelList="info.labelList"
+      :labelList="labelList"
     >
       <view class="activityInfo">
         <view class="joinInfo">
-          <view class="avatarBlock" v-if="info.avatarList?.length">
-            <image class="avatarItem" :style="{'zIndex': index + 1, 'transform': `translateX(-${index * 16}rpx)`}" :src="item.imageUrl" mode="aspectFix" v-for="(item,index) in info.avatarList" :key="index" />
+          <view class="avatarBlock" v-if="joinList?.length">
+            <image class="avatarItem" :style="{'zIndex': index + 1, 'transform': `translateX(-${index * 16}rpx)`}" :src="item.img" mode="aspectFix" v-for="(item,index) in joinList" :key="index" />
           </view>
-          <view class="signUpText">{{info.completePersonCount}}人报名/{{info.completePersonCount}}满</view>
+          <view class="signUpText">{{info?.participantVo?.participanCount}}人报名/{{info?.participantVo?.participanCount}}人满</view>
         </view>
         <view class="price">
           ¥{{info.activityPrice}}{{priceTypeText}}
@@ -34,7 +34,7 @@ const props = defineProps({
 const { info } = toRefs(props);
 
 const subTitle = computed(() => {
-  return '截止报名 ' + info.value.activeEndTime;
+  return info.value?.activeEndTime ? '截止报名 ' + info.value?.activeEndTime : info.value?.activeRemark;
 });
 
 const coverImg = computed(() => {
@@ -42,7 +42,28 @@ const coverImg = computed(() => {
 });
 
 const priceTypeText = computed(() => {
-  return info.activityPriceType === 1 ? 'AA' : '/人均';
+  return info.value?.activityPriceTypeValue || '';
+});
+
+const labelList = computed(() => {
+  const resList = [];
+  if (info.value.activeTypeValue) {
+    resList.push({
+      labelValue: info.value.activeTypeValue,
+      type: 'type'
+    });
+  }
+  if (info.value.applicablePeopleValue) {
+    resList.push({
+      labelValue: info.value.applicablePeopleValue
+    });
+  }
+  return resList;
+});
+
+const joinList = computed(() => {
+  const resList = info.value?.participantVo?.participantUserVo || [];
+  return resList.slice(0, 3);
 });
 
 </script>

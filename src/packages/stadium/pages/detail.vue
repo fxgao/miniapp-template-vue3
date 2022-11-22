@@ -62,17 +62,16 @@
       <view class="coachInfoContainer" v-if="coachList.length > 0">
         <view class="title">教练团队</view>
         <view class="coachList">
-          <coach-card
-            v-for="item in coachList"
-            :key="item.id"
-            :id="item.id"
-            :name="item.nickName"
-            :img="item.photo"
-            :level="item.level"
-            :content="item.remarks"
-            :size="'small'"
-            @click="goCoachDetail(item)"
-          ></coach-card>
+          <view class="componentItem" @click="goCoachDetail(item)" v-for="item in coachList" :key="item.id">
+            <coach-card
+              :id="item.id"
+              :name="item.nickName"
+              :img="item.photo"
+              :level="item.level"
+              :content="item.remarks"
+              :size="'small'"
+            ></coach-card>
+          </view>
         </view>
       </view>
     </view>
@@ -125,7 +124,9 @@ const initCoachInfo = async (id) => {
 // 跳转教练详情
 const goCoachDetail = (item) => {
   console.log('goCoachDetail', item);
-  to();
+  to('/coach/detail', {
+    id: item.id
+  });
 };
 
 // 打开地图
@@ -341,6 +342,10 @@ onLoad(async (options) => {
       @include flex-between;
       flex-wrap: wrap;
       padding-bottom: 32rpx;
+      .componentItem {
+        width: auto;
+        display: inline-block;
+      }
     }
   }
 }

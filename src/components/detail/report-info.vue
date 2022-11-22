@@ -2,7 +2,7 @@
   <view class="reportInfoContianer">
     <view class="header">
       <view class="leftText">已报名{{ infoList.length }}/{{ total }}</view>
-      <view class="moreText" :class="{ active: showAll }" @click="toggleShow">
+      <view class="moreText" :class="{ active: showAll }" @click="toggleShow" v-if="infoList.length > 4">
         {{ showAll ? '收起' : '展开' }}
         <image
           class="icon"
@@ -12,19 +12,19 @@
     </view>
     <view class="content">
       <view class="item" v-for="(item, index) in list" :key="index">
-        <image class="avatar" :src="item.photo" mode="aspectFit" />
-        <view class="nickName">{{ item.nickName }}</view>
+        <image class="avatar" :src="item.img" mode="aspectFit" />
+        <view class="nickName">{{ item.name }}</view>
         <image
           class="sex"
           :src="
-            item?.sex === '男'
+            item?.sex == 1
               ? 'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/sex-male.png'
               : 'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/sex-female.png'
           "
           mode="aspectFit"
         />
         <view class="level">
-          {{ item.level }}
+          {{ item.level }}级
         </view>
       </view>
     </view>
@@ -53,8 +53,8 @@ const toggleShow = () => {
 };
 
 const list = computed(() => {
-  if (showAll.value && infoList.value?.length > 5) {
-    return infoList.value.slice(0, 5);
+  if (!showAll.value) {
+    return infoList.value.slice(0, 4);
   } else {
     return infoList.value;
   }
@@ -94,6 +94,7 @@ const list = computed(() => {
   .content {
     .item {
       @include flex-start;
+      margin-top: 32rpx;
       .avatar {
         width: 48rpx;
         height: 48rpx;

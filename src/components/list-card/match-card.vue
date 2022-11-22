@@ -1,16 +1,16 @@
 <template>
   <view class="matchCardContainer">
     <BaseList
-      :title="info.gameName"
+      :title="info.gameName || info.publishName"
       :subTitle="subTitle"
       :img="coverImg"
-      :labelList="info.labelList"
+      :labelList="labelList"
     >
       <view class="matchInfo">
-        <view class="place">{{info.stadiumName}}</view>
+        <view class="place">{{info.stadiumName || '得乐体育'}}</view>
         <view class="btns">
           <view class="btn" v-if="info.gameStatus === 1">报名</view>
-          <view class="btn grey" v-else>报名</view>
+          <view class="btn grey" v-else>结束</view>
         </view>
       </view>
     </BaseList>
@@ -30,15 +30,38 @@ const props = defineProps({
 const { info } = toRefs(props);
 
 const subTitle = computed(() => {
-  return info.value.startTime;
+  return info.value.activityDate;
 });
 
 const coverImg = computed(() => {
   return info.value?.gameImageUrl || '';
 });
 
-const priceTypeText = computed(() => {
-  return info.activityPriceType === 1 ? 'AA' : '/人均';
+const labelList = computed(() => {
+  const resList = [];
+  if (info.value.gameTypeValue) {
+    resList.push({
+      labelValue: info.value.gameTypeValue,
+      type: 'red'
+    });
+  }
+  if (info.value.activeTypeValue) {
+    resList.push({
+      labelValue: info.value.activeTypeValue,
+      type: 'type'
+    });
+  }
+  if (info.value.applicablePeopleValue) {
+    resList.push({
+      labelValue: info.value.applicablePeopleValue
+    });
+  }
+  if (info.value.applicableAgeValue) {
+    resList.push({
+      labelValue: info.value.applicableAgeValue
+    });
+  }
+  return resList;
 });
 
 </script>

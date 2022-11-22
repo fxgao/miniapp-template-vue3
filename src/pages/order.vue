@@ -451,7 +451,7 @@ onLoad(async (options) => {
       margin-top: 16rpx;
     }
     &.list {
-      background: linear-gradient(180deg, #ffffff 0, #f5f5f5 80rpx, #f5f5f5 100%);
+      background: linear-gradient(180deg, #ffffff 0, #f5f5f5 120rpx, #f5f5f5 100%);
     }
     background: #fff;
     padding: 32rpx 40rpx;

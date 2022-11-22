@@ -8,7 +8,7 @@
     <view class="tabsContainer" :style="{ height: tabsHeight + 'rpx', background: bgColor}">
       <view
         class="tabsListBlock"
-        :class="{ list: tabType === 'list', page: tabType === 'page' }"
+        :class="{ tabsListList: tabType === 'list', tabsListPage: tabType === 'page' }"
         v-if="tabList.length > 0"
       >
         <view
@@ -250,6 +250,7 @@ const changeTab = (item) => {
       selected: itemChild.value === item.value
     };
   });
+  handleConfirm();
 };
 
 // 选择数据
@@ -432,7 +433,7 @@ $selectColor: v-bind('activeColor');
     padding: 0 40rpx;
     @include flex-between;
     .tabsListBlock {
-      &.list {
+      &.tabsListList {
         @include flex-between;
         width: 100%;
         .tabsItem {
@@ -448,7 +449,7 @@ $selectColor: v-bind('activeColor');
           position: relative;
         }
       }
-      &.page {
+      &.tabsListPage {
         @include flex-start;
         .tabsItem {
           &:not(:last-child) {

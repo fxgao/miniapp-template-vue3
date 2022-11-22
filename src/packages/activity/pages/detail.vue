@@ -12,7 +12,7 @@
       <view class="infoBlock">
         <detail-header :title="activityInfo.activeName" :labelList="labelList"></detail-header>
         <view class="reportInfoBlock">
-          <report-info :total="activityInfo.completePersonCount"></report-info>
+          <report-info :total="activityInfo.participantVo.participanCountMax" :infoList="activityInfo.participantVo.participantUserVo" ></report-info>
         </view>
       </view>
       <view class="infoBlock">
@@ -39,7 +39,7 @@
         </view>
         <view class="infoItem">
           <view class="leftText">活动费用：</view>
-          <view class="right">{{ activityInfo.activityPrice || '暂无' }}</view>
+          <view class="right">{{ activityInfo.activityPrice ? '¥' + activityInfo.activityPrice : '暂无' }}</view>
         </view>
         <view class="infoItem">
           <view class="leftText">有无停车场：</view>
@@ -66,7 +66,7 @@
         <template v-slot:outer-main>
           <view class="actionBlock">
             <view class="actionBtn plain" @click="showWechatModal">立即咨询</view>
-            <view class="actionBtn">¥{{ activityInfo.activityPrice }} 报名</view>
+            <view class="actionBtn" @click="goOrderConfirm">¥{{ activityInfo.activityPrice }} 报名</view>
           </view>
         </template>
       </PopupBottom>
@@ -97,9 +97,11 @@ import MpHtml from '@/components/mp-html/mp-html.vue';
 import PopupBottom from '@/components/popup-bottom';
 import Modal from '@/components/modal';
 import StadiumCard from '@/components/list-card/stadium-card';
-import { useAppInstance } from '@/hooks';
+import { useAppInstance, useNav } from '@/hooks';
 import api from '@/api';
+import Constant from '@/lib/constant';
 const { $onLaunched } = useAppInstance();
+const { to } = useNav();
 
 const activityId = ref(null);
 const publishId = ref(null);
@@ -130,12 +132,8 @@ const labelList = computed(() => {
 const initDetail = async (refresh = false) => {
   uni.showLoading();
   try {
-    const res = await api.activity.getActivityDetail(activityId.value);
+    const res = await api.activity.getActivityDetail(publishId.value);
     console.log('getActivityDetail res', res);
-    res.activeRule = `<h1 style="text-align: left;">Welcome to the TinyMCE demo!</h1>
-<p style="font-size: 15px; text-align: left;"><img src="https://www.baidu.com/img/bd_logo1.png" alt="My alt text" width="540" height="258" /></p >
-<p style="font-size: 15px; text-align: left;">f<strong>adsfdasfas</strong>df</p >
-<p style="font-size: 15px; text-align: left;">fad<em>sfasd</em>fasd</p >`;
     activityInfo.value = res;
   } catch (error) {
     uni.showToast({ title: error, icon: 'none' });
@@ -151,6 +149,36 @@ const showWechatModal = () => {
   wechatModalShow.value = true;
 };
 
+const goOrderConfirm = () => {
+  to('/mine/create-order', {
+    type: Constant.ACTIVITY_TYPE_2PAYTYPE[activityInfo.value.activeType],
+    price: activityInfo.value.activityPrice,
+    activityId: activityId.value,
+    publishId: publishId.value
+  });
+};
+
+const saveQrCode = () => {
+  uni.saveImageToPhotosAlbum({
+    filePath: activityInfo.value.wechatCardUrl,
+    success: () => {
+      uni.showToast({ title: '保存成功', icon: 'none' });
+    },
+    fail: () => {
+      uni.showToast({ title: '保存失败', icon: 'none' });
+    }
+  });
+};
+
+const copyWechatNumber = () => {
+  uni.setClipboardData({
+    data: activityInfo.value.wechatCode,
+    success: () => {
+      uni.showToast({ title: '复制成功', icon: 'none' });
+    }
+  });
+};
+
 const stadiumList = ref([]);
 const getHotStadiumList = () => {
   api.homePage.getHotStadiumList().then((res) => {
@@ -159,8 +187,8 @@ const getHotStadiumList = () => {
 };
 
 onLoad(async (options) => {
-  const { id, pubId } = options;
-  activityId.value = id;
+  const { actId, pubId } = options;
+  activityId.value = actId;
   publishId.value = pubId;
   await $onLaunched;
   console.log('activity detail onload', options);
@@ -181,7 +209,7 @@ onLoad(async (options) => {
       margin-top: 16rpx;
     }
     &.list {
-      background: linear-gradient(180deg, #FFFFFF 0, #F5F5F5 80rpx, #F5F5F5 100%);
+      background: linear-gradient(180deg, #FFFFFF 0, #F5F5F5 120rpx, #F5F5F5 100%);
     }
     background: #fff;
     padding: 32rpx 40rpx;

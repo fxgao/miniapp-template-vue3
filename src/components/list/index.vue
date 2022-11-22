@@ -17,7 +17,7 @@
 </template>
 
 <script setup>
-import { toRefs, watch, onMounted, ref, computed } from 'vue';
+import { toRefs, watch, onMounted, ref, computed, nextTick } from 'vue';
 import request from '@/api/request';
 
 const props = defineProps({
@@ -92,22 +92,25 @@ const list = computed(() => {
 });
 
 watch(list, (newVal) => {
-  const lastSize = newVal[newVal.length - 1].data.length;
+  const lastSize = newVal.length ? newVal[newVal.length - 1].data.length : 0;
   if (lastSize.length < size.value) {
     noMore.value = true;
   }
 });
 
 // 重新加载列表
-const refresh = () => {
+const refresh = (paramsValue) => {
+  console.log('refresh', paramsValue);
   emits('update:dataList', []);
   pageNum.value = 0;
   noMore.value = false;
-  requestList();
+  nextTick(() => {
+    requestList(paramsValue);
+  });
 };
 
 // 加载列表
-const requestList = () => {
+const requestList = (params = {}) => {
   if (noMore.value) return;
   loading.value = true;
   const requestParams = {
@@ -116,7 +119,7 @@ const requestList = () => {
     data: {
       [sizeName.value]: size.value,
       [pageName.value]: ++pageNum.value,
-      ...params.value
+      ...params
     }
   };
 

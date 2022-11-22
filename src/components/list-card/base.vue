@@ -7,10 +7,9 @@
       </view>
       <view class="labelBlock">
         <view
-          :class="{ type: item.type }"
-          class="labelItem"
-          v-for="item in labelList"
-          :key="item.id"
+          :class="'labelItem' + ' ' + item.type"
+          v-for="(item, index) in labelList"
+          :key="index"
           >{{ item.labelValue }}</view
         >
       </view>
@@ -78,6 +77,16 @@ const { img, title, subTitle, labelList } = toRefs(props);
       @include flex-start;
       margin-top: 8rpx;
       .labelItem {
+        &.type {
+          background: #EEF7E6;
+          color: #5DB612;
+          border: 1rpx solid transparent;
+        }
+        &.red {
+          background: #FFEEEE;
+          color: #FF5A5A;
+          border: 1rpx solid transparent;
+        }
         &:not(:last-child) {
           margin-right: 8rpx;
         }

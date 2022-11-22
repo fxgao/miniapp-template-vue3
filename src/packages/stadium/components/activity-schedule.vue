@@ -20,12 +20,13 @@
           :class="{ active: index === nowPlaceIndex }"
           v-for="(item, index) in placeList"
           :key="index"
+          @click="choosePlace(index)"
         >
           {{ item.name }}
         </view>
       </view>
     </scroll-view>
-    <scroll-view class="main" :scroll-y="true">
+    <scroll-view class="main" :scroll-y="true" :scroll-top="scrollTop">
       <view class="scheduleBg"></view>
       <view
         class="activityBlock"
@@ -64,7 +65,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, toRefs, computed } from 'vue';
+import { ref, onMounted, toRefs, computed, watch } from 'vue';
 import { useGenerateDateInfo, useNav } from '@/hooks';
 import api from '@/api';
 
@@ -82,6 +83,7 @@ const dateInfo = useGenerateDateInfo(7);
 const activityInfoList = ref([]);
 const nowIndex = ref(0);
 const nowPlaceIndex = ref(0);
+const scrollTop = ref(0);
 const loading = ref(false);
 const getActivityInfo = async (activityTime) => {
   loading.value = true;
@@ -114,12 +116,22 @@ const placeList = computed(() => {
   return res;
 });
 
+const choosePlace = (index) => {
+  nowPlaceIndex.value = index;
+};
+
 const activityList = computed(() => {
   if (!placeList.value[nowPlaceIndex.value]) return [];
   const nowResourceId = placeList.value[nowPlaceIndex.value].resourceId;
-  return activityInfoList.value.filter((item) => {
-    return item.resourceId === nowResourceId;
-  });
+  const resList = activityInfoList.value.filter((item) => item.resourceId === nowResourceId);
+  return resList;
+});
+
+watch(activityList, (newVal) => {
+  if (newVal.length <= 0) return;
+  const nowActivity = newVal[0];
+  const nowActivityTop = calcTop(nowActivity.start);
+  scrollTop.value = nowActivityTop - 116 + 'rpx';
 });
 
 const changeDate = (index) => {
@@ -138,8 +150,9 @@ const calcTop = (startTime) => {
   const timeArr = startTime.split(':');
   const Hour = Number(timeArr[0]);
   const Minutes = Number(timeArr[1]);
+  const height = 36 + (Hour - 6 + (Minutes / 60)) * 115.6;
   console.log('calcTop', Hour, Minutes);
-  return 36 + (Hour - 6) * 115.6 + (Minutes / 60) * 115.6;
+  return height;
 };
 
 const calcHeight = (startTime, endTime) => {
@@ -278,15 +291,6 @@ onMounted(() => {
       background-size: contain;
     }
     .activityBlock {
-      // &.inline {
-      //   @include flex-between;
-      //   .title {
-      //     max-width: 218rpx;
-      //   }
-      //   .info {
-      //     margin-top: 0;
-      //   }
-      // }
       position: absolute;
       left: 132rpx;
       z-index: 10;

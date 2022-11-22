@@ -192,16 +192,16 @@ const getStartCoach = () => {
 const handleGoMore = (type) => {
   switch (type) {
     case 'activity':
-      to();
+      to('/index:activity');
       break;
     case 'course':
-      to();
+      to('/index:course');
       break;
     case 'match':
-      to();
+      to('/match/index');
       break;
     case 'coach':
-      to();
+      to('/coach/list');
       break;
   }
 };
@@ -210,7 +210,8 @@ const handleGoMore = (type) => {
 const goActivityDetail = (item) => {
   console.log('goActivityDetail', item);
   to('/activity/detail', {
-    id: item.id
+    actId: item.activityId,
+    pubId: item.id
   });
 };
 

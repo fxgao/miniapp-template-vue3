@@ -35,7 +35,7 @@
       </view>
       <view class="infoBlock">
         <view class="title">课程安排</view>
-        <mp-html v-model:content="courseInfo.courseDesc"></mp-html>
+        <mp-html v-model:content="courseInfo.supplementaryInformation"></mp-html>
       </view>
       <view class="infoBlock list">
         <view class="title">热门场馆</view>
@@ -113,10 +113,6 @@ const initDetail = async (refresh = false) => {
   try {
     const res = await api.course.getCourseDetail(courseId.value);
     console.log('getCourseDetail res', res);
-    res.courseDesc = `<h1 style="text-align: left;">Welcome to the TinyMCE demo!</h1>
-<p style="font-size: 15px; text-align: left;"><img src="https://www.baidu.com/img/bd_logo1.png" alt="My alt text" width="540" height="258" /></p >
-<p style="font-size: 15px; text-align: left;">f<strong>adsfdasfas</strong>df</p >
-<p style="font-size: 15px; text-align: left;">fad<em>sfasd</em>fasd</p >`;
     courseInfo.value = res;
   } catch (error) {
     uni.showToast({ title: error, icon: 'none' });
@@ -162,7 +158,7 @@ onLoad(async (options) => {
       margin-top: 16rpx;
     }
     &.list {
-      background: linear-gradient(180deg, #FFFFFF 0, #F5F5F5 80rpx, #F5F5F5 100%);
+      background: linear-gradient(180deg, #FFFFFF 0, #F5F5F5 120rpx, #F5F5F5 100%);
     }
     background: #fff;
     padding: 32rpx 40rpx;
