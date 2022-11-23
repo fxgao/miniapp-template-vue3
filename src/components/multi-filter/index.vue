@@ -241,6 +241,8 @@ const changeTab = (item) => {
   if (item.showMore) {
     show.value = true;
     emits('onShow', true);
+  } else {
+    handleConfirm();
   }
   if (item.selected) return;
   console.log('changeTab', item);
@@ -250,7 +252,6 @@ const changeTab = (item) => {
       selected: itemChild.value === item.value
     };
   });
-  handleConfirm();
 };
 
 // 选择数据
@@ -428,7 +429,7 @@ $selectColor: v-bind('activeColor');
   }
   width: 100vw;
   position: relative;
-  z-index: 1;
+  z-index: 1001;
   .tabsContainer {
     padding: 0 40rpx;
     @include flex-between;

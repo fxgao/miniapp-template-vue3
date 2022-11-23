@@ -17,7 +17,7 @@
         <image
           class="sex"
           :src="
-            item?.sex == 1
+            item?.sex == '男'
               ? 'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/sex-male.png'
               : 'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/sex-female.png'
           "

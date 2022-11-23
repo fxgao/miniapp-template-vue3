@@ -136,8 +136,8 @@ const hotActivityList = ref([]);
 const getHotActivity = () => {
   api.activity
     .getActivityList({
-      pageNum: 4,
-      pageSize: 1,
+      pageNum: 1,
+      pageSize: 4,
       hot: 1
     })
     .then((res) => {
@@ -152,8 +152,8 @@ const hotCourseList = ref([]);
 const getHotCourse = () => {
   api.course
     .getCourseList({
-      pageNum: 4,
-      pageSize: 1,
+      pageNum: 1,
+      pageSize: 4,
       hot: 1
     })
     .then((res) => {
@@ -168,8 +168,8 @@ const classicMatchList = ref([]);
 const getClassicMatch = () => {
   api.match
     .getMatchList({
-      pageNum: 4,
-      pageSize: 1,
+      pageNum: 1,
+      pageSize: 4,
       hot: 1
     })
     .then((res) => {

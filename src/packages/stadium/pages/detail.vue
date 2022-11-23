@@ -153,6 +153,12 @@ const copyPhone = () => {
   });
 };
 
+const handleGoMore = () => {
+  to('/stadium/index', {
+    stadiumId: stadiumId.value
+  });
+};
+
 onLoad(async (options) => {
   console.log('stadium detail onload', options);
   if (options.id) {

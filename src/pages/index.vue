@@ -5,7 +5,7 @@
       <view class="bannerBlock" v-if="current !== 'mine'">
         <swiper class="bannerSwiper" circular="true" @change="bannerChange">
           <swiper-item v-for="item in banner" :key="item.id">
-            <image class="bannerImg" :src="item.bannerUrl" @tap="handleBannerJump(item)"/>
+            <image class="bannerImg" :src="item.bannerUrl" @click="handleBannerJump(item)"/>
           </swiper-item>
         </swiper>
         <view class="indicatorBlock">
@@ -34,13 +34,13 @@
         v-if="stadiumList.length > 0 && (current === 'home' || current === 'activity')"
       >
         <view
-          :class="{ stadiumItem: true, hot: item.hot && index === 1 }"
+          :class="{ stadiumItem: true, hot: item && item.hot && index === 1 }"
           v-for="(item, index) in stadiumList"
           :key="index"
           @click="handleStadiumClick(item)"
         >
           <view class="name">{{ index === 0 ? "附近场馆" : "热门场馆" }}</view>
-          <view class="remark">{{ item.stadiumName }}</view>
+          <view class="remark">{{ item ? item.stadiumName : '' }}</view>
           <view class="labelBlock">
             <view class="labelItem">室内</view>
             <view class="labelItem">成人</view>
@@ -62,7 +62,7 @@
       <Mine v-if="current === 'mine'" ref="mineRef" />
     </view>
     <view class="footer">
-      <tab-bar @tabChange="tabChange" :tabs="tabList" :current="current"></tab-bar>
+      <tab-bar @tabChange="handleTabChange" :tabs="tabList" :current="current"></tab-bar>
     </view>
   </view>
 </template>
@@ -124,20 +124,6 @@ const tabList = readonly([
     title: '我的'
   }
 ]);
-
-const tabChange = (key) => {
-  if (key === current.value) return;
-
-  uni.pageScrollTo({
-    scrollTop: 0,
-    duration: 0
-  });
-  current.value = key;
-
-  nextTick(() => {
-    console.log('do smt');
-  });
-};
 
 const banner = ref([]);
 const curIndex = ref(0);
@@ -225,6 +211,20 @@ const handleStadiumClick = (item) => {
   to('/stadium/detail', { id });
 };
 
+const handleTabChange = (key) => {
+  if (key === current.value) return;
+
+  uni.pageScrollTo({
+    scrollTop: 0,
+    duration: 0
+  });
+  current.value = key;
+
+  nextTick(() => {
+    console.log('do smt');
+  });
+};
+
 onPageScroll((e) => {
   if (current.value === 'home') {
     homeRef.value.pageScroll(e);
@@ -247,15 +247,14 @@ onReachBottom(() => {
 });
 
 onLoad(async (options) => {
+  if (options.key && options.key !== current.value) {
+    current.value = options.key;
+  }
   await $onLaunched;
   getBannerList(); // banner列表
   getKingKongPosition(); // 金刚位列表
   getHotStadiumList(); // 热门场馆
   getNearbyStadiumList(); // 附近场馆
-
-  if (options.key && options.key !== current.value) {
-    current.value = options.key;
-  }
 });
 </script>
 

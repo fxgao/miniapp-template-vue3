@@ -72,7 +72,7 @@
               range-key="name"
               :value="locationIndex"
             >
-              <view class="picker">北京{{locationArr[locationIndex].name}}</view>
+              <view class="picker">北京{{locationArr[locationIndex] ? locationArr[locationIndex].name : ''}}</view>
             </picker>
           </view>
         </view>
