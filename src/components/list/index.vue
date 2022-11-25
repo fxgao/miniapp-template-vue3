@@ -1,7 +1,7 @@
 <template>
   <view class="listContainer">
     <view class="listBlock" :class="{column: listType === 'column'}">
-      <view class="list" v-for="(item, index) in dataList" :key="index">
+      <view class="list" v-for="(item, index) in dataList" :key="item.id + 'listitem' + index">
         <slot :data="item"></slot>
       </view>
     </view>
@@ -99,8 +99,7 @@ watch(list, (newVal) => {
 });
 
 // 重新加载列表
-const refresh = (paramsValue) => {
-  console.log('refresh', paramsValue);
+const refresh = () => {
   emits('update:dataList', []);
   pageNum.value = 0;
   noMore.value = false;

@@ -22,8 +22,7 @@ import { useNav } from '@/hooks';
 const { to } = useNav();
 const props = defineProps({
   id: {
-    type: Number || String,
-    required: true
+    type: Number || String
   },
   name: {
     type: String,

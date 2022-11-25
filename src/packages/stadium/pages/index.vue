@@ -25,9 +25,10 @@
           url="/wx/stadium/list"
           ref="stadiumListRef"
           :listType="'column'"
+          :params="filterParams"
         >
           <template v-slot="{ data }">
-            <view @click="goStadiumDetail(data)">
+            <view @click="goStadiumDetail(data)" v-if="data.id">
               <stadium-card :info="data"></stadium-card>
             </view>
           </template>
@@ -44,7 +45,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, watch } from 'vue';
+import { ref, reactive, computed, watch, nextTick } from 'vue';
 import { storeToRefs } from 'pinia';
 import List from '@/components/list';
 import StadiumCard from '@/components/list-card/stadium-card';
@@ -57,7 +58,10 @@ const locationInfoStore = useLocationInfoStore();
 const { getAreaList } = storeToRefs(locationInfoStore);
 
 const { to } = useNav();
+const stadiumListRef = ref(null);
+const stadiumList = ref([]);
 const filter = ref(null);
+const filterParams = ref({});
 const filterTabList = ref([
   {
     label: '全城',
@@ -187,6 +191,12 @@ const filterData = reactive({
 
 const filterChange = (data) => {
   console.log('filterChange', data);
+  filterParams.value = data;
+  // 需要重置外部列表数据，否则会引起列表数据问题
+  stadiumList.value = [];
+  nextTick(() => {
+    stadiumListRef.value.refresh();
+  });
 };
 
 watch(
@@ -215,8 +225,6 @@ watch(
   },
   { immediate: true }
 );
-
-const stadiumList = ref([]);
 
 const goStadiumDetail = (data) => {
   console.log('goStadiumDetail', data);

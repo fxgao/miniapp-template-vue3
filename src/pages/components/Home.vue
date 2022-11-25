@@ -1,5 +1,5 @@
 <template>
-  <view class="page">
+  <view class="pageHome">
     <nav-bar
       ref="navbar"
       :showSelectBlock="true"
@@ -253,7 +253,7 @@ defineExpose({
 </script>
 
 <style lang="scss" scoped>
-.page {
+.pageHome {
   min-height: 100vh;
   width: 100%;
   background: #f5f5f5;

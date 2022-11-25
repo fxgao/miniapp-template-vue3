@@ -1,13 +1,13 @@
 <template>
   <view class="stadiumCardContainer">
     <BaseList
-      :title="info.stadiumName"
+      :title="stadiumName"
       :subTitle="subTitle"
       :img="coverImg"
-      :labelList="info.labelList"
+      :labelList="labelList"
     >
       <view class="stadiumInfo">
-        <view class="time">营业中{{info.operatStartTime}} - {{info.operatEndTime}}</view>
+        <view class="time">营业中{{operatStartTime}} - {{operatEndTime}}</view>
       </view>
     </BaseList>
   </view>
@@ -26,11 +26,27 @@ const props = defineProps({
 const { info } = toRefs(props);
 
 const subTitle = computed(() => {
-  return info.value.areaDetail;
+  return info.value?.areaDetail || '';
 });
 
 const coverImg = computed(() => {
   return info.value?.stadiumHeadFigure || '';
+});
+
+const operatStartTime = computed(() => {
+  return info.value?.operatStartTime || '';
+});
+
+const operatEndTime = computed(() => {
+  return info.value?.operatEndTime || '';
+});
+
+const stadiumName = computed(() => {
+  return info.value?.stadiumName || '';
+});
+
+const labelList = computed(() => {
+  return info.value?.labelList || [];
 });
 
 </script>

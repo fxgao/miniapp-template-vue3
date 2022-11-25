@@ -98,13 +98,13 @@ const filterTabList = ref([
     key: 'activeType'
   },
   {
-    label: '陪练',
+    label: '发球机',
     value: 2,
     linkKey: 'activity',
     key: 'activeType'
   },
   {
-    label: '发球机',
+    label: '陪练',
     value: 3,
     linkKey: 'activity',
     key: 'activeType'
@@ -138,6 +138,8 @@ const filterData = reactive({
 const filterChange = (data) => {
   console.log('filterChange', data);
   filterParams.value = data;
+  // 需要重置外部列表数据，否则会引起列表数据问题
+  activityList.value = [];
   nextTick(() => {
     activityListRef.value.refresh();
   });
@@ -145,7 +147,7 @@ const filterChange = (data) => {
 
 const filterShow = (flag) => {
   console.log('filterShow', flag);
-  if (flag) uni.pageScrollTo({ scrollTop: 284, duration: 300 });
+  if (flag) uni.pageScrollTo({ scrollTop: 296, duration: 300 });
 };
 
 watch(

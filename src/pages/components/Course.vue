@@ -174,6 +174,8 @@ const filterData = reactive({
 const filterChange = (data) => {
   console.log('filterChange', data);
   filterParams.value = data;
+  // 需要重置外部列表数据，否则会引起列表数据问题
+  courseList.value = [];
   nextTick(() => {
     courseListRef.value.refresh();
   });
@@ -210,6 +212,7 @@ defineExpose({
 
 <style lang="scss" scoped>
 .page {
+  min-height: auto;
   .pageContainer {
     .filterBlock {
       position: sticky;
