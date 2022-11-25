@@ -28,15 +28,13 @@
           {{ coachDetail.remarks }}
         </view>
       </view>
-      <view class="bottomBtn">
-        <view class="btn" @click="callPhone">联系我</view>
-      </view>
     </view>
     <view class="detailPopupBottom">
       <PopupBottom ref="popup1">
         <template v-slot:outer-main>
           <view class="actionBlock">
-            <view class="actionBtn" @click="callPhone">联系我</view>
+            <view class="actionBtn" @click="callPhone">联系微信</view>
+            <view class="actionBtn" @click="callPhone">联系电话</view>
           </view>
         </template>
       </PopupBottom>
@@ -176,10 +174,12 @@ onLoad(async (options) => {
 }
 .detailPopupBottom {
   .actionBlock {
+    @include flex-between;
     padding: 16rpx 40rpx;
     border-top: 2rpx solid #eee;
     .actionBtn {
       @include btn-normal;
+      width: 48%;
     }
   }
 }

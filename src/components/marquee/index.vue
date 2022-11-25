@@ -11,7 +11,7 @@
     >
       <swiper-item v-for="(item, index) in list" :key="index">
         <view class="innerContent">
-          <image class="avatar" :src="item.photo" />
+          <image class="avatar" :src="item.photo || 'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/default-avatar.png'" />
           <view class="text">
             {{ item.nickName }}正在活动中 | 已有{{total}}人参与活动
           </view>

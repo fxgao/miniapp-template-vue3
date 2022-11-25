@@ -5,7 +5,7 @@
       <view class="bannerBlock" v-if="current !== 'mine'">
         <swiper class="bannerSwiper" circular="true" @change="bannerChange">
           <swiper-item v-for="item in banner" :key="item.id">
-            <image class="bannerImg" :src="item.bannerUrl" @click="handleBannerJump(item)"/>
+            <image class="bannerImg" mode="aspectFill" :src="item.bannerUrl" @click="handleBannerJump(item)"/>
           </swiper-item>
         </swiper>
         <view class="indicatorBlock">

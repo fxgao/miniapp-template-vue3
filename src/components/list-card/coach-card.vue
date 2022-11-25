@@ -1,7 +1,7 @@
 <template>
   <view class="coach-card-container" :class="{small: size === 'small'}" :style="style">
     <view class="info">
-      <image class="avatar" :src="img" />
+      <image class="avatar" :src="img" mode="aspectFill"/>
       <view class="right">
         <view class="name">
           {{ name }}

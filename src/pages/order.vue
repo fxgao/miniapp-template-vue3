@@ -24,12 +24,12 @@
           />
           <view class="userInfo">
             <view class="infoRow">
-              <view class="userName" hover-class="none" hover-stop-propagation="false">
+              <view class="userName" :class="{red: !loginInfoData?.tel || !loginInfoData?.openId}">
                 {{
                   loginInfoData?.nickname && loginInfoData?.openId
                     ? loginInfoData.nickname +
                       (loginInfoData?.age ? `(${loginInfoData?.age}岁)` : '')
-                    : '请登录'
+                    : '请填写信息'
                 }}
               </view>
               <image
@@ -323,6 +323,9 @@ onLoad(async (options) => {
           width: 500rpx;
           @include flex-start;
           .userName {
+            &.red {
+              color: #ff4d4f;
+            }
             font-size: 28rpx;
             font-weight: 500;
             color: #333333;

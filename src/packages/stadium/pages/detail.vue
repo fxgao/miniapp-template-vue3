@@ -32,8 +32,8 @@
           <view class="leftLocation">
             <view class="location">{{ stadiumInfo.areaDetail }}</view>
             <view class="chargeInfo">
-              <image class="avatar" src="" mode="aspectFit" />
-              <view class="name">郭教练</view>
+              <image class="avatar" :src="stadiumInfo?.managerVo.photo" mode="aspectFit" />
+              <view class="name">{{ stadiumInfo?.managerVo.nickName }}</view>
               <view class="tag">场馆负责人</view>
             </view>
           </view>
@@ -62,7 +62,12 @@
       <view class="coachInfoContainer" v-if="coachList.length > 0">
         <view class="title">教练团队</view>
         <view class="coachList">
-          <view class="componentItem" @click="goCoachDetail(item)" v-for="item in coachList" :key="item.id">
+          <view
+            class="componentItem"
+            @click="goCoachDetail(item)"
+            v-for="item in coachList"
+            :key="item.id"
+          >
             <coach-card
               :id="item.id"
               :name="item.nickName"
@@ -95,6 +100,7 @@ import { reactive, ref } from 'vue';
 import { onLoad } from '@dcloudio/uni-app';
 import { useAppInstance, useNav } from '@/hooks';
 import api from '@/api';
+import uniAsync from '@/lib/uni-async';
 import Marquee from '@/components/marquee';
 import ActivitySchedule from '../components/activity-schedule';
 import CoachCard from '@/components/list-card/coach-card';
@@ -145,16 +151,69 @@ const showWechatModal = () => {
 };
 
 const copyPhone = () => {
+  uni.makePhoneCall({
+    phoneNumber: stadiumInfo.value.landlinePhone
+  });
+};
+
+const saveQrCode = async () => {
+  const url = stadiumInfo.value.wechatCardUrl;
+  const save = (path) => {
+    uni.saveImageToPhotosAlbum({
+      filePath: path,
+      success() {
+        uni.showToast({ title: '已保存到系统相册', icon: 'none' });
+      },
+      fail(e) {
+        console.log('saveImageToPhotosAlbum fail', e);
+        uni.showToast({ title: '下载失败', icon: 'none' });
+      }
+    });
+  };
+
+  try {
+    const auth = await uniAsync.authorize({
+      scope: 'scope.writePhotosAlbum'
+    });
+    if (auth.errMsg === 'authorize:ok') {
+      if (url.startsWith('http')) {
+        uni.downloadFile({
+          url,
+          success: (res) => save(res.tempFilePath)
+        });
+      } else {
+        save(url);
+      }
+    } else {
+      uni.showModal({
+        title: '无法保存',
+        content:
+          '1.请在“设置-隐私-照片”选项中，允许微信访问你的照片 2.请点击小程序右上角"...",在“设置”中打开“添加到相册”功能',
+        showCancel: false
+      });
+    }
+  } catch (error) {
+    console.log('authorize error', error);
+    uni.showModal({
+      title: '无法保存',
+      content:
+        '1.请在“设置-隐私-照片”选项中，允许微信访问你的照片 2.请点击小程序右上角"...",在“设置”中打开“添加到相册”功能',
+      showCancel: false
+    });
+  }
+};
+
+const copyWechatNumber = () => {
   uni.setClipboardData({
-    data: stadiumInfo.value.landlinePhone,
-    success(res) {
-      uni.showToast({ title: '复制电话成功', icon: 'none' });
+    data: stadiumInfo.value.wechatCode,
+    success: () => {
+      uni.showToast({ title: '复制成功', icon: 'none' });
     }
   });
 };
 
 const handleGoMore = () => {
-  to('/stadium/index', {
+  to('/index:activity', {
     stadiumId: stadiumId.value
   });
 };
@@ -272,8 +331,8 @@ onLoad(async (options) => {
             border-radius: 4rpx;
             font-size: 24rpx;
             color: #ff5a5a;
-            line-height: 32rpx;
-            padding: 0 8rpx;
+            line-height: 36rpx;
+            padding: 2rpx 8rpx;
             margin-left: 16rpx;
           }
         }

@@ -1,10 +1,7 @@
 {
   "pages": [
     {
-      "path": "pages/index",
-      "style": {
-        "enablePullDownRefresh": true
-      }
+      "path": "pages/index"
     },
     {
       "path": "pages/webview"

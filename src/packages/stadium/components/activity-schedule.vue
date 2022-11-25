@@ -297,6 +297,9 @@ onMounted(() => {
       border-radius: 8rpx;
       padding: 16rpx 14rpx;
       width: 584rpx;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
       .title {
         @include text-ellipsis;
         font-size: 28rpx;

@@ -20,7 +20,7 @@
         <view class="userInfo">
           <view class="infoRow">
             <view class="userName" hover-class="none" hover-stop-propagation="false">
-              {{ loginInfoData?.nickname && loginInfoData?.openId ? loginInfoData.nickname : '请登录' }}
+              {{ loginInfoData?.nickname && loginInfoData?.openId ? loginInfoData.nickname : '请填写信息' }}
             </view>
             <image
               v-if="loginInfoData?.sex"
@@ -164,6 +164,9 @@ const goJoinPath = (item) => {
 
 const goSettingPath = (item) => {
   console.log('goSettingPath', item.path);
+  if (item.path === '/suggest' && !loginInfoData?.tel) {
+    to('/edit-profile');
+  }
   to(item.path);
 };
 

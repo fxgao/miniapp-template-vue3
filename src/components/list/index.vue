@@ -105,12 +105,12 @@ const refresh = (paramsValue) => {
   pageNum.value = 0;
   noMore.value = false;
   nextTick(() => {
-    requestList(paramsValue);
+    requestList();
   });
 };
 
 // 加载列表
-const requestList = (params = {}) => {
+const requestList = () => {
   if (noMore.value) return;
   loading.value = true;
   const requestParams = {
@@ -119,7 +119,7 @@ const requestList = (params = {}) => {
     data: {
       [sizeName.value]: size.value,
       [pageName.value]: ++pageNum.value,
-      ...params
+      ...params.value
     }
   };
 

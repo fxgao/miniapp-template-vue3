@@ -90,9 +90,10 @@ import MpHtml from '@/components/mp-html/mp-html.vue';
 import PopupBottom from '@/components/popup-bottom';
 import Modal from '@/components/modal';
 import StadiumCard from '@/components/list-card/stadium-card';
-import { useAppInstance } from '@/hooks';
+import { useAppInstance, useNav } from '@/hooks';
 import api from '@/api';
 const { $onLaunched } = useAppInstance();
+const { to } = useNav();
 
 const matchId = ref(null);
 const publishId = ref(null);
@@ -139,6 +140,10 @@ const wechatModalShow = ref(false);
 
 const showWechatModal = () => {
   wechatModalShow.value = true;
+};
+
+const goStadiumDetail = (item) => {
+  to('/stadium/detail', { id: item.id });
 };
 
 const stadiumList = ref([]);

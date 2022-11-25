@@ -71,7 +71,7 @@ const { img, title, subTitle, labelList } = toRefs(props);
       font-weight: 500;
       color: #333333;
       line-height: 48rpx;
-      width: 404rpx
+      width: 412rpx
     }
     .labelBlock {
       @include flex-start;

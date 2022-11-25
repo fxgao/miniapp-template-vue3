@@ -241,8 +241,6 @@ const changeTab = (item) => {
   if (item.showMore) {
     show.value = true;
     emits('onShow', true);
-  } else {
-    handleConfirm();
   }
   if (item.selected) return;
   console.log('changeTab', item);
@@ -252,6 +250,9 @@ const changeTab = (item) => {
       selected: itemChild.value === item.value
     };
   });
+  if (!item.showMore) {
+    handleConfirm();
+  }
 };
 
 // 选择数据

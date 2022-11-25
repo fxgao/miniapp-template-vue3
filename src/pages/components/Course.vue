@@ -18,7 +18,7 @@
         @onShow="filterShow"
       ></multi-filter>
       <view class="list">
-        <List v-model:dataList="courseList" url="/wx/publish/courseList" ref="courseListRef">
+        <List v-model:dataList="courseList" url="/wx/publish/courseList" ref="courseListRef" :params="filterParams">
           <template v-slot="{ data }">
             <view @click="goCourseDetail(data)">
               <course-card
@@ -41,7 +41,7 @@
 </template>
 
 <script setup>
-import { reactive, ref, toRefs } from 'vue';
+import { reactive, ref, toRefs, nextTick } from 'vue';
 import { onLoad, onReachBottom } from '@dcloudio/uni-app';
 import { useAppInstance, useNav } from '@/hooks';
 import List from '@/components/list';
@@ -56,6 +56,9 @@ const { to } = useNav();
 const navTitleColor = ref('color: rgba(0,0,0,1);');
 const navBarBackgroundColor = ref('rgba(255,255,255,0)');
 const filterBgColor = ref('rgba(255,255,255,0)');
+const filterParams = ref({
+  applicablePeople: 1
+});
 
 const pageScroll = (e) => {
   const scrollTop = e.scrollTop;
@@ -170,6 +173,10 @@ const filterData = reactive({
 });
 const filterChange = (data) => {
   console.log('filterChange', data);
+  filterParams.value = data;
+  nextTick(() => {
+    courseListRef.value.refresh();
+  });
 };
 
 const filterShow = (flag) => {

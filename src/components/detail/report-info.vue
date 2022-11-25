@@ -12,8 +12,8 @@
     </view>
     <view class="content">
       <view class="item" v-for="(item, index) in list" :key="index">
-        <image class="avatar" :src="item.img" mode="aspectFit" />
-        <view class="nickName">{{ item.name }}</view>
+        <image class="avatar" :src="item.img || 'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/default-avatar.png'" mode="aspectFit" />
+        <view class="nickName">{{ item.name || '得乐用户' }}</view>
         <image
           class="sex"
           :src="

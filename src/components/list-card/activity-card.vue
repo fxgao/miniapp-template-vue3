@@ -11,7 +11,7 @@
           <view class="avatarBlock" v-if="joinList?.length">
             <image class="avatarItem" :style="{'zIndex': index + 1, 'transform': `translateX(-${index * 16}rpx)`}" :src="item.img" mode="aspectFix" v-for="(item,index) in joinList" :key="index" />
           </view>
-          <view class="signUpText">{{info?.participantVo?.participanCount}}人报名/{{info?.participantVo?.participanCount}}人满</view>
+          <view class="signUpText">{{info?.participantVo?.participanCount}}人报名/{{info?.participantVo?.participanCountMax}}满</view>
         </view>
         <view class="price">
           ¥{{info.activityPrice}}{{priceTypeText}}

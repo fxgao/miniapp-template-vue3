@@ -35,7 +35,7 @@
         </view>
         <view class="infoItem">
           <view class="leftText">活动等级：</view>
-          <view class="right">{{ activityInfo.areaDetail || '暂无' }}</view>
+          <view class="right">{{ activityInfo.levelStart || '暂无' }}</view>
         </view>
         <view class="infoItem">
           <view class="leftText">活动费用：</view>
@@ -177,6 +177,10 @@ const copyWechatNumber = () => {
       uni.showToast({ title: '复制成功', icon: 'none' });
     }
   });
+};
+
+const goStadiumDetail = (item) => {
+  to('/stadium/detail', { id: item.id });
 };
 
 const stadiumList = ref([]);

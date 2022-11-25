@@ -19,7 +19,7 @@
         @onShow="filterShow"
       ></multi-filter>
       <view class="listBlock">
-        <List v-model:dataList="activityList" url="/wx/publish/activityList" listType="column" ref="activityListRef">
+        <List v-model:dataList="activityList" url="/wx/publish/activityList" listType="column" ref="activityListRef" :params="filterParams">
           <template v-slot="{data}">
             <view @click="goActivityDetail(data)">
               <activity-card
@@ -40,7 +40,7 @@
 </template>
 
 <script setup>
-import { reactive, ref, toRefs, watch } from 'vue';
+import { reactive, ref, toRefs, watch, nextTick } from 'vue';
 import { storeToRefs } from 'pinia';
 import { onLoad, onReachBottom } from '@dcloudio/uni-app';
 import { useAppInstance, useNav } from '@/hooks';
@@ -60,6 +60,9 @@ const navTitleColor = ref('color: rgba(0,0,0,1);');
 const navBarBackgroundColor = ref('rgba(255,255,255,0)');
 const filterBgColor = ref('rgba(255,255,255,0)');
 const filter = ref(null);
+const filterParams = ref({
+  activeType: 1
+});
 
 const pageScroll = (e) => {
   const scrollTop = e.scrollTop;
@@ -134,7 +137,10 @@ const filterData = reactive({
 });
 const filterChange = (data) => {
   console.log('filterChange', data);
-  activityListRef.value.refresh(data);
+  filterParams.value = data;
+  nextTick(() => {
+    activityListRef.value.refresh();
+  });
 };
 
 const filterShow = (flag) => {
