@@ -3,7 +3,7 @@
     <view class="modal-bg" @click="handelClose"></view>
     <view class="modal-main">
       <view class="main-header">
-        <view class="title" v-if="title">{{title}}</view>
+        <view class="title">{{title}}</view>
         <image class="close-icon" src="https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/model-close-icon.png" @click="handelClose" />
       </view>
       <view class="main-content">

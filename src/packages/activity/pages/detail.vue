@@ -20,13 +20,13 @@
         <view class="infoItem">
           <view class="leftText">活动时间：</view>
           <view class="right"
-            >{{ activityInfo.activeStartTime }} - {{ activityInfo.activeEndTime }}</view
+            >{{ activityInfo.activeStartTime }} - {{ activityInfo.endTime }}</view
           >
         </view>
         <view class="infoItem">
           <view class="leftText">截止报名：</view>
           <view class="right"
-            >{{ activityInfo.activeStartTime }} - {{ activityInfo.activeEndTime }}</view
+            >{{ activityInfo.lastSignUpTimeStr }}</view
           >
         </view>
         <view class="infoItem">
@@ -99,6 +99,7 @@ import Modal from '@/components/modal';
 import StadiumCard from '@/components/list-card/stadium-card';
 import { useAppInstance, useNav } from '@/hooks';
 import api from '@/api';
+import uniAsync from '@/lib/uni-async';
 import Constant from '@/lib/constant';
 const { $onLaunched } = useAppInstance();
 const { to } = useNav();
@@ -106,6 +107,7 @@ const { to } = useNav();
 const activityId = ref(null);
 const publishId = ref(null);
 const popup1 = ref(null);
+const isFromMine = ref(false);
 
 const activityInfo = ref({});
 const labelList = computed(() => {
@@ -150,24 +152,69 @@ const showWechatModal = () => {
 };
 
 const goOrderConfirm = () => {
+  if (isFromMine.value) {
+    uni.showToast({ title: '您已报名该活动', icon: 'none' });
+    return;
+  }
   to('/mine/create-order', {
     type: Constant.ACTIVITY_TYPE_2PAYTYPE[activityInfo.value.activeType],
     price: activityInfo.value.activityPrice,
     activityId: activityId.value,
-    publishId: publishId.value
+    publishId: publishId.value,
+    info: JSON.stringify({
+      img: activityInfo.value.activeHeadFigure,
+      name: activityInfo.value.activeName,
+      area: activityInfo.value.areaDetail || '得乐场馆',
+      time: `${activityInfo.value.activeStartTime}-${activityInfo.value.endTime}`
+    })
   });
 };
 
-const saveQrCode = () => {
-  uni.saveImageToPhotosAlbum({
-    filePath: activityInfo.value.wechatCardUrl,
-    success: () => {
-      uni.showToast({ title: '保存成功', icon: 'none' });
-    },
-    fail: () => {
-      uni.showToast({ title: '保存失败', icon: 'none' });
+const saveQrCode = async () => {
+  const url = activityInfo.value.wechatCardUrl;
+  const save = (path) => {
+    uni.saveImageToPhotosAlbum({
+      filePath: path,
+      success() {
+        uni.showToast({ title: '已保存到系统相册', icon: 'none' });
+      },
+      fail(e) {
+        console.log('saveImageToPhotosAlbum fail', e);
+        uni.showToast({ title: '下载失败', icon: 'none' });
+      }
+    });
+  };
+
+  try {
+    const auth = await uniAsync.authorize({
+      scope: 'scope.writePhotosAlbum'
+    });
+    if (auth.errMsg === 'authorize:ok') {
+      if (url.startsWith('http')) {
+        uni.downloadFile({
+          url,
+          success: (res) => save(res.tempFilePath)
+        });
+      } else {
+        save(url);
+      }
+    } else {
+      uni.showModal({
+        title: '无法保存',
+        content:
+          '1.请在“设置-隐私-照片”选项中，允许微信访问你的照片 2.请点击小程序右上角"...",在“设置”中打开“添加到相册”功能',
+        showCancel: false
+      });
     }
-  });
+  } catch (error) {
+    console.log('authorize error', error);
+    uni.showModal({
+      title: '无法保存',
+      content:
+        '1.请在“设置-隐私-照片”选项中，允许微信访问你的照片 2.请点击小程序右上角"...",在“设置”中打开“添加到相册”功能',
+      showCancel: false
+    });
+  }
 };
 
 const copyWechatNumber = () => {
@@ -191,9 +238,10 @@ const getHotStadiumList = () => {
 };
 
 onLoad(async (options) => {
-  const { actId, pubId } = options;
+  const { actId, pubId, fromMine = false } = options;
   activityId.value = actId;
   publishId.value = pubId;
+  isFromMine.value = fromMine;
   await $onLaunched;
   console.log('activity detail onload', options);
   initDetail();

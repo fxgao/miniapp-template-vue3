@@ -1,21 +1,28 @@
 <template>
   <view class="activityCardContainer">
-    <BaseList
-      :title="info.activeName"
-      :subTitle="subTitle"
-      :img="coverImg"
-      :labelList="labelList"
-    >
+    <BaseList :title="info.activeName" :subTitle="subTitle" :img="coverImg" :labelList="labelList">
       <view class="activityInfo">
         <view class="joinInfo">
           <view class="avatarBlock" v-if="joinList?.length">
-            <image class="avatarItem" :style="{'zIndex': index + 1, 'transform': `translateX(-${index * 16}rpx)`}" :src="item.img" mode="aspectFix" v-for="(item,index) in joinList" :key="index" />
+            <image
+              class="avatarItem"
+              :style="{ zIndex: index + 1, transform: `translateX(-${index * 16}rpx)` }"
+              :src="
+                item.img ||
+                'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/default-avatar.png'
+              "
+              mode="aspectFix"
+              v-for="(item, index) in joinList"
+              :key="index"
+            />
           </view>
-          <view class="signUpText">{{info?.participantVo?.participanCount}}人报名/{{info?.participantVo?.participanCountMax}}满</view>
+          <view class="signUpText"
+            >{{ info?.participantVo?.participanCount }}人报名/{{
+              info?.participantVo?.participanCountMax
+            }}满</view
+          >
         </view>
-        <view class="price">
-          ¥{{info.activityPrice}}{{priceTypeText}}
-        </view>
+        <view class="price"> ¥{{ info.activityPrice || info.orderPrice }}{{ priceTypeText }} </view>
       </view>
     </BaseList>
   </view>
@@ -34,7 +41,9 @@ const props = defineProps({
 const { info } = toRefs(props);
 
 const subTitle = computed(() => {
-  return info.value?.activeEndTime ? '截止报名 ' + info.value?.activeEndTime : info.value?.activeRemark;
+  return info.value?.activeStartTime
+    ? '截止报名 ' + info.value?.activeStartTime
+    : info.value?.activityDate;
 });
 
 const coverImg = computed(() => {
@@ -65,7 +74,6 @@ const joinList = computed(() => {
   const resList = info.value?.participantVo?.participantUserVo || [];
   return resList.slice(0, 3);
 });
-
 </script>
 
 <style lang="scss" scoped>
@@ -84,21 +92,21 @@ const joinList = computed(() => {
           width: 40rpx;
           height: 40rpx;
           border-radius: 50%;
-          border: 2rpx solid #FFFFFF;
+          border: 2rpx solid #ffffff;
           box-sizing: border-box;
           background: #f5f5f5;
         }
       }
       .signUpText {
         font-size: 24rpx;
-        color: #A0A0A0;
+        color: #a0a0a0;
         line-height: 40rpx;
       }
     }
     .price {
       font-size: 32rpx;
       font-weight: 600;
-      color: #FF6829;
+      color: #ff6829;
       line-height: 48rpx;
     }
   }

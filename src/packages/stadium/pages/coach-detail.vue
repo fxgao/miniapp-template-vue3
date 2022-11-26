@@ -20,8 +20,8 @@
           <view class="label-item red" v-if="coachDetail.level">高级</view>
           <view class="label-item">外教</view>
         </view>
-        <view class="stadium">
-          <view class="place">得乐网球(朝阳网球场){{}}</view>
+        <view class="stadium" v-for="item in stadiumList" :key="item.id" @click="goStadiumDetail(item)">
+          <view class="place">{{item.stadiumName}}</view>
           <image class="rightIcon" src="https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/right-arrow-icon.png" />
         </view>
         <view class="content">
@@ -33,21 +33,35 @@
       <PopupBottom ref="popup1">
         <template v-slot:outer-main>
           <view class="actionBlock">
-            <view class="actionBtn" @click="callPhone">联系微信</view>
-            <view class="actionBtn" @click="callPhone">联系电话</view>
+            <view class="actionBtn" @click="callPhone">联系我</view>
           </view>
         </template>
       </PopupBottom>
     </view>
+    <!-- <view class="modalContainer">
+      <Modal v-model:show="infoModalShow">
+        <view class="modalContainer">
+        <image class="wechatImg" :src="stadiumInfo.wechatCardUrl" />
+        <view class="text">更多活动内容请添加教练微信进行咨询</view>
+      </view>
+      <template v-slot:bottom>
+        <view class="actionBlock">
+          <view class="saveBtn" @click="saveQrCode">保存二维码</view>
+          <view class="copyBtn" @click="copyWechatNumber">复制微信号</view>
+        </view>
+      </template>
+      </Modal>
+    </view> -->
   </view>
 </template>
 
 <script setup>
-import { reactive, ref, toRefs } from 'vue';
+import { computed, reactive, ref, toRefs } from 'vue';
 import { onLoad, onPageScroll } from '@dcloudio/uni-app';
 import { useAppInstance, useNav } from '@/hooks';
 import { useLoginInfoStore } from '@/stores/loginInfo';
 import PopupBottom from '@/components/popup-bottom';
+// import Modal from '@/components/modal';
 import api from '@/api';
 
 const { $onLaunched } = useAppInstance();
@@ -60,6 +74,15 @@ const navBarBackgroundColor = ref('rgba(255,255,255,0)');
 const coachId = ref(0);
 const coachDetail = ref({});
 const popup1 = ref(null);
+const infoModalShow = ref(false);
+
+const stadiumList = computed(() => {
+  return coachDetail.value?.tbBizStadiumListVo || [];
+});
+
+const goStadiumDetail = (item) => {
+  to('/stadium/detail', { id: item.id });
+};
 
 onPageScroll((e) => {
   const scrollTop = e.scrollTop;
@@ -78,6 +101,10 @@ onPageScroll((e) => {
     });
   }
 });
+
+const showModal = () => {
+  infoModalShow.value = true;
+};
 
 const callPhone = () => {
   uni.makePhoneCall({
@@ -174,12 +201,10 @@ onLoad(async (options) => {
 }
 .detailPopupBottom {
   .actionBlock {
-    @include flex-between;
     padding: 16rpx 40rpx;
     border-top: 2rpx solid #eee;
     .actionBtn {
       @include btn-normal;
-      width: 48%;
     }
   }
 }

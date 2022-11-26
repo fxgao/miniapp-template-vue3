@@ -36,8 +36,49 @@ const ACTIVITY_TYPE_2PAYTYPE= {
   1: 'about_ball',
   2: 'serve_machine',
   3: 'practice_partner',
-  4: 'have_many_goals'
+  4: 'have_many_goals',
+  5: 'course_official',
+  6: 'course_experience',
+  7: 'game',
 };
+
+
+
+const LEVEL_GRADE_MAP = {
+  '0基础': 1,
+  '0.5': 2,
+  '1': 3,
+  '1.5': 4,
+  '2': 5,
+  '2.5': 6,
+  '3': 7,
+  '3.5': 8,
+  '4': 9,
+  '4.5': 10,
+  '5': 11,
+  '5.5': 12,
+  '6': 13,
+  '6.5': 14,
+  '7': 15,
+}
+
+const LEVEL_GRADE_2STRING_MAP = {
+  1: '0基础',
+  2: '0.5',
+  3: '1',
+  4: '1.5',
+  5: '2',
+  6: '2.5',
+  7: '3',
+  8: '3.5',
+  9: '4',
+  10: '4.5',
+  11: '5',
+  12: '5.5',
+  13: '6',
+  14: '6.5',
+  15: '7',
+}
 
 export default {
   PROCESS_ENV,
@@ -45,5 +86,7 @@ export default {
   PAY_STATUS,
   PAY_STATUS_2STRING,
   ACTIVITY_TYPE,
-  ACTIVITY_TYPE_2PAYTYPE
+  ACTIVITY_TYPE_2PAYTYPE,
+  LEVEL_GRADE_MAP,
+  LEVEL_GRADE_2STRING_MAP
 };

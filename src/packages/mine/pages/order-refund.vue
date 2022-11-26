@@ -12,14 +12,7 @@
       <!-- 订单信息 -->
       <view class="orderInfo">
         <view class="title">退款订单</view>
-        <view class="orderInfoBlock">
-          <image :src="actInfo?.activeHeadFigure" class="infoImg" />
-          <view class="infoRight">
-            <view class="infoTitle">{{ actInfo?.activeName }}</view>
-            <view class="infoSub">{{ stadiumInfo?.stadiumName }}</view>
-            <view class="infoSub">活动时间{{ orderInfo.time }}</view>
-          </view>
-        </view>
+        <order-card :info="orderInfo" :noPadding="true"></order-card>
         <view class="priceInfo">
           <view class="price"
             >合计支付：<span class="priceText">¥{{ orderInfo?.orderPrice }}</span>
@@ -99,6 +92,7 @@ import { useLoginInfoStore } from '@/stores/loginInfo';
 import { useAppInstance } from '@/hooks';
 import api from '@/api';
 import PopupBottom from '@/components/popup-bottom';
+import OrderCard from '@/components/list-card/order-card';
 
 // const loginInfoStore = useLoginInfoStore();
 // const { loginInfoData } = storeToRefs(loginInfoStore);
@@ -208,35 +202,6 @@ onLoad(async (options) => {
       font-size: 28rpx;
       color: #a0a0a0;
       line-height: 44rpx;
-    }
-  }
-  .orderInfoBlock {
-    @include flex-start;
-    align-items: flex-start;
-    padding-bottom: 32rpx;
-    border-bottom: 1rpx solid #eee;
-    margin: 32rpx 0;
-    .infoImg {
-      width: 192rpx;
-      height: 192rpx;
-      border-radius: 16rpx;
-      margin-right: 16rpx;
-      flex: none;
-      background: #f5f5f5;
-    }
-    .infoRight {
-      .infoTitle {
-        font-size: 32rpx;
-        font-weight: 500;
-        color: #333333;
-        line-height: 48rpx;
-      }
-      .infoSub {
-        font-size: 24rpx;
-        color: #a0a0a0;
-        line-height: 40rpx;
-        margin-top: 8rpx;
-      }
     }
   }
   .priceInfo {

@@ -181,8 +181,11 @@ const filterChange = (data) => {
 
 const goMatchDetail = (data) => {
   console.log('goMatchDetail', data);
-  const { id } = data;
-  to('/match/detail', { id });
+  const { activityId, id } = data;
+  to('/match/detail', {
+    id,
+    pubId: activityId
+  });
 };
 </script>
 

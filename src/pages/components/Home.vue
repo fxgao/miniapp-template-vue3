@@ -192,10 +192,10 @@ const getStartCoach = () => {
 const handleGoMore = (type) => {
   switch (type) {
     case 'activity':
-      to('/index:activity');
+      to('/index:activity', {}, 'redirectTo');
       break;
     case 'course':
-      to('/index:course');
+      to('/index:course', {}, 'redirectTo');
       break;
     case 'match':
       to('/match/index');

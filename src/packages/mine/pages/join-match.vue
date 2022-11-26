@@ -18,7 +18,7 @@
         >
           <template v-slot="{ data }">
             <view @click="goMatchDetail(data)">
-              <match-card :info="data"></match-card>
+              <match-card :info="data" :overTime="data.gameStatus === 3"></match-card>
             </view>
           </template>
           <template v-slot:loading>

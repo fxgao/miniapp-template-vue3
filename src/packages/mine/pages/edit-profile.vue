@@ -112,10 +112,12 @@
 import { ref, computed } from 'vue';
 import { onLoad } from '@dcloudio/uni-app';
 import { storeToRefs } from 'pinia';
+import dayjs from 'dayjs';
 import { useSystemInfoStore } from '@/stores/systemInfo';
 import { useLoginInfoStore } from '@/stores/loginInfo';
 import { useAppInstance } from '@/hooks';
 import api from '@/api';
+import Constant from '@/lib/constant';
 import { debounce, randomString } from '@/utils';
 import uploadImage from '@/lib/upload-img';
 const systemInfo = useSystemInfoStore();
@@ -225,9 +227,20 @@ const birthDayChange = (e) => {
 const level = ref('');
 const levelOptionList = ref([
   { label: '0基础' },
-  { label: '初级' },
-  { label: '进阶' },
-  { label: '高水平' }
+  { label: '0.5' },
+  { label: '1' },
+  { label: '1.5' },
+  { label: '2' },
+  { label: '2.5' },
+  { label: '3' },
+  { label: '3.5' },
+  { label: '4' },
+  { label: '4.5' },
+  { label: '5' },
+  { label: '5.5' },
+  { label: '6' },
+  { label: '6.5' },
+  { label: '7' }
 ]);
 const levelChange = (e) => {
   console.log('levelChange', e);
@@ -336,7 +349,7 @@ const handleSave = async (lastAvatarImg = '') => {
     nickname: nickName.value,
     tel: telPhone.value,
     birthday: birthDay.value,
-    level: level.value,
+    level: Constant.LEVEL_GRADE_MAP[level.value],
     sex: sexValue2String.value[sex.value],
     demand: demand.value
   };
@@ -373,8 +386,8 @@ onLoad(async (option) => {
     avatar.value = loginInfoData.value.photo;
     nickName.value = loginInfoData.value.nickname;
     telPhone.value = loginInfoData.value.tel;
-    birthDay.value = loginInfoData.value.birthDay;
-    level.value = loginInfoData.value.level;
+    birthDay.value = loginInfoData.value.birthday ? dayjs(loginInfoData.value.birthday).format('YYYY-MM-DD') : '';
+    level.value = Constant.LEVEL_GRADE_2STRING_MAP[loginInfoData.value.level];
     sex.value = loginInfoData.value.sex === '男' ? 1 : loginInfoData.value.sex === '女' ? 0 : 1;
     demand.value = loginInfoData.value.demand;
   }

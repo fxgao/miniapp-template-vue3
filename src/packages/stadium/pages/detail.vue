@@ -20,19 +20,19 @@
         <scroll-view class="imgBlock" :scroll-x="true">
           <view
             class="imgItem"
-            v-for="(item, index) in stadiumInfo.imageVoList"
+            v-for="(item, index) in detailImgList"
             :key="index"
-            @click="showLargeImg(item)"
+            @click="showLargeImg(index)"
           >
-            <image class="bgImg" :src="item.imageUrl" mode="aspectFit" />
-            <view class="text">({{ item.length }})</view>
+            <image class="bgImg" :src="item[0].imageUrl" mode="aspectFit" />
+            <view class="text">{{ item.length }}张</view>
           </view>
         </scroll-view>
         <view class="bottomInfo">
           <view class="leftLocation">
             <view class="location">{{ stadiumInfo.areaDetail }}</view>
             <view class="chargeInfo">
-              <image class="avatar" :src="stadiumInfo?.managerVo.photo" mode="aspectFit" />
+              <image class="avatar" :src="stadiumInfo?.managerVo?.photo" mode="aspectFit" />
               <view class="name">{{ stadiumInfo?.managerVo.nickName }}</view>
               <view class="tag">场馆负责人</view>
             </view>
@@ -96,7 +96,7 @@
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue';
+import { computed, reactive, ref } from 'vue';
 import { onLoad } from '@dcloudio/uni-app';
 import { useAppInstance, useNav } from '@/hooks';
 import api from '@/api';
@@ -112,6 +112,24 @@ const { to } = useNav();
 
 const stadiumId = ref(null);
 const stadiumInfo = ref({});
+
+const detailImgList = computed(() => {
+  const resList = [];
+  if (stadiumInfo.value?.storeEnvironmentList && stadiumInfo.value?.storeEnvironmentList.length > 0) {
+    resList.push(stadiumInfo.value?.storeEnvironmentList);
+  }
+  if (stadiumInfo.value?.infrastructureList && stadiumInfo.value?.infrastructureList.length > 0) {
+    resList.push(stadiumInfo.value?.infrastructureList);
+  }
+  if (stadiumInfo.value?.stadiumImgList && stadiumInfo.value?.stadiumImgList.length > 0) {
+    resList.push(stadiumInfo.value?.stadiumImgList);
+  }
+  if (stadiumInfo.value?.courseWillList && stadiumInfo.value?.courseWillList.length > 0) {
+    resList.push(stadiumInfo.value?.courseWillList);
+  }
+  return resList;
+});
+
 const initStadiumInfo = async (id) => {
   const resInfo = await api.stadium.getStadiumDetailInfo(id);
   console.log('getStadiumDetailInfo res', resInfo);
@@ -141,6 +159,14 @@ const showMap = () => {
     latitude: stadiumInfo.value.lat,
     longitude: stadiumInfo.value.lng,
     scale: 18
+  });
+};
+
+const showLargeImg = (index) => {
+  const urlsArr = detailImgList.value[index].map((item) => item.imageUrl);
+  uni.previewImage({
+    current: 0,
+    urls: urlsArr
   });
 };
 
@@ -273,6 +299,9 @@ onLoad(async (options) => {
     .imgBlock {
       margin-top: 32rpx;
       padding-left: 40rpx;
+      width: 100%;
+      white-space: nowrap;
+      @include flex-start;
       .imgItem {
         &:last-child {
           margin-right: 32rpx;
@@ -280,9 +309,12 @@ onLoad(async (options) => {
         position: relative;
         border-radius: 16rpx;
         margin-right: 16rpx;
+        display: inline-block;
+        overflow: hidden;
         .bgImg {
           width: 272rpx;
           height: 204rpx;
+          border-radius: 16rpx;
         }
         .text {
           position: absolute;

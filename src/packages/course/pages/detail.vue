@@ -16,9 +16,7 @@
         <view class="title">基本信息</view>
         <view class="infoItem">
           <view class="leftText">适用人群：</view>
-          <view class="right"
-            >{{ courseInfo.applicableLevelValue }}</view
-          >
+          <view class="right">{{ courseInfo.applicableLevelValue }}</view>
         </view>
         <view class="infoItem">
           <view class="leftText">报名费用：</view>
@@ -49,7 +47,7 @@
         <template v-slot:outer-main>
           <view class="actionBlock">
             <view class="actionBtn plain" @click="showWechatModal">立即咨询</view>
-            <view class="actionBtn">¥{{ courseInfo.courseFee }} 报名</view>
+            <view class="actionBtn" @click="goOrderConfirm">¥{{ courseInfo.courseFee }} 报名</view>
           </view>
         </template>
       </PopupBottom>
@@ -61,11 +59,11 @@
           <view class="text">更多活动内容请添加教练微信进行咨询</view>
         </view>
         <template v-slot:bottom>
-            <view class="actionBlock">
-              <view class="saveBtn" @click="saveQrCode">保存二维码</view>
-              <view class="copyBtn" @click="copyWechatNumber">复制微信号</view>
-            </view>
-          </template>
+          <view class="actionBlock">
+            <view class="saveBtn" @click="saveQrCode">保存二维码</view>
+            <view class="copyBtn" @click="copyWechatNumber">复制微信号</view>
+          </view>
+        </template>
       </Modal>
     </view>
   </view>
@@ -79,9 +77,11 @@ import MpHtml from '@/components/mp-html/mp-html.vue';
 import PopupBottom from '@/components/popup-bottom';
 import Modal from '@/components/modal';
 import StadiumCard from '@/components/list-card/stadium-card';
-import { useAppInstance } from '@/hooks';
+import { useAppInstance, useNav } from '@/hooks';
 import api from '@/api';
+import Constant from '@/lib/constant';
 const { $onLaunched } = useAppInstance();
+const { to } = useNav();
 
 const courseId = ref(null);
 const publishId = ref(null);
@@ -135,6 +135,28 @@ const getHotStadiumList = () => {
   });
 };
 
+const goOrderConfirm = () => {
+  const typeString = courseInfo.value.courseType === 1 ? 5 : 6;
+  to('/mine/create-order', {
+    type: Constant.ACTIVITY_TYPE_2PAYTYPE[typeString],
+    price: courseInfo.value.courseFee,
+    activityId: courseInfo.value.activityId,
+    publishId: publishId.value,
+    info: JSON.stringify({
+      img: courseInfo.value.courseHeadFigure,
+      name: courseInfo.value.courseName,
+      area: courseInfo.value.stadiumAreaDetail,
+      time: `${courseInfo.value.startTime}-${courseInfo.value.endTime}`
+    })
+  });
+};
+
+const goStadiumDetail = (item) => {
+  to('/stadium/detail', {
+    id: item.id
+  });
+};
+
 onLoad(async (options) => {
   console.log('course detail onload', options);
   const { id, pubId } = options;
@@ -158,7 +180,7 @@ onLoad(async (options) => {
       margin-top: 16rpx;
     }
     &.list {
-      background: linear-gradient(180deg, #FFFFFF 0, #F5F5F5 120rpx, #F5F5F5 100%);
+      background: linear-gradient(180deg, #ffffff 0, #f5f5f5 120rpx, #f5f5f5 100%);
     }
     background: #fff;
     padding: 32rpx 40rpx;

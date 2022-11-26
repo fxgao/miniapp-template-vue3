@@ -12,7 +12,7 @@
       <view class="listContainer">
         <List
           v-model:dataList="joinActivityList"
-          url="/wx/publish/activityList"
+          url="/wx/order/getActivity"
           ref="activityListRef"
           :listType="'column'"
         >
@@ -50,8 +50,12 @@ const joinActivityList = ref([]);
 
 const goActivityDetail = (data) => {
   console.log('goStadiumDetail', data);
-  const { id } = data;
-  to('/activity/detail', { id });
+  const { activityId, id } = data;
+  to('/activity/detail', {
+    actId: activityId,
+    pubId: id,
+    fromMine: true
+  });
 };
 </script>
 

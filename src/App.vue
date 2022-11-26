@@ -81,7 +81,7 @@ const getUserLocation = () => {
     },
     fail: async (err) => {
       console.log('getLocation fail', err);
-      const positionInfo = await api.common.locationTransPosition(0, 0);
+      const positionInfo = await api.common.locationTransPosition('', '');
       console.log('positionInfo', positionInfo);
       locationInfoStore.setLocationInfo({
         lat: 0,

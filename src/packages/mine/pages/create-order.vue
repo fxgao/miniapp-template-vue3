@@ -120,12 +120,14 @@
     <view class="modalContainer">
       <Modal v-model:show="successModalShow">
         <view class="modalBlock">
-          <image class="successImg" src="" />
+          <image class="successImg" src="https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/success-icon.png" />
           <view class="text">订单支付成功</view>
         </view>
         <template v-slot:bottom>
-          <view class="saveBtn" @click="share">分享给好友/群聊</view>
-          <view class="copyBtn" @click="goOrderDetail">查看订单详情</view>
+          <view class="actionBlock">
+            <button open-type="share" class="copyBtn">分享给好友/群聊</button>
+            <view class="saveBtn" @click="goOrderDetail">查看订单详情</view>
+          </view>
         </template>
       </Modal>
     </view>
@@ -167,6 +169,7 @@ const successModalShow = ref(false);
  * 活动--有痒多球 have_many_goals
  **/
 const orderType = ref('');
+const orderSn = ref('');
 const actId = ref(0);
 const pId = ref(0);
 const price = ref(0);
@@ -183,6 +186,13 @@ const priceExplainText = computed(() => {
 });
 
 const submit = () => {
+  if (!loginInfoData.value?.tel || !loginInfoData.value?.openId) {
+    uni.showToast({
+      title: '请先填写用户信息',
+      icon: 'none'
+    });
+    return;
+  }
   uni.showLoading();
   const params = {
     retry_times: 5
@@ -251,6 +261,7 @@ const submit = () => {
       uni.hideLoading();
       // 支付成功弹窗
       successModalShow.value = true;
+      orderSn.value = successRes.orderNo;
     },
     (error) => {
       console.log('error=====', error);
@@ -276,6 +287,12 @@ const goEditProfile = () => {
   });
 };
 
+const goOrderDetail = () => {
+  to('/mine/order-detail', {
+    id: orderSn.value
+  });
+};
+
 onLoad(async (options) => {
   const { activityId, publishId, type, price: priceValue, info } = options;
   console.log(activityId, type, priceValue, info);
@@ -284,6 +301,7 @@ onLoad(async (options) => {
   actId.value = activityId;
   pId.value = publishId;
   price.value = priceValue;
+  confirmInfo.value = JSON.parse(info);
 });
 </script>
 
@@ -396,6 +414,7 @@ onLoad(async (options) => {
       margin-top: 32rpx;
       .orderInfo {
         @include flex-start;
+        align-items: flex-start;
         padding-bottom: 32rpx;
         border-bottom: 1rpx solid #eee;
         .infoImg {
@@ -523,22 +542,23 @@ onLoad(async (options) => {
     display: flex;
     flex-direction: column;
     align-items: center;
-    .wechatImg {
-      width: 362rpx;
-      height: 362rpx;
+    width: 560rpx;
+    .successImg {
+      width: 128rpx;
+      height: 128rpx;
       margin: 0 68rpx;
     }
     .text {
-      font-size: 24rpx;
-      color: #a0a0a0;
-      line-height: 40rpx;
-      text-align: center;
-      margin-top: 32rpx;
+      font-size: 36rpx;
+      font-weight: 500;
+      color: #333333;
+      line-height: 52rpx;
+      margin-top: 16rpx
     }
   }
   .actionBlock {
-    @include flex-between;
     width: 100%;
+    margin-bottom: 32rpx;
     .saveBtn {
       border-radius: 40rpx;
       border: 2rpx solid #ff6829;
@@ -548,6 +568,8 @@ onLoad(async (options) => {
       color: #ff6829;
       line-height: 48rpx;
       padding: 20rpx 36rpx;
+      text-align: center;
+      margin-top: 32rpx;
     }
     .copyBtn {
       background: linear-gradient(135deg, #ffab43 0%, #ff6829 100%);
@@ -557,6 +579,7 @@ onLoad(async (options) => {
       color: #ffffff;
       line-height: 48rpx;
       padding: 20rpx 36rpx;
+      text-align: center;
     }
   }
 }

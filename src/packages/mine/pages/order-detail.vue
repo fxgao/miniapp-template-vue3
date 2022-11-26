@@ -54,19 +54,11 @@
       <view class="orderInfoBlock">
         <view class="title">订单信息</view>
         <view class="orderBlock">
-          <view class="orderInfo">
-            <image :src="actInfo?.activeHeadFigure" class="infoImg" />
-            <view class="infoRight">
-              <view class="infoTitle">{{ actInfo?.activeName }}</view>
-              <view class="infoSub">{{ stadiumInfo?.stadiumName }}</view>
-              <view class="infoSub">活动时间{{ orderInfo.time }}</view>
-            </view>
-          </view>
+          <order-card :info="orderInfo" :noPadding="true"></order-card>
           <view class="priceInfo">
             <view class="priceInfoItem">
-              <!-- <view class="priceExplain">{{ priceExplainText }}</view> -->
               <view class="priceExplain">实付金额</view>
-              <view class="price">¥{{ orderInfo?.goodsPrice }}</view>
+              <view class="price">¥{{ orderInfo?.orderPrice }}</view>
             </view>
             <view class="priceInfoItem right">
               <view class="price"
@@ -112,7 +104,7 @@
       </view>
       <!-- 购买须知 -->
       <view class="buyNoticeBlock">
-        <view class="title">购买须知</view>
+        <view class="title">订单须知</view>
         <view class="content">
           <view class="row">
             1、根据北京防疫规定，参与者需提供72小时内核酸证明和健康宝绿码，如因自身原因无法提供不能参与活动，概不退款
@@ -129,27 +121,35 @@
         付款即代表您同意此协议。
       </view>
     </view>
-    <view class="detailPopupBottom">
+    <view class="detailPopupBottom" v-if="orderInfo.orderStatus === 10 || orderInfo.orderStatus === 20">
       <PopupBottom ref="popup1">
         <template v-slot:outer-main>
           <view class="popupContainer">
-            <view class="info">
-              金额（元）： <span class="priceText">{{ orderInfo.orderPrice }}</span>
-            </view>
-            <view class="payBtn" @click="rePay">去付款</view>
+            <template v-if="orderInfo.orderStatus === 10">
+              <view class="info">
+                金额（元）： <span class="priceText">{{ orderInfo.orderPrice }}</span>
+              </view>
+              <view class="payBtn" @click="rePay">去付款</view>
+            </template>
+            <template v-if="orderInfo.orderStatus === 20">
+              <view class="payBtn half plain" @click="goRefund">申请退款</view>
+              <view class="payBtn half" @click="showServeModal">联系客服</view>
+            </template>
           </view>
         </template>
       </PopupBottom>
     </view>
     <view class="modalContainer">
-      <Modal v-model:show="successModalShow">
+      <Modal v-model:show="serveModalShow">
         <view class="modalBlock">
-          <image class="successImg" src="" />
-          <view class="text">订单支付成功</view>
+          <image class="wechatImg" src="" />
+          <view class="text">咨询客服了解退款情况</view>
         </view>
         <template v-slot:bottom>
-          <view class="saveBtn" @click="share">分享给好友/群聊</view>
-          <view class="copyBtn" @click="goOrderDetail">查看订单详情</view>
+          <view class="actionBlock">
+            <view class="saveBtn" @click="saveQrCode">保存二维码</view>
+            <view class="copyBtn" @click="copyWechatNumber">复制微信号</view>
+          </view>
         </template>
       </Modal>
     </view>
@@ -157,17 +157,19 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed } from 'vue';
-import { onLoad } from '@dcloudio/uni-app';
+import { ref, reactive, computed, nextTick } from 'vue';
+import { onLoad, onShow } from '@dcloudio/uni-app';
 import { storeToRefs } from 'pinia';
 import { useAppInstance, useNav } from '@/hooks';
 import { useSystemInfoStore } from '@/stores/systemInfo';
 import { useLoginInfoStore } from '@/stores/loginInfo';
+import OrderCard from '@/components/list-card/order-card';
 import PopupBottom from '@/components/popup-bottom';
 import Modal from '@/components/modal';
 import Constant from '@/lib/constant';
 import api from '@/api';
 import config from '@/api/config';
+import uniAsync from '@/lib/uni-async';
 import { debounce } from '@/utils';
 import payment from '@/lib/payment';
 
@@ -184,7 +186,7 @@ const orderInfo = ref(null);
 let actInfo = reactive({});
 let stadiumInfo = reactive({});
 const popup1 = ref(null);
-const successModalShow = ref(false);
+const serveModalShow = ref(false);
 
 const payStatusStr = computed(() => {
   return PAY_STATUS_2STRING[orderInfo.value?.orderStatus];
@@ -253,8 +255,7 @@ const submit = () => {
     (successRes) => {
       console.log('successRes=====', successRes);
       uni.hideLoading();
-      // 支付成功弹窗
-      successModalShow.value = true;
+      // 支付成功刷新当前数据
       initData(orderInfo.value.orderSn);
     },
     (error) => {
@@ -271,6 +272,76 @@ const submit = () => {
 
 const rePay = debounce(submit, 2000, true);
 
+const showServeModal = () => {
+  serveModalShow.value = true;
+};
+
+const saveQrCode = async () => {
+  const url = '';
+  const save = (path) => {
+    uni.saveImageToPhotosAlbum({
+      filePath: path,
+      success() {
+        uni.showToast({ title: '已保存到系统相册', icon: 'none' });
+      },
+      fail(e) {
+        console.log('saveImageToPhotosAlbum fail', e);
+        uni.showToast({ title: '下载失败', icon: 'none' });
+      }
+    });
+  };
+
+  try {
+    const auth = await uniAsync.authorize({
+      scope: 'scope.writePhotosAlbum'
+    });
+    if (auth.errMsg === 'authorize:ok') {
+      if (url.startsWith('http')) {
+        uni.downloadFile({
+          url,
+          success: (res) => save(res.tempFilePath)
+        });
+      } else {
+        save(url);
+      }
+    } else {
+      uni.showModal({
+        title: '无法保存',
+        content:
+          '1.请在“设置-隐私-照片”选项中，允许微信访问你的照片 2.请点击小程序右上角"...",在“设置”中打开“添加到相册”功能',
+        showCancel: false
+      });
+    }
+  } catch (error) {
+    console.log('authorize error', error);
+    uni.showModal({
+      title: '无法保存',
+      content:
+        '1.请在“设置-隐私-照片”选项中，允许微信访问你的照片 2.请点击小程序右上角"...",在“设置”中打开“添加到相册”功能',
+      showCancel: false
+    });
+  }
+};
+
+const copyWechatNumber = () => {
+  uni.setClipboardData({
+    data: 'deletiyu',
+    success: () => {
+      uni.showToast({ title: '复制成功', icon: 'none' });
+    }
+  });
+};
+
+const isRefund = ref(false);
+const goRefund = () => {
+  isRefund.value = true;
+  nextTick(() => {
+    to('/mine/order-refund', {
+      id: orderInfo.value.orderSn
+    });
+  });
+};
+
 const initData = async (id) => {
   try {
     const res = await api.order.getOrderDetail(id);
@@ -283,6 +354,14 @@ const initData = async (id) => {
     console.log('getOrderDetail error', error);
   }
 };
+
+onShow(() => {
+  console.log('onshow', isRefund);
+  if (isRefund.value) {
+    isRefund.value = false;
+    initData(orderInfo.value.orderSn);
+  }
+});
 
 onLoad(async (options) => {
   const { id } = options;
@@ -416,7 +495,7 @@ onLoad(async (options) => {
         }
       }
       .priceInfo {
-        padding: 32rpx 0;
+        padding: 0 0 32rpx;
         border-bottom: 1rpx solid #eee;
         .priceInfoItem {
           @include flex-between;
@@ -471,6 +550,7 @@ onLoad(async (options) => {
     font-size: 24rpx;
     color: #a0a0a0;
     line-height: 40rpx;
+    padding-bottom: 64rpx;
     .ruleText {
       color: #ff6829;
     }
@@ -494,6 +574,15 @@ onLoad(async (options) => {
     }
   }
   .payBtn {
+    &.half {
+      width: 48%;
+      text-align: center;
+    }
+    &.plain {
+      border: 1rpx solid #ECECEC;
+      color: #333333;
+      background: #fff;
+    }
     font-size: 32rpx;
     font-weight: 600;
     color: #ffffff;
@@ -501,6 +590,48 @@ onLoad(async (options) => {
     padding: 20rpx 48rpx;
     background: linear-gradient(135deg, #ffab43 0%, #ff6829 100%);
     border-radius: 44rpx;
+  }
+}
+.modalContainer {
+  .modalBlock {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .wechatImg {
+      width: 362rpx;
+      height: 362rpx;
+      margin: 0 68rpx;
+    }
+    .text {
+      font-size: 24rpx;
+      color: #a0a0a0;
+      line-height: 40rpx;
+      text-align: center;
+      margin-top: 32rpx;
+    }
+  }
+  .actionBlock {
+    @include flex-between;
+    width: 100%;
+    .saveBtn {
+      border-radius: 40rpx;
+      border: 2rpx solid #ff6829;
+      backdrop-filter: blur(1rpx);
+      font-size: 32rpx;
+      font-weight: 600;
+      color: #ff6829;
+      line-height: 48rpx;
+      padding: 20rpx 36rpx;
+    }
+    .copyBtn {
+      background: linear-gradient(135deg, #ffab43 0%, #ff6829 100%);
+      border-radius: 44rpx;
+      font-size: 32rpx;
+      font-weight: 600;
+      color: #ffffff;
+      line-height: 48rpx;
+      padding: 20rpx 36rpx;
+    }
   }
 }
 </style>

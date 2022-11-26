@@ -58,7 +58,7 @@ const RESPONSE_ERROR_MSG = {
 
 // 业务错误信息
 const BUSINESS_ERROR_MSG = {
-  500: '系统错误',
+  500: '该活动已经过期,请选择其它活动',
   800: '未查询到订单',
   801: '价格变动，请重新下单'
 };

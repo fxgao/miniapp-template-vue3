@@ -1,6 +1,6 @@
 <template>
   <view class="courseCardContainer" :class="{small: size === 'small'}" :style="style">
-    <image class="bgImg" :src="bgImg" mode="widthFix" />
+    <image class="bgImg" :src="bgImg" mode="aspectFill" />
     <view class="info">
       <view class="title">{{ info.courseName }}</view>
       <view class="labelList">
@@ -109,10 +109,12 @@ const labelList = computed(() => {
     }
     .content {
       @include text-ellipsis-2;
+      width: 298rpx;
       margin-top: 16rpx;
       font-size: 24rpx;
       color: #A0A0A0;
       line-height: 40rpx;
+      word-break: break-all;
     }
   }
 }

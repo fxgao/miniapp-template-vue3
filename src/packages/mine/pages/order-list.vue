@@ -18,7 +18,7 @@
         >
           <template v-slot="{ data }">
             <view @click="goOrderDetail(data)">
-              <order-card :info="data"></order-card>
+              <order-card :info="data" showBottom></order-card>
             </view>
           </template>
           <template v-slot:loading>

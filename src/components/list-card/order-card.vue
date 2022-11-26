@@ -1,22 +1,24 @@
 <template>
   <view class="orderCardContainer">
-    <view class="infoBlock">
-      <image :src="actInfo?.activeHeadFigure" class="infoImg" />
+    <view class="infoBlock" :class="{'nopd': noPadding}">
+      <image :src="headFigure" class="infoImg" />
       <view class="infoRight">
-        <view class="infoTitle">{{ actInfo?.activeName }}</view>
+        <view class="infoTitle">{{ publishInfo?.publishName }}</view>
         <view class="infoSub">{{ stadiumInfo?.stadiumName }}</view>
-        <view class="infoSub">活动时间{{ actInfo.time }}</view>
+        <view class="infoSub">活动时间{{ publishInfo.startTime }}</view>
       </view>
     </view>
-    <view class="bottomBlock">
-      <view class="payText">{{payText}}: ¥{{info.orderPrice}}</view>
-      <!-- 801 未查询订单  10未支付, 默认10 20支付成功 30支付失败 40待退款 50已退款 -->
-      <view class="actionBlock">
-        <view class="actionBtn" v-if="info.orderStatus === 10">去支付</view>
-        <view class="actionBtn plain" v-if="info.orderStatus === 20">申请退款</view>
+    <template v-if="showBottom">
+      <view class="bottomBlock">
+        <view class="payText">{{payText}}: ¥{{info.orderPrice}}</view>
+        <!-- 801 未查询订单  10未支付, 默认10 20支付成功 30支付失败 40待退款 50已退款 -->
+        <view class="actionBlock">
+          <view class="actionBtn" v-if="info.orderStatus === 10">去支付</view>
+          <view class="actionBtn plain" v-if="info.orderStatus === 20">申请退款</view>
+        </view>
       </view>
-    </view>
-    <image v-if="coverStatus" class="coverStatusIcon" :src="'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon' + coverStatus + '.png'"  />
+      <image v-if="info.orderStatus === 50" class="coverStatusIcon" :src="'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/refund-icon.png'"  />
+    </template>
   </view>
 </template>
 
@@ -26,24 +28,54 @@ const props = defineProps({
   info: {
     type: Object,
     default: () => {}
+  },
+  noPadding: {
+    type: Boolean,
+    default: false
+  },
+  showBottom: {
+    type: Boolean,
+    default: false
   }
 });
 const { info } = toRefs(props);
 
 const payText = computed(() => {
   if (info.value?.payStatus === 1) {
-    return '实付定金';
+    return '定金';
   } else {
-    return '实付总额';
+    return '金额';
+  }
+});
+
+const headFigure = computed(() => {
+  if (info.value?.actType === 'course_official' && info.value?.actType === 'course_experience') {
+    return courseInfo.value?.courseHeadFigure || '';
+  } else if (info.value?.actType === 'game') {
+    return gameInfo.value?.gameImageUrl || '';
+  } else {
+    return actInfo.value?.activeHeadFigure || '';
   }
 });
 
 const actInfo = computed(() => {
-  return info.value && info.value.actJson ? JSON.parse(info.value.actJson) : {};
+  return info.value && info.value.tbBizActivityVo ? info.value.tbBizActivityVo : {};
+});
+
+const courseInfo = computed(() => {
+  return info.value && info.value.tbBizCourseVo ? info.value.tbBizCourseVo : {};
+});
+
+const gameInfo = computed(() => {
+  return info.value && info.value.tbBizGameVo ? info.value.tbBizGameVo : {};
+});
+
+const publishInfo = computed(() => {
+  return info.value && info.value.tbBizInformationPublishVo ? info.value.tbBizInformationPublishVo : {};
 });
 
 const stadiumInfo = computed(() => {
-  return info.value && info.value.stadiumJson ? JSON.parse(info.value.stadiumJson) : {};
+  return info.value && info.value.tbBizStadiumVo ? info.value.tbBizStadiumVo : {};
 });
 
 </script>
@@ -53,7 +85,11 @@ const stadiumInfo = computed(() => {
   background: #FFFFFF;
   border-radius: 16rpx;
   margin-bottom: 32rpx;
+  position: relative;
   .infoBlock {
+    &.nopd {
+      padding: 24rpx 0 32rpx;
+    }
     @include flex-start;
     align-items: flex-start;
     padding: 24rpx 24rpx 32rpx;
@@ -72,6 +108,7 @@ const stadiumInfo = computed(() => {
         font-weight: 500;
         color: #333333;
         line-height: 48rpx;
+        height: 96rpx;
       }
       .infoSub {
         font-size: 24rpx;
@@ -108,6 +145,13 @@ const stadiumInfo = computed(() => {
         }
       }
     }
+  }
+  .coverStatusIcon {
+    position: absolute;
+    bottom: 56rpx;
+    right: 18rpx;
+    width: 132rpx;
+    height: 132rpx;
   }
 }
 </style>

@@ -161,8 +161,8 @@ const getHotStadiumList = () => {
 const getNearbyStadiumList = async () => {
   await $userLocation;
   const data = {
-    lng: locationInfo.value.lng || 0,
-    lat: locationInfo.value.lat || 0
+    lng: locationInfo.value.lng || '',
+    lat: locationInfo.value.lat || ''
   };
   api.homePage.getNearbyStadiumList(data).then((res) => {
     console.log('getNearbyStadiumList res', res);
@@ -174,23 +174,21 @@ const getNearbyStadiumList = async () => {
 const handleBannerJump = (item) => {
   console.log('handleBannerJump', item);
   const { stationJumpType, jumpType, data } = item;
-  if (stationJumpType === 1) {
+  if (jumpType === 1) {
     let url = '';
-    switch (jumpType) {
+    switch (stationJumpType) {
       case 4: // 活动
-        url = `/activity/detail?id=${data}`;
+        url = `/activity/detail?${data}`;
         break;
       case 6: // 课程
-        url = `/course/detail?id=${data}`;
+        url = `/course/detail?${data}`;
         break;
       case 8: // 比赛
-        url = `/match/detail?id=${data}`;
+        url = `/match/detail?${data}`;
         break;
     }
     url && to(url);
-  } else if (stationJumpType === 2) {
-    to(data);
-  } else {
+  } else if (jumpType === 2) {
     to(data);
   }
 };

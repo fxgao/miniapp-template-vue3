@@ -19,7 +19,8 @@ const REDIRECT_URL = {
   '/mine/join-course': '/packages/mine/pages/join-course',
   '/mine/create-order': '/packages/mine/pages/create-order',
   '/mine/order-list': '/packages/mine/pages/order-list',
-  '/mine/order-detail': '/packages/mine/pages/order-detail'
+  '/mine/order-detail': '/packages/mine/pages/order-detail',
+  '/mine/order-refund': '/packages/mine/pages/order-refund'
 };
 
 const useNavigate = () => {

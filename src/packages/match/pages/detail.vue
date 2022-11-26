@@ -59,7 +59,7 @@
         <template v-slot:outer-main>
           <view class="actionBlock">
             <view class="actionBtn plain" @click="showWechatModal">立即咨询</view>
-            <view class="actionBtn">¥{{ matchInfo.entryFee }} 报名</view>
+            <view class="actionBtn" @click="goOrderConfirm">¥{{ matchInfo.entryFee }} 报名</view>
           </view>
         </template>
       </PopupBottom>
@@ -92,6 +92,7 @@ import Modal from '@/components/modal';
 import StadiumCard from '@/components/list-card/stadium-card';
 import { useAppInstance, useNav } from '@/hooks';
 import api from '@/api';
+import Constant from '@/lib/constant';
 const { $onLaunched } = useAppInstance();
 const { to } = useNav();
 
@@ -144,6 +145,21 @@ const showWechatModal = () => {
 
 const goStadiumDetail = (item) => {
   to('/stadium/detail', { id: item.id });
+};
+
+const goOrderConfirm = () => {
+  to('/mine/create-order', {
+    type: Constant.ACTIVITY_TYPE_2PAYTYPE[7],
+    price: matchInfo.value.entryFee,
+    activityId: matchInfo.value.activityId,
+    publishId: matchId.value,
+    info: JSON.stringify({
+      img: matchInfo.value.gameImageUrl,
+      name: matchInfo.value.gameName,
+      area: matchInfo.value.stadiumAreaDetail,
+      time: `${matchInfo.value.startTime}-${matchInfo.value.endTime}`
+    })
+  });
 };
 
 const stadiumList = ref([]);

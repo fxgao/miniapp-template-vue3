@@ -192,7 +192,8 @@ const courseListRef = ref(null);
 const goCourseDetail = (item) => {
   console.log('goCourseDetail', item);
   to('/course/detail', {
-    id: item.id
+    id: item.activityId,
+    pubId: item.id
   });
 };
 

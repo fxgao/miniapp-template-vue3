@@ -184,15 +184,20 @@ const navBarFullHeight = computed(() => {
   return `${navBarHeight + navBarExtendHeight + statusBarHeight}px`;
 });
 const showAddMiniProgram = ref(false);
-const locationIndex = ref(0);
+const locationIndex = computed(() => {
+  const index = locationArr.value.findIndex(item => {
+    return item.code === locationCode.value;
+  });
+  return index > 0 ? index : 0;
+});
 const locationArr = computed(() => locationStore.getAreaList);
 const locationCode = computed(() => locationStore.getCode);
 // 只会在首次store被赋值时触发，用来init初始值
-watch(locationCode, (newVal, oldVal) => {
-  locationIndex.value = locationArr.value.findIndex(item => {
-    return item.code === newVal;
-  });
-}, { deep: true });
+// watch(locationCode, (newVal, oldVal) => {
+//   locationIndex.value = locationArr.value.findIndex(item => {
+//     return item.code === newVal;
+//   });
+// }, { deep: true });
 
 const shareButtonStyle = computed(() => {
   return `top:${systemInfo.capsulePosition.top}px;left:calc(${systemInfo.capsulePosition.left}px - 74rpx);`;
