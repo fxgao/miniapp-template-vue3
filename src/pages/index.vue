@@ -61,7 +61,7 @@
         marginTop: current === 'course' ? '-208rpx' : current === 'mine' ? '-528rpx' : ''
       }"
     >
-      <Home v-show="current === 'home'" ref="homeRef" />
+      <Home v-show="current === 'home'" ref="homeRef" @locationChange="locationChange"/>
       <Course v-if="current === 'course'" ref="courseRef" />
       <Activity v-if="current === 'activity'" ref="activityRef" />
       <Mine v-if="current === 'mine'" ref="mineRef" />
@@ -252,6 +252,12 @@ onReachBottom(() => {
     activityRef.value.reachBottom();
   }
 });
+
+const locationChange = (info) => {
+  console.log('locationChange', info);
+  getHotStadiumList(); // 热门场馆
+  getNearbyStadiumList(); // 附近场馆
+};
 
 onLoad(async (options) => {
   if (options.key && options.key !== current.value) {

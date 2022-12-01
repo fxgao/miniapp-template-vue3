@@ -167,7 +167,7 @@ const props = defineProps({
     default: false
   }
 });
-const emits = defineEmits(['back']);
+const emits = defineEmits(['back', 'locationChange']);
 const {
   hidePlaceholder,
   isTransparent,
@@ -274,6 +274,7 @@ const locationChange = (res) => {
     state.locationInfo.code = locationArr.value[res.detail?.value].code;
     state.locationInfo.name = locationArr.value[res.detail?.value].name;
   });
+  emits('locationChange', locationArr.value[res.detail?.value]);
 };
 
 onMounted(() => {

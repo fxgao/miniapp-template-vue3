@@ -6,6 +6,7 @@
       :isTransparent="true"
       :titleColor="navTitleColor"
       :backgroundColor="navBarBackgroundColor"
+      @locationChange="locationChange"
     />
     <view class="pageContainer">
       <!-- 热门活动 -->
@@ -106,6 +107,8 @@ import CoachCard from '@/components/list-card/coach-card';
 
 const { $onLaunched } = useAppInstance();
 const { to } = useNav();
+
+const emits = defineEmits(['locationChange']);
 
 // 变量
 const navTitleColor = ref('color: rgba(255,255,255,0)');
@@ -237,6 +240,11 @@ const goCoachDetail = (item) => {
   to('/coach/detail', {
     id: item.id
   });
+};
+
+const locationChange = (info) => {
+  console.log('locationChange', info);
+  emits('locationChange', info);
 };
 
 onLoad(async (options) => {

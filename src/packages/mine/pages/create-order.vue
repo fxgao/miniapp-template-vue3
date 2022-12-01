@@ -197,7 +197,7 @@ const submit = () => {
   }
   if (loginInfoData.value?.level > levelEnd || loginInfoData.value?.level < levelStart) {
     uni.showToast({
-      title: '等级不符合要求',
+      title: '您的等级要不符合要求，请看看其他活动',
       icon: 'none'
     });
     return;
