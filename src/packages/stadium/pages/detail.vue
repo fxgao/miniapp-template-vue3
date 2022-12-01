@@ -17,7 +17,7 @@
           <view class="labelItem">幼少儿</view>
           <view class="labelItem">可预约</view>
         </view>
-        <scroll-view class="imgBlock" :scroll-x="true">
+        <scroll-view v-if="detailImgList.length > 0" class="imgBlock" :scroll-x="true">
           <view
             class="imgItem"
             v-for="(item, index) in detailImgList"
@@ -25,22 +25,28 @@
             @click="showLargeImg(index)"
           >
             <image class="bgImg" :src="item[0].imageUrl" mode="aspectFit" />
-            <view class="text">{{ item.length }}张</view>
+            <view class="text">{{item.title}}({{ item.length }}张)</view>
           </view>
         </scroll-view>
         <view class="bottomInfo">
           <view class="leftLocation">
             <view class="location">{{ stadiumInfo.areaDetail }}</view>
             <view class="chargeInfo">
-              <image class="avatar" :src="stadiumInfo?.managerVo?.photo" mode="aspectFit" />
-              <view class="name">{{ stadiumInfo?.managerVo.nickName }}</view>
+              <image class="avatar" :src="stadiumInfo?.managerVo?.photo" mode="aspectFill" />
+              <view class="name">{{ stadiumInfo?.managerVo?.nickName }}</view>
               <view class="tag">场馆负责人</view>
             </view>
           </view>
           <view class="rightIcon">
-            <view class="iconItem map" @click="showMap"></view>
-            <view class="iconItem share" @click="showWechatModal"></view>
-            <view class="iconItem phone" @click="copyPhone"></view>
+            <view class="iconItem" @click="showMap">
+              <image class="icon" src="https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/navigation-icon.png" />
+            </view>
+            <view class="iconItem" @click="showWechatModal">
+              <image class="icon" src="https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/wechat-icon.png" />
+            </view>
+            <view class="iconItem" @click="copyPhone">
+              <image class="icon" src="https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/phone-icon.png" />
+            </view>
           </view>
         </view>
       </view>
@@ -82,7 +88,7 @@
     </view>
     <Modal v-model:show="wechatModalShow" title="咨询客服">
       <view class="modalContainer">
-        <image class="wechatImg" :src="stadiumInfo.wechatCardUrl" />
+        <image class="wechatImg" show-menu-by-longpress :src="stadiumInfo.wechatCardUrl" />
         <view class="text">更多活动内容请添加教练微信进行咨询</view>
       </view>
       <template v-slot:bottom>
@@ -116,15 +122,23 @@ const stadiumInfo = ref({});
 const detailImgList = computed(() => {
   const resList = [];
   if (stadiumInfo.value?.storeEnvironmentList && stadiumInfo.value?.storeEnvironmentList.length > 0) {
-    resList.push(stadiumInfo.value?.storeEnvironmentList);
+    const list = stadiumInfo.value.storeEnvironmentList;
+    list.title = '门店环境';
+    resList.push(list);
   }
   if (stadiumInfo.value?.infrastructureList && stadiumInfo.value?.infrastructureList.length > 0) {
+    const list = stadiumInfo.value.infrastructureList;
+    list.title = '基础设施';
     resList.push(stadiumInfo.value?.infrastructureList);
   }
   if (stadiumInfo.value?.stadiumImgList && stadiumInfo.value?.stadiumImgList.length > 0) {
+    const list = stadiumInfo.value.stadiumImgList;
+    list.title = '场馆环境';
     resList.push(stadiumInfo.value?.stadiumImgList);
   }
   if (stadiumInfo.value?.courseWillList && stadiumInfo.value?.courseWillList.length > 0) {
+    const list = stadiumInfo.value.courseWillList;
+    list.title = '课程实拍';
     resList.push(stadiumInfo.value?.courseWillList);
   }
   return resList;
@@ -372,22 +386,11 @@ onLoad(async (options) => {
       .rightIcon {
         @include flex-start;
         .iconItem {
-          &.map {
-            background: url('https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/navigation-icon.png')
-              0 0 no-repeat;
-            background-size: contain;
-            margin-right: 32rpx;
-          }
-          &.share {
-            background: url('https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/wechat-icon.png')
-              0 0 no-repeat;
-            background-size: contain;
-            margin-right: 32rpx;
-          }
-          &.phone {
-            background: url('https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/phone-icon.png')
-              0 0 no-repeat;
-            background-size: contain;
+          @include flex-center;
+          margin-left: 32rpx;
+          .icon {
+            width: 48rpx;
+            height: 48rpx;
           }
           width: 64rpx;
           height: 64rpx;

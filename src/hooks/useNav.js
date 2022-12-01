@@ -1,5 +1,6 @@
 const REDIRECT_URL = {
   '/webview': '/pages/webview',
+  '/mp-html': '/packages/mp-html/pages/index',
   '/index:home': '/pages/index?key=home',
   '/index:mine': '/pages/index?key=mine',
   '/index:course': '/pages/index?key=course',

@@ -35,7 +35,7 @@
         </view>
         <view class="infoItem">
           <view class="leftText">活动等级：</view>
-          <view class="right">{{ activityInfo.levelStart || '暂无' }}</view>
+          <view class="right">{{ Constant.LEVEL_GRADE_2STRING_MAP[activityInfo.levelStart] || '暂无' }} - {{ Constant.LEVEL_GRADE_2STRING_MAP[activityInfo.levelEnd] || '暂无' }}</view>
         </view>
         <view class="infoItem">
           <view class="leftText">活动费用：</view>
@@ -65,8 +65,8 @@
       <PopupBottom ref="popup1">
         <template v-slot:outer-main>
           <view class="actionBlock">
-            <view class="actionBtn plain" @click="showWechatModal">立即咨询</view>
-            <view class="actionBtn" @click="goOrderConfirm">¥{{ activityInfo.activityPrice }} 报名</view>
+            <view class="actionBtn plain" :class="{'w100': !activityInfo.isOrder}" @click="showWechatModal">立即咨询</view>
+            <view class="actionBtn" v-if="activityInfo.isOrder" @click="goOrderConfirm">¥{{ activityInfo.activityPrice }} 报名</view>
           </view>
         </template>
       </PopupBottom>
@@ -74,7 +74,7 @@
     <view class="modalContainer">
       <Modal v-model:show="wechatModalShow" title="活动咨询">
         <view class="modalBlock">
-          <image class="wechatImg" :src="activityInfo.wechatCardUrl" />
+          <image class="wechatImg" show-menu-by-longpress :src="activityInfo.wechatCardUrl" />
           <view class="text">更多活动内容请添加教练微信进行咨询</view>
         </view>
         <template v-slot:bottom>
@@ -165,7 +165,9 @@ const goOrderConfirm = () => {
       img: activityInfo.value.activeHeadFigure,
       name: activityInfo.value.activeName,
       area: activityInfo.value.areaDetail || '得乐场馆',
-      time: `${activityInfo.value.activeStartTime}-${activityInfo.value.endTime}`
+      time: `${activityInfo.value.activeStartTime}-${activityInfo.value.endTime}`,
+      levelStart: activityInfo.value.levelStart,
+      levelEnd: activityInfo.value.levelEnd
     })
   });
 };
@@ -304,6 +306,9 @@ onLoad(async (options) => {
         color: #ff6829;
         background: #fff;
         border: 4rpx solid #ff6829;
+      }
+      &.w100 {
+        width: 100%;
       }
       @include btn-normal;
       width: 320rpx;

@@ -1,7 +1,7 @@
 <template>
   <view class="modal-container" v-if="show">
-    <view class="modal-bg" @click="handelClose"></view>
-    <view class="modal-main">
+    <view class="modal-bg" @click="handelClose" @touchmove.stop.prevent="stop"></view>
+    <view class="modal-main" @touchmove.stop.prevent="stop">
       <view class="main-header">
         <view class="title">{{title}}</view>
         <image class="close-icon" src="https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/model-close-icon.png" @click="handelClose" />
@@ -9,7 +9,7 @@
       <view class="main-content">
         <slot></slot>
       </view>
-      <view class="main-bottom">
+      <view class="main-bottom" @touchmove.stop.prevent="stop">
         <slot name="bottom"></slot>
       </view>
     </view>
@@ -35,6 +35,7 @@ const { show, title } = toRefs(props);
 const handelClose = () => {
   emits('update:show', false);
 };
+const stop = () => {};
 </script>
 
 <style lang="scss" scoped>

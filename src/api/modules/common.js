@@ -109,6 +109,16 @@ const common = {
     return request({
       requestParams
     });
+  },
+  // 获取规则信息
+  getProtocolContent(type) {
+    const requestParams = {
+      url: `/wx/protocol/${type}`,
+      method: 'GET'
+    };
+    return request({
+      requestParams
+    });
   }
 };
 

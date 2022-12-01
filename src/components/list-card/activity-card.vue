@@ -83,7 +83,8 @@ const joinList = computed(() => {
     @include flex-between;
     align-items: flex-end;
     .joinInfo {
-      @include flex-start;
+      @include flex-between;
+      width: 236rpx;
       .avatarBlock {
         @include flex-center;
         margin-right: -16rpx;

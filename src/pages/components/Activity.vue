@@ -172,7 +172,7 @@ watch(
       key: 'areaId',
       list: resList
     }];
-    filter.value && filter.value.handleReset();
+    filter.value && filter.value.handleResetAll();
   },
   { immediate: true }
 );
@@ -207,6 +207,7 @@ defineExpose({
   .pageContainer {
     .listBlock {
       padding: 0 40rpx;
+      margin-top: -24rpx;
     }
     .listBottomText {
       font-size: 28rpx;

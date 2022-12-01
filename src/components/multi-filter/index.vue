@@ -395,13 +395,44 @@ const handleReset = () => {
   allFilterData.value = filterDataReset;
 };
 
+// 处理全部重置
+const handleResetAll = () => {
+  const tabListReset = tabListData.value.map((item) => {
+    console.log('tabListReset map', item);
+    return {
+      ...item,
+      showLabel: item.label,
+      selected: item.selected
+    };
+  });
+
+  const filterDataReset = {};
+  for (const key in filterData.value) {
+    filterDataReset[key] = filterData.value[key].map((item) => {
+      const list = item.list.map((itemChild) => {
+        return {
+          ...itemChild,
+          checked: itemChild.checked || false
+        };
+      });
+      return {
+        ...item,
+        list
+      };
+    });
+  }
+  tabListData.value = tabListReset;
+  allFilterData.value = filterDataReset;
+};
+
 const handClose = () => {
   show.value = false;
 };
 
 defineExpose({
   handClose,
-  handleReset
+  handleReset,
+  handleResetAll
 });
 </script>
 <style lang="scss">

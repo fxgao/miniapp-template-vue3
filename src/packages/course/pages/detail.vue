@@ -46,8 +46,8 @@
       <PopupBottom ref="popup1">
         <template v-slot:outer-main>
           <view class="actionBlock">
-            <view class="actionBtn plain" @click="showWechatModal">立即咨询</view>
-            <view class="actionBtn" @click="goOrderConfirm">¥{{ courseInfo.courseFee }} 报名</view>
+            <view class="actionBtn plain" :class="{'w100': !courseInfo.isOrder}" @click="showWechatModal">立即咨询</view>
+            <view class="actionBtn" v-if="courseInfo.isOrder" @click="goOrderConfirm">¥{{ courseInfo.courseFee }} 报名</view>
           </view>
         </template>
       </PopupBottom>
@@ -55,7 +55,7 @@
     <view class="modalContainer">
       <Modal v-model:show="wechatModalShow" title="活动咨询">
         <view class="modalBlock">
-          <image class="wechatImg" :src="courseInfo.wechatCardUrl" />
+          <image class="wechatImg" show-menu-by-longpress :src="courseInfo.wechatCardUrl" />
           <view class="text">更多活动内容请添加教练微信进行咨询</view>
         </view>
         <template v-slot:bottom>
@@ -220,6 +220,9 @@ onLoad(async (options) => {
         color: #ff6829;
         background: #fff;
         border: 4rpx solid #ff6829;
+      }
+      &.w100 {
+        width: 100%;
       }
       @include btn-normal;
       width: 320rpx;

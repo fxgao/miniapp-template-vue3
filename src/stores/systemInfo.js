@@ -14,7 +14,7 @@ export const useSystemInfoStore = defineStore('systemInfo', {
     },
     navHeight: (state) => {
       if (!state.systemInfo) {
-        return 4;
+        return '4px';
       } else {
         const { navBarHeight = 0, navBarExtendHeight = 0, statusBarHeight = 0 } = state.systemInfo;
         return `${navBarHeight + navBarExtendHeight + statusBarHeight}px`;

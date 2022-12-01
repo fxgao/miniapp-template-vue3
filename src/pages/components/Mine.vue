@@ -134,17 +134,17 @@ const settingList = ref([
   {
     title: '等级说明',
     icon: 'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/setting-level-icon.png',
-    path: ''
+    path: '/mp-html?alias=descriptionGrade&title=等级说明'
   },
   {
     title: '关于得乐',
     icon: 'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/setting-about-icon.png',
-    path: ''
+    path: '/mp-html?alias=aboutUs&title=关于得乐'
   },
   {
     title: '联系我们',
     icon: 'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/setting-concat-icon.png',
-    path: ''
+    path: '/mp-html?alias=contactUs&title=联系我们'
   },
   {
     title: '建议反馈',

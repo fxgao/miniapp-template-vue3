@@ -394,7 +394,7 @@ onMounted(() => {
     position: relative;
     display: flex;
     align-items: center;
-    width: 340rpx;
+    width: 364rpx;
     // justify-content: center;
     overflow: hidden;
     font-size: 17px;

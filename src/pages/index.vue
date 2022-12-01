@@ -37,22 +37,27 @@
           :class="{ stadiumItem: true, hot: item && item.hot && index === 1 }"
           v-for="(item, index) in stadiumList"
           :key="index"
-          @click="handleStadiumClick(item)"
+          @click="handleStadiumClick(item, index)"
         >
-          <view class="name">{{ index === 0 ? "附近场馆" : "热门场馆" }}</view>
-          <view class="remark">{{ item ? item.stadiumName : '' }}</view>
-          <view class="labelBlock">
-            <view class="labelItem">室内</view>
-            <view class="labelItem">成人</view>
-            <view class="labelItem">标签</view>
-          </view>
+          <view class="name">{{ index === 0 ? "附近场馆" : "全部场馆" }}</view>
+          <template v-if="index !== 1">
+            <view class="remark">{{ item ? item.stadiumName : '' }}</view>
+            <view class="labelBlock">
+              <view class="labelItem">室内</view>
+              <view class="labelItem">成人</view>
+              <view class="labelItem">标签</view>
+            </view>
+          </template>
+          <template v-else>
+            <view class="remark">查看全部场馆</view>
+          </template>
         </view>
       </view>
     </view>
     <view
       class="main"
       :style="{
-        paddingBottom: 46 + (systemInfo.safeBottom === 0 ? 8 : systemInfo.safeBottom) + 'px',
+        paddingBottom: 46 + (safeBottom === 0 ? 8 : safeBottom) + 'px',
         marginTop: current === 'course' ? '-208rpx' : current === 'mine' ? '-528rpx' : ''
       }"
     >
@@ -82,10 +87,10 @@ import { useAppInstance, useNav } from '@/hooks';
 import Config from '@/api/config';
 const locationStore = useLocationInfoStore();
 const { getCode, locationInfo } = storeToRefs(locationStore);
+const systemInfoStore = useSystemInfoStore();
+const { safeBottom, navHeight } = storeToRefs(systemInfoStore);
 const { $onLaunched, $userLocation } = useAppInstance();
 const { to } = useNav();
-
-const systemInfo = useSystemInfoStore();
 
 const current = ref('home');
 const homeRef = ref(null);
@@ -102,18 +107,18 @@ const tabList = readonly([
     title: '首页'
   },
   {
-    key: 'course',
-    url: '/pages/index?key=course',
-    iconPath: Config.OSS_URL_PREFIX + '/tabbar/tabbar-course.png',
-    selectedIconPath: Config.OSS_URL_PREFIX + '/tabbar/tabbar-course-selected.png',
-    title: '课程'
-  },
-  {
     key: 'activity',
     url: '/pages/index?key=activity',
     iconPath: Config.OSS_URL_PREFIX + '/tabbar/tabbar-activity.png',
     selectedIconPath: Config.OSS_URL_PREFIX + '/tabbar/tabbar-activity-selected.png',
     title: '活动'
+  },
+  {
+    key: 'course',
+    url: '/pages/index?key=course',
+    iconPath: Config.OSS_URL_PREFIX + '/tabbar/tabbar-course.png',
+    selectedIconPath: Config.OSS_URL_PREFIX + '/tabbar/tabbar-course-selected.png',
+    title: '课程'
   },
   {
     key: 'mine',
@@ -203,10 +208,14 @@ const handleKingkongClick = (item) => {
   };
 };
 
-const handleStadiumClick = (item) => {
+const handleStadiumClick = (item, index) => {
   console.log('handleStadiumClick', item);
   const { id } = item;
-  to('/stadium/detail', { id });
+  if (index === 1) {
+    to('/stadium/index');
+  } else {
+    to('/stadium/detail', { id });
+  }
 };
 
 const handleTabChange = (key) => {
@@ -266,7 +275,7 @@ onLoad(async (options) => {
   background: #f5f5f5;
   .topConatiner {
     min-height: 720rpx;
-    padding-top: 208rpx;
+    padding-top:  calc( v-bind('navHeight') + 16rpx);
     background: url('https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/home/home-top-bg.png')
       no-repeat;
     background-size: contain;

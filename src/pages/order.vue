@@ -120,12 +120,11 @@
     <view class="modalContainer">
       <Modal v-model:show="successModalShow">
         <view class="modalBlock">
-          <image class="successImg" src="" />
+          <image class="successImg" src="https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/success-icon.png" />
           <view class="text">订单支付成功</view>
         </view>
         <template v-slot:bottom>
-          <view class="saveBtn" @click="share">分享给好友/群聊</view>
-          <view class="copyBtn" @click="goOrderDetail">查看订单详情</view>
+          <button open-type="share" class="copyBtn">分享给好友/群聊</button>
         </template>
       </Modal>
     </view>

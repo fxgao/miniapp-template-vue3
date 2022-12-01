@@ -61,7 +61,7 @@ const labelList = computed(() => {
     width: 320rpx;
     .bgImg {
       width: 320rpx;
-      height: 320rpx
+      height: 180rpx
     }
     .info {
       width: 320rpx;
@@ -70,19 +70,15 @@ const labelList = computed(() => {
   border-radius: 16rpx;
   overflow: hidden;
   width: 350rpx;
-  height: 412rpx;
   position: relative;
   .bgImg {
     width: 350rpx;
-    height: 350rpx
+    height: 196rpx
   }
   .info {
-    position: absolute;
-    bottom: 0;
     width: 350rpx;
     height: 232rpx;
-    background: rgba(255,255,255,0.9);
-    backdrop-filter: blur(2rpx);
+    background: rgba(255,255,255, 1);
     padding: 24rpx;
     .title {
       font-size: 32rpx;
@@ -110,11 +106,13 @@ const labelList = computed(() => {
     .content {
       @include text-ellipsis-2;
       width: 298rpx;
+      height: 80rpx;
       margin-top: 16rpx;
       font-size: 24rpx;
       color: #A0A0A0;
       line-height: 40rpx;
       word-break: break-all;
+      white-space: normal;
     }
   }
 }

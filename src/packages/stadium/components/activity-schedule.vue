@@ -13,16 +13,16 @@
         </view>
       </view>
     </scroll-view>
-    <scroll-view :scroll-x="true" class="placeInfo" v-if="placeList.length">
+    <scroll-view :scroll-x="true" class="placeInfo">
       <view class="placeContainer">
         <view
           class="placeItem"
           :class="{ active: index === nowPlaceIndex }"
-          v-for="(item, index) in placeList"
+          v-for="(item, index) in activityInfoList"
           :key="index"
           @click="choosePlace(index)"
         >
-          {{ item.name }}
+          {{ item.placeName }}
         </view>
       </view>
     </scroll-view>
@@ -53,8 +53,9 @@
             color: item.textColor
           }"
         >
-          {{ item.start }}-{{ item.end }} {{ isOverTime(item.start) ? '可报名' : '已结束' }}
+          {{ item.start }}-{{ item.end }} {{ isOverTime(item.start) ? '已结束报名' : '可报名' }}
           <image
+            v-if="!isOverTime(item.start)"
             class="icon"
             src="https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/right-arrow-icon.png"
           />
@@ -82,15 +83,16 @@ const { stadiumId } = toRefs(props);
 const dateInfo = useGenerateDateInfo(7);
 const activityInfoList = ref([]);
 const nowIndex = ref(0);
-const nowPlaceIndex = ref(0);
+const nowPlaceIndex = ref(-1);
 const scrollTop = ref(0);
 const loading = ref(false);
+
 const getActivityInfo = async (activityTime) => {
   loading.value = true;
   try {
     const res = await api.stadium.getStadiumActivityList(stadiumId.value, activityTime.dateStr);
     console.log('getStadiumActivityList', res);
-    activityInfoList.value = res;
+    activityInfoList.value = res || [];
     nowPlaceIndex.value = 0;
   } catch (error) {
     uni.showToast({ title: '请求数据出错！', icon: 'none' });
@@ -99,39 +101,22 @@ const getActivityInfo = async (activityTime) => {
   }
 };
 
-const placeList = computed(() => {
-  if (activityInfoList.value.length <= 0) return [];
-  const res = [];
-  const exisitId = [];
-
-  activityInfoList.value.forEach((item) => {
-    if (!exisitId.includes(item.resourceId)) {
-      exisitId.push(item.resourceId);
-      res.push({
-        name: item.placeName,
-        resourceId: item.resourceId
-      });
-    }
-  });
-  return res;
-});
-
-const choosePlace = (index) => {
-  nowPlaceIndex.value = index;
-};
-
 const activityList = computed(() => {
-  if (!placeList.value[nowPlaceIndex.value]) return [];
-  const nowResourceId = placeList.value[nowPlaceIndex.value].resourceId;
-  const resList = activityInfoList.value.filter((item) => item.resourceId === nowResourceId);
-  return resList;
+  if (
+    nowPlaceIndex.value < 0 ||
+    !activityInfoList.value[nowPlaceIndex.value] ||
+    activityInfoList.value[nowPlaceIndex.value].publishPlaceDetails.length === 0
+  ) {
+    return [];
+  }
+  return activityInfoList.value[nowPlaceIndex.value].publishPlaceDetails;
 });
 
 watch(activityList, (newVal) => {
   if (newVal.length <= 0) return;
-  const nowActivity = newVal[0];
+  const nowActivity = newVal[newVal.length - 1];
   const nowActivityTop = calcTop(nowActivity.start);
-  scrollTop.value = nowActivityTop - 116 + 'rpx';
+  scrollTop.value = nowActivityTop - 56 + 'rpx';
 });
 
 const changeDate = (index) => {
@@ -140,17 +125,15 @@ const changeDate = (index) => {
   getActivityInfo(dateInfo[index]);
 };
 
-const changePlace = (index) => {
-  if (index === nowIndex.value || loading.value) return;
-  nowIndex.value = index;
-  getActivityInfo(dateInfo[index]);
+const choosePlace = (index) => {
+  nowPlaceIndex.value = index;
 };
 
 const calcTop = (startTime) => {
   const timeArr = startTime.split(':');
   const Hour = Number(timeArr[0]);
   const Minutes = Number(timeArr[1]);
-  const height = 36 + (Hour - 6 + (Minutes / 60)) * 115.6;
+  const height = 36 + (Hour - 6 + Minutes / 60) * 115.6;
   console.log('calcTop', Hour, Minutes);
   return height;
 };
@@ -192,7 +175,7 @@ const isOverTime = (startTime) => {
   dateStart.setHours(HourStart);
   dateStart.setMinutes(MinutesStart);
   const nowDateHours = new Date();
-
+  console.log(dateStart.getTime(), nowDateHours.getTime());
   return dateStart.getTime() < nowDateHours.getTime();
 };
 
@@ -203,15 +186,23 @@ const goDetail = (item) => {
   let path = '';
   if (useble === 4) {
     path = '/activity/detail';
+    to(path, {
+      actId: resourceId,
+      pubId
+    });
   } else if (useble === 6) {
     path = '/course/detail';
+    to(path, {
+      id: resourceId,
+      pubId
+    });
   } else if (useble === 8) {
     path = '/match/detail';
+    to(path, {
+      id: resourceId,
+      pubId
+    });
   }
-  to(path, {
-    id: resourceId,
-    pubId
-  });
 };
 
 onMounted(() => {

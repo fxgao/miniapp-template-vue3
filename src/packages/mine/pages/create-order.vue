@@ -186,9 +186,18 @@ const priceExplainText = computed(() => {
 });
 
 const submit = () => {
+  const levelStart = parseInt(confirmInfo.value.levelStart);
+  const levelEnd = parseInt(confirmInfo.value.levelEnd);
   if (!loginInfoData.value?.tel || !loginInfoData.value?.openId) {
     uni.showToast({
       title: '请先填写用户信息',
+      icon: 'none'
+    });
+    return;
+  }
+  if (loginInfoData.value?.level > levelEnd || loginInfoData.value?.level < levelStart) {
+    uni.showToast({
+      title: '等级不符合要求',
       icon: 'none'
     });
     return;

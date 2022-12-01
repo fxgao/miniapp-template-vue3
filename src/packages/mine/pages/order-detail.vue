@@ -142,7 +142,7 @@
     <view class="modalContainer">
       <Modal v-model:show="serveModalShow">
         <view class="modalBlock">
-          <image class="wechatImg" src="" />
+          <image class="wechatImg" show-menu-by-longpress :src="orderInfo?.tbBizStadiumVo?.wechatCardUrl" />
           <view class="text">咨询客服了解退款情况</view>
         </view>
         <template v-slot:bottom>
@@ -277,7 +277,7 @@ const showServeModal = () => {
 };
 
 const saveQrCode = async () => {
-  const url = '';
+  const url = orderInfo.value?.tbBizStadiumVo?.wechatCardUrl;
   const save = (path) => {
     uni.saveImageToPhotosAlbum({
       filePath: path,
@@ -325,7 +325,7 @@ const saveQrCode = async () => {
 
 const copyWechatNumber = () => {
   uni.setClipboardData({
-    data: 'deletiyu',
+    data: orderInfo.value?.tbBizStadiumVo?.wechatCode,
     success: () => {
       uni.showToast({ title: '复制成功', icon: 'none' });
     }

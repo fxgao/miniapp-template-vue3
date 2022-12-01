@@ -221,7 +221,7 @@ watch(
       key: 'areaId',
       list: resList
     }];
-    filter.value && filter.value.handleReset();
+    filter.value && filter.value.handleResetAll();
   },
   { immediate: true }
 );

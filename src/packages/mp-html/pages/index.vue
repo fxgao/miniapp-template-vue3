@@ -22,8 +22,7 @@
         'padding-bottom': systemInfo.safeBottomHeight + 'px'
       }"
     >
-      <!-- <mp-html v-model:content="tipsContent"></mp-html> -->
-      <!-- <loading-spin v-if="loading" /> -->
+      <mp-html v-model:content="tipsContent"></mp-html>
     </view>
   </view>
 </template>
@@ -32,32 +31,24 @@
 import { ref, nextTick } from 'vue';
 import { onLoad } from '@dcloudio/uni-app';
 import api from '@/api';
-// import LoadingSpin from '@/components/base/LoadingSpin';
-// import MpHtml from '@/components/mp-html/mp-html.vue';
+import MpHtml from '@/components/mp-html/mp-html.vue';
 import { useSystemInfo, useAppInstance } from '@/hooks';
 
 const { systemInfo } = useSystemInfo();
-const { $globalEnv } = useAppInstance();
-const loading = ref(true);
+// const { $globalEnv } = useAppInstance();
 const tipTitle = ref('');
 const tipsContent = ref('');
 
-const getRulesInfo = async (alias) => {
-  const VUE_APP_PROCESS_ENV = $globalEnv;
-  // const { title, content } = await api.common.getRuleContent(alias, VUE_APP_PROCESS_ENV);
-  tipTitle.value = '测试';
-  tipsContent.value = `<h1 style="text-align: left;">Welcome to the TinyMCE demo!</h1>
-<p style="font-size: 15px; text-align: left;"><img src="https://www.baidu.com/img/bd_logo1.png" alt="My alt text" width="540" height="258" /></p >
-<p style="font-size: 15px; text-align: left;">f<strong>adsfdasfas</strong>df</p >
-<p style="font-size: 15px; text-align: left;">fad<em>sfasd</em>fasd</p >`;
-
-  nextTick(() => {
-    loading.value = false;
-  });
+const getRulesInfo = async (alias, title) => {
+  // const VUE_APP_PROCESS_ENV = $globalEnv;
+  const res = await api.common.getProtocolContent(alias);
+  console.log('getProtocolContent', res);
+  tipTitle.value = title;
+  tipsContent.value = res.data || '暂无内容';
 };
 
 onLoad((options) => {
-  getRulesInfo(options.alias);
+  getRulesInfo(options.alias, options.title);
 });
 </script>
 
