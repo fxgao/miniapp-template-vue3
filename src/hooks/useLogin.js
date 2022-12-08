@@ -17,18 +17,19 @@ const useLogin = () => {
 
   /**
    * 静默登录
-   * params.evetyLogin 每次onlaunch都调用login
+   * params.everyLogin 每次onlaunch都调用login
    * params.retryTimes 重试次数
    * params.loginSuccessCode 业务成功码
    * timeout 延迟时间
    * codeAlias 静默登录，别名，默认为code
    */
   const login = (params, completeFunc, failFunc) => {
-    const { evetyLogin, retryTimes = 3, loginSuccessCode = 200, codeAlias = 'code' } = params;
+    const { everyLogin, retryTimes = 3, loginSuccessCode = 200, codeAlias = 'code' } = params;
     RetryTimes = retryTimes;
     LoginCode = loginSuccessCode;
     CodeAlias = codeAlias;
-    if (evetyLogin) {
+    if (everyLogin) {
+      console.log('everyLogin >>>>>>>>');
       clearLoginStorage();
     }
     wx.checkSession({

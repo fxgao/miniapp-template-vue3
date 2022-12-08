@@ -8,7 +8,7 @@
     >
       <view class="matchInfo">
         <view class="place">{{info.stadiumName || '得乐体育'}}</view>
-        <view class="btns" v-if="!overTime">
+        <view class="btns" v-if="(!overTime && info.gameStatus)">
           <view class="btn" v-if="info.gameStatus === 1">报名</view>
           <view class="btn grey" v-else>结束</view>
         </view>
