@@ -46,7 +46,7 @@
           <view class="right">{{ activityInfo.isParkValue || '无' }}</view>
         </view>
         <view class="infoItem">
-          <view class="leftText">流程安排：</view>
+          <view class="leftText">活动介绍：</view>
           <view class="right">{{ activityInfo.activeRemark || '无' }}</view>
         </view>
       </view>

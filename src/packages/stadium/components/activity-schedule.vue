@@ -32,8 +32,8 @@
         class="activityBlock"
         @click="goDetail(item)"
         :style="{
-          background: item.color,
-          color: item.textColor,
+          background: item.textColor,
+          color: item.color,
           top: calcTop(item.start) + 'rpx',
           height: calcHeight(item.start, item.end) + 'rpx'
         }"
@@ -43,14 +43,14 @@
         <view
           class="title"
           :style="{
-            color: item.textColor
+            color: item.color
           }"
           >{{ item.title }}</view
         >
         <view
           class="info"
           :style="{
-            color: item.textColor
+            color: item.color
           }"
         >
           {{ item.start }}-{{ item.end }} {{ isOverTime(item.start) ? '已结束报名' : '可报名' }}
@@ -290,7 +290,7 @@ onMounted(() => {
       width: 584rpx;
       display: flex;
       flex-direction: column;
-      justify-content: space-around;
+      justify-content: center;
       .title {
         @include text-ellipsis;
         font-size: 28rpx;

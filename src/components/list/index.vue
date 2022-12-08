@@ -60,6 +60,10 @@ const props = defineProps({
   dataName: {
     type: String,
     default: ''
+  },
+  loading: {
+    type: Boolean,
+    default: true
   }
 });
 
@@ -163,7 +167,8 @@ onMounted(() => {
 
 defineExpose({
   refresh,
-  requestList
+  requestList,
+  loading
 });
 </script>
 

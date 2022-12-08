@@ -58,7 +58,7 @@
       <PopupBottom ref="popup1">
         <template v-slot:outer-main>
           <view class="actionBlock">
-            <view class="actionBtn plain" :class="{'w100': !courseInfo.isOrder}" @click="showWechatModal">立即咨询</view>
+            <view class="actionBtn plain" :class="{'w100': !matchInfo.isOrder}" @click="showWechatModal">立即咨询</view>
             <view class="actionBtn" v-if="matchInfo.isOrder" @click="goOrderConfirm">¥{{ matchInfo.entryFee }} 报名</view>
           </view>
         </template>

@@ -7,10 +7,10 @@
       title="报名课程"
       :navCenterStyle="'flex-end'"
     />
-    <view class="pageContainer">
+    <view class="pageContainer" :class="{ white: courseList.length === 0 }">
       <!-- 列表 -->
       <view class="listContainer">
-        <List v-model:dataList="courseList" url="/wx/publish/courseList" ref="courseListRef">
+        <List v-show="courseList.length > 0" v-model:loading="loading" v-model:dataList="courseList" url="/wx/publish/courseList" ref="courseListRef">
           <template v-slot="{ data }">
             <view @click="goCourseDetail(data)">
               <course-card
@@ -27,21 +27,39 @@
             <view class="listBottomText"> 没有更多了! </view>
           </template>
         </List>
+        <empty
+          v-if="(courseList.length === 0 && !listLoading)"
+          title="暂无课程"
+          subTitle="目前还没有报名课程哦"
+          icon="https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/empty/no-course.png"
+          buttonText="去报名"
+          url="/index:course"
+        ></empty>
       </view>
     </view>
   </view>
 </template>
 
 <script setup>
-import { ref, reactive, watch } from 'vue';
+import { ref, reactive, computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import List from '@/components/list';
-import ActivityCard from '@/components/list-card/activity-card';
+import CourseCard from '@/components/list-card/course-card';
+import Empty from '@/components/base/empty';
 import { useAppInstance, useNav } from '@/hooks';
+import { useSystemInfoStore } from '@/stores/systemInfo';
 
+const systemInfoStore = useSystemInfoStore();
+const { safeBottom, navHeight } = storeToRefs(systemInfoStore);
 const { to } = useNav();
 
 const courseList = ref([]);
+const courseListRef = ref(null);
+
+const listLoading = computed(() => {
+  console.log(courseListRef);
+  return courseListRef.value ? courseListRef.value.loading : true;
+});
 
 const goCourseDetail = (data) => {
   console.log('goCourseDetail', data);
@@ -57,6 +75,10 @@ const goCourseDetail = (data) => {
   background: #f5f5f5;
 }
 .pageContainer {
+  &.white {
+    background: #fff;
+  }
+  min-height: calc(100vh - v-bind('navHeight'));
   .listContainer {
     padding: 0 38rpx;
   }

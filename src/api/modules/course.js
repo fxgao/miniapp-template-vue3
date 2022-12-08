@@ -5,7 +5,8 @@ const course = {
   getCourseList(params) {
     return request({
       requestParams: {
-        url: '/wx/publish/courseList',
+        // url: '/wx/publish/courseList',
+        url: '/wx/course/listPage',
         method: 'GET',
         data: params
       }

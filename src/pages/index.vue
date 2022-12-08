@@ -1,11 +1,17 @@
 <template>
   <view class="pageContainer">
+    <view class="bg"></view>
     <view class="topConatiner">
       <!-- banner位 -->
       <view class="bannerBlock" v-if="current !== 'mine'">
         <swiper class="bannerSwiper" circular="true" @change="bannerChange">
           <swiper-item v-for="item in banner" :key="item.id">
-            <image class="bannerImg" mode="aspectFill" :src="item.bannerUrl" @click="handleBannerJump(item)"/>
+            <image
+              class="bannerImg"
+              mode="aspectFill"
+              :src="item.bannerUrl"
+              @click="handleBannerJump(item)"
+            />
           </swiper-item>
         </swiper>
         <view class="indicatorBlock">
@@ -39,7 +45,7 @@
           :key="index"
           @click="handleStadiumClick(item, index)"
         >
-          <view class="name">{{ index === 0 ? "附近场馆" : "全部场馆" }}</view>
+          <view class="name">{{ index === 0 ? '附近场馆' : '全部场馆' }}</view>
           <template v-if="index !== 1">
             <view class="remark">{{ item ? item.stadiumName : '' }}</view>
             <view class="labelBlock">
@@ -57,11 +63,10 @@
     <view
       class="main"
       :style="{
-        paddingBottom: 46 + (safeBottom === 0 ? 8 : safeBottom) + 'px',
-        marginTop: current === 'course' ? '-208rpx' : current === 'mine' ? '-528rpx' : ''
+        paddingBottom: 46 + (safeBottom === 0 ? 8 : safeBottom) + 'px'
       }"
     >
-      <Home v-show="current === 'home'" ref="homeRef" @locationChange="locationChange"/>
+      <Home v-show="current === 'home'" ref="homeRef" @locationChange="locationChange" />
       <Course v-if="current === 'course'" ref="courseRef" />
       <Activity v-if="current === 'activity'" ref="activityRef" />
       <Mine v-if="current === 'mine'" ref="mineRef" />
@@ -205,7 +210,7 @@ const handleKingkongClick = (item) => {
     current.value = path.split(':')[1];
   } else {
     to(path);
-  };
+  }
 };
 
 const handleStadiumClick = (item, index) => {
@@ -228,7 +233,9 @@ const handleTabChange = (key) => {
   current.value = key;
 
   nextTick(() => {
-    console.log('do smt');
+    if (key === 'home') {
+      homeRef.value.pageScroll({ scrollTop: 0 });
+    }
   });
 };
 
@@ -274,17 +281,27 @@ onLoad(async (options) => {
 <style lang="scss" scoped>
 .main {
   width: 100%;
+  position: relative;
+  z-index: 2;
 }
 .pageContainer {
   width: 100%;
   min-height: 100vh;
   background: #f5f5f5;
-  .topConatiner {
+  .bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
     min-height: 720rpx;
-    padding-top:  calc( v-bind('navHeight') + 16rpx);
     background: url('https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/home/home-top-bg.png')
       no-repeat;
     background-size: contain;
+  }
+  .topConatiner {
+    position: relative;
+    z-index: 2;
+    padding-top: calc(v-bind('navHeight') + 16rpx);
     .bannerBlock {
       position: relative;
       padding-top: 208rpx;

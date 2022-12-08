@@ -73,15 +73,22 @@ const pageScroll = (e) => {
   }
   const transparent = scrollTop / 36 >= 1 ? 1 : scrollTop / 36;
   const transparent2 = scrollTop / 284 >= 1 ? 1 : scrollTop / 284;
-  navTitleColor.value = `color:rgba(0,0,0,${transparent});`;
-  navBarBackgroundColor.value = `rgba(255,255,255,${transparent})`;
-  filterBgColor.value = `rgba(255,255,255,${transparent2})`;
+  if (transparent2 >= 1) {
+    filterBgColor.value = `rgba(255,255,255,${transparent2})`;
+  } else {
+    filterBgColor.value = 'rgba(255,255,255,0)';
+  }
+
   if (transparent >= 1) {
+    navTitleColor.value = `color:rgba(0,0,0,${transparent});`;
+    navBarBackgroundColor.value = `rgba(255,255,255,${transparent})`;
     uni.setNavigationBarColor({
       frontColor: '#000000',
       backgroundColor: '#ffffff'
     });
   } else {
+    navTitleColor.value = 'color:rgba(0,0,0,0);';
+    navBarBackgroundColor.value = 'rgba(255,255,255,0)';
     uni.setNavigationBarColor({
       frontColor: '#ffffff',
       backgroundColor: '#ffffff'

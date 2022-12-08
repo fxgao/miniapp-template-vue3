@@ -5,7 +5,8 @@ const match = {
   getMatchList(params) {
     return request({
       requestParams: {
-        url: '/wx/publish/gameList',
+        // url: '/wx/publish/gameList',
+        url: '/wx/game/listPage',
         method: 'GET',
         data: params
       }

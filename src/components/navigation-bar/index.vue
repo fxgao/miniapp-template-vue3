@@ -410,7 +410,7 @@ onMounted(() => {
       }
       .locationChoose {
         font-size: 36rpx;
-        font-weight: 600;
+        font-weight: 700;
         color: #333333;
         line-height: 52rpx;
       }

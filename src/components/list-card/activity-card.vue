@@ -17,8 +17,8 @@
             />
           </view>
           <view class="signUpText"
-            >{{ info?.participantVo?.participanCount }}人报名/{{
-              info?.participantVo?.participanCountMax
+            >{{ info?.participantVo.participanCount || 0 }}人报名/{{
+              info?.participantVo.participanCountMax || 'x'
             }}满</view
           >
         </view>
