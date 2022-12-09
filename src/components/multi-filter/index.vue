@@ -5,7 +5,7 @@
     :class="{ isSticky: isSticky }"
     :style="{ top: isSticky ? (stickyTop ? stickyTop : navHeight) : 0 }"
   >
-    <view class="tabsContainer" :style="{ height: tabsHeight + 'rpx', background: bgColor}">
+    <view class="tabsContainer" :style="{ height: tabsHeight + 'rpx', background: bgColor }">
       <view
         class="tabsListBlock"
         :class="{ tabsListList: tabType === 'list', tabsListPage: tabType === 'page' }"
@@ -24,7 +24,13 @@
           </template>
         </view>
       </view>
-      <view v-if="tabType === 'page'" class="moreChoose" :class="{ active: show }" @click="showMoreFilter">更多筛选</view>
+      <view
+        v-if="tabType === 'page'"
+        class="moreChoose"
+        :class="{ active: show }"
+        @click="showMoreFilter"
+        >更多筛选</view
+      >
     </view>
     <view class="dropContainer" v-show="show">
       <view class="mock" @click="handClose"></view>
@@ -35,9 +41,16 @@
           :class="{ open: show }"
           :style="{ height: maxHei }"
         >
-          <view :class="{ chooseItem: true, noMgt: !item.title }" v-for="(item, index) in nowFilterData" :key="index">
+          <view
+            :class="{ chooseItem: true, noMgt: !item.title }"
+            v-for="(item, index) in nowFilterData"
+            :key="index"
+          >
             <view class="title" v-if="item.title">{{ item.title }}</view>
-            <view class="chooseContent" :class="{ column: item.type === 'checkBox', noMgt: !item.title }">
+            <view
+              class="chooseContent"
+              :class="{ column: item.type === 'checkBox', noMgt: !item.title }"
+            >
               <template v-if="item.type === 'block'">
                 <view
                   :class="{ filterItemBlock: true, active: itemChild.checked }"
@@ -80,7 +93,17 @@
   </view>
 </template>
 <script setup>
-import { ref, watch, toRaw, computed, reactive, nextTick, toRefs, onMounted, getCurrentInstance } from 'vue';
+import {
+  ref,
+  watch,
+  toRaw,
+  computed,
+  reactive,
+  nextTick,
+  toRefs,
+  onMounted,
+  getCurrentInstance
+} from 'vue';
 import { storeToRefs } from 'pinia';
 import { useSystemInfoStore } from '@/stores/systemInfo';
 const systemInfoStore = useSystemInfoStore();
@@ -367,29 +390,40 @@ const handleConfirm = () => {
 
 // 处理重置按钮
 const handleReset = () => {
+  const selectIndex = tabListData.value.findIndex((item) => item.selected);
+  const linkKey = tabListData.value[selectIndex].linkKey;
   const tabListReset = tabListData.value.map((item) => {
     console.log('tabListReset map', item);
-    return {
-      ...item,
-      showLabel: item.label,
-      selected: item.selected
-    };
+    if (item.linkKey === linkKey) {
+      return {
+        ...item,
+        showLabel: item.label,
+        selected: item.selected
+      };
+    } else {
+      return item;
+    }
   });
 
   const filterDataReset = {};
   for (const key in filterData.value) {
-    filterDataReset[key] = filterData.value[key].map((item) => {
-      const list = item.list.map((itemChild) => {
+    if (key === linkKey) {
+      filterDataReset[key] = filterData.value[key].map((item) => {
+        const list = item.list.map((itemChild) => {
+          return {
+            ...itemChild,
+            checked: itemChild.reset || false
+          };
+        });
         return {
-          ...itemChild,
-          checked: itemChild.checked || false
+          ...item,
+          list
         };
       });
-      return {
-        ...item,
-        list
-      };
-    });
+    } else {
+      console.log('>>>>>', filterData.value[key]);
+      filterDataReset[key] = allFilterData.value[key];
+    }
   }
   tabListData.value = tabListReset;
   allFilterData.value = filterDataReset;

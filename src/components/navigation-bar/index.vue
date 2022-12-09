@@ -17,7 +17,7 @@
         <view v-if="showBackIcon === 'black'" class="nav_back" @tap.stop="handleBackClick">
           <image
             style="width: 44rpx; height: 44rpx"
-            src="https://res.paquapp.com/boxonline/newui3/navigation/back_black.png"
+            src="https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/back_black.png"
           />
         </view>
         <view
@@ -27,33 +27,26 @@
         >
           <image
             style="width: 54rpx; height: 54rpx"
-            src="https://res.paquapp.com/boxonline/newui3/navigation/back_black_bg.png"
+            src="https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/back_black_bg.png"
           />
         </view>
         <view v-if="showBackIcon === 'white'" class="nav_back" @tap.stop="handleBackClick">
           <image
             style="width: 44rpx; height: 44rpx"
-            src="https://res.paquapp.com/boxonline/newui3/navigation/back_white.png"
+            src="https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/back_white.png"
           />
         </view>
 
         <view v-if="showHomeIcon === 'black'" class="home_back" @tap.stop="handleGoHomeClick">
           <image
             style="width: 60rpx; height: 60rpx"
-            src="https://res.paquapp.com/boxonline/newui3/navigation/home_black.png"
+            src="https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/home_black.png"
           />
         </view>
         <view v-if="showHomeIcon === 'white'" class="home_back" @tap.stop="handleGoHomeClick">
           <image
             style="width: 60rpx; height: 60rpx"
-            src="https://res.paquapp.com/boxonline/newui3/navigation/home_white.png"
-          />
-        </view>
-
-        <view v-if="showLogo" class="popmartlogo">
-          <image
-            style="width: 142rpx; height: 44rpx"
-            src="https://res.paquapp.com/boxonline/newui3/navigation/popmart_logo.png"
+            src="https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/home_white.png"
           />
         </view>
       </view>
@@ -115,10 +108,6 @@ const systemInfo = useSystemInfoStore().systemInfo;
 const locationStore = useLocationInfoStore();
 
 const props = defineProps({
-  showLogo: {
-    type: Boolean,
-    default: false
-  },
   showBackIcon: {
     type: String,
     default: 'none' // 0.none 1.black 2.white
@@ -299,7 +288,7 @@ onMounted(() => {
     right: 26rpx;
     width: 378rpx;
     height: 120rpx;
-    background: url('https://res.paquapp.com/boxonline/newui3/index/add_my_miniprogram.png');
+    background: url('https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/add_my_miniprogram.png');
     background-repeat: no-repeat;
     background-size: 100% 100%;
     .add_miniprogram_icon {
@@ -308,7 +297,7 @@ onMounted(() => {
       bottom: 20rpx;
       width: 20rpx;
       height: 20rpx;
-      background: url('https://res.paquapp.com/boxonline/newui3/index/add_my_miniprogram_close.png');
+      background: url('https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/add_my_miniprogram_close.png');
       background-repeat: no-repeat;
       background-size: 100% 100%;
     }
@@ -437,21 +426,21 @@ onMounted(() => {
   .button_share_01 {
     width: 60rpx;
     height: 60rpx;
-    background-image: url('https://res.paquapp.com/boxonline/buyers_show_media/topic-share-icon.png');
+    background-image: url('https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/topic-share-icon.png');
     background-repeat: no-repeat;
     background-size: 100% 100%;
   }
   .button_share_01_black {
     width: 60rpx;
     height: 60rpx;
-    background-image: url('https://res.paquapp.com/boxonline/buyers_show_media/topic-share-icon-o.png');
+    background-image: url('https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/topic-share-icon-o.png');
     background-repeat: no-repeat;
     background-size: 100% 100%;
   }
   .button_share_02 {
     width: 64rpx;
     height: 64rpx;
-    background-image: url('https://res.paquapp.com/boxonline/newui3/navigation/new_share_03.png');
+    background-image: url('https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/new_share_03.png');
     background-repeat: no-repeat;
     background-size: 100% 100%;
   }

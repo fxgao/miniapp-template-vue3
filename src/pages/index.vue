@@ -168,12 +168,19 @@ const getHotStadiumList = () => {
   });
 };
 
-const getNearbyStadiumList = async () => {
+const getNearbyStadiumList = async (code) => {
+  let data = {};
   await $userLocation;
-  const data = {
-    lng: locationInfo.value.lng || '',
-    lat: locationInfo.value.lat || ''
-  };
+  if (code) {
+    data = {
+      areaId: code
+    };
+  } else {
+    data = {
+      lng: locationInfo.value.lng || '',
+      lat: locationInfo.value.lat || ''
+    };
+  }
   api.homePage.getNearbyStadiumList(data).then((res) => {
     console.log('getNearbyStadiumList res', res);
     if (!res.length) return;
@@ -262,8 +269,9 @@ onReachBottom(() => {
 
 const locationChange = (info) => {
   console.log('locationChange', info);
+  const code = getCode.value || '';
   getHotStadiumList(); // 热门场馆
-  getNearbyStadiumList(); // 附近场馆
+  getNearbyStadiumList(code); // 附近场馆
 };
 
 onLoad(async (options) => {

@@ -106,11 +106,11 @@ const loginedSaveStorage = (loginInfo) => {
 
 // 加载字体
 const loadFont = () => {
-  uni.loadFontFace({
-    family: 'DINPro-Bold',
-    source: 'url("https://res.paquapp.com/boxonline/font/DINPro-Bold.otf")',
-    global: true
-  });
+  // uni.loadFontFace({
+  //   family: 'DINPro-Bold',
+  //   source: 'url("https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/font/DINPro-Bold.otf")',
+  //   global: true
+  // });
 };
 
 onLaunch(() => {
