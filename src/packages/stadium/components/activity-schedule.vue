@@ -234,7 +234,7 @@ onMounted(() => {
             background: #ff6829;
             border-radius: 4rpx;
           }
-          font-weight: 600;
+          font-weight: 700;
           color: #333333;
         }
         font-size: 28rpx;
@@ -257,7 +257,7 @@ onMounted(() => {
       margin-left: 40rpx;
       .placeItem {
         &.active {
-          font-weight: 600;
+          font-weight: 700;
           color: #ff6829;
         }
         font-size: 28rpx;
@@ -294,7 +294,7 @@ onMounted(() => {
       .title {
         @include text-ellipsis;
         font-size: 28rpx;
-        font-weight: 600;
+        font-weight: 700;
         line-height: 44rpx;
         flex: none;
       }

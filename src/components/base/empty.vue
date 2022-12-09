@@ -74,18 +74,17 @@ const handleNav = () => {
     font-size: 28rpx;
     color: #A0A0A0;
     line-height: 44rpx;
-    transform: translateY(4rpx);
+    transform: translateY(-44rpx);
   }
   .btn {
     font-size: 32rpx;
-    font-weight: 600;
+    font-weight: 700;
     color: #FF6829;
-    line-height: 48rpx;
+    line-height: 32rpx;
     padding: 24rpx 84rpx;
     border-radius: 40rpx;
     border: 2rpx solid #FF6829;
-    backdrop-filter: blur(2rpx);
-    margin-top: 48rpx;
+    margin-top: 24rpx;
   }
 }
 </style>

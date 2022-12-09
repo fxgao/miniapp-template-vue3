@@ -14,6 +14,7 @@
       :title="tipTitle"
       showBackIcon="black"
       titleColor="color:#2F2E3B;"
+      :navCenterStyle="'flex-end'"
       backgroundColor="rgba(255,255,255,1)"
     ></nav-bar>
     <view

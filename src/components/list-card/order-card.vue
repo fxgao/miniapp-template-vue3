@@ -123,7 +123,7 @@ const stadiumInfo = computed(() => {
     padding: 28rpx;
     .payText {
       font-size: 32rpx;
-      font-weight: 600;
+      font-weight: 700;
       color: #333333;
       line-height: 48rpx;
     }

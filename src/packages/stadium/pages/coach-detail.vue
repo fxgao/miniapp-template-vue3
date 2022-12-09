@@ -148,7 +148,7 @@ onLoad(async (options) => {
     overflow-y: scroll;
     .name {
       font-size: 40rpx;
-      font-weight: 600;
+      font-weight: 700;
       color: #333333;
       line-height: 56rpx;
       .seniority {

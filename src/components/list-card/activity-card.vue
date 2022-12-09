@@ -106,7 +106,7 @@ const joinList = computed(() => {
     }
     .price {
       font-size: 32rpx;
-      font-weight: 600;
+      font-weight: 700;
       color: #ff6829;
       line-height: 48rpx;
     }

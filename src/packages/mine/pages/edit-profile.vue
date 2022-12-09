@@ -27,6 +27,7 @@
               :value="nickName"
               :maxlength="20"
               placeholder="请输入报名人"
+              placeholder-style="color: #A0A0A0;"
               @change="handleInput"
               @input="handleInput"
             />
@@ -35,7 +36,7 @@
         <view class="setting_block required">
           <view class="text">手机号</view>
           <view class="content">
-            <button open-type="getPhoneNumber" @getphonenumber="getPhoneNumber" class="inputBlock">
+            <button open-type="getPhoneNumber" @getphonenumber="getPhoneNumber" class="inputBlock" :class="{placeHolder: !telPhone}">
               {{ telPhone ? telPhone : '请选择手机号' }}
             </button>
           </view>
@@ -43,7 +44,7 @@
         <view class="setting_block required">
           <view class="text">出生日期</view>
           <view class="content">
-            <picker class="inputBlock" mode="date" :value="birthDay" @change="birthDayChange">
+            <picker class="inputBlock" :class="{placeHolder: !birthDay}" mode="date" :value="birthDay" @change="birthDayChange">
               {{ birthDay ? birthDay : '请选择出生日期' }}
             </picker>
           </view>
@@ -60,10 +61,13 @@
           <view class="content">
             <picker
               class="inputBlock"
+              :class="{placeHolder: !level}"
               :range="levelOptionList"
+              :disabled="!canChangeLevel"
               range-key="label"
               :value="level"
               @change="levelChange"
+              @click="clickLevel"
             >
               {{ level ? level : '请选择等级' }}
             </picker>
@@ -74,6 +78,7 @@
           <view class="content">
             <picker
               class="inputBlock"
+              :class="{placeHolder: !sex}"
               :range="sexOptionList"
               range-key="label"
               :value="sex"
@@ -92,7 +97,7 @@
             @input="demandChange"
             :maxlength="300"
             placeholder="请输入您参加活动/课程的诉求，如：入门学习，提升技能"
-            placeholder-style="color: #C0C0C0;"
+            placeholder-style="color: #A0A0A0;"
           />
         </view>
       </view>
@@ -242,6 +247,15 @@ const levelOptionList = ref([
   { label: '6.5' },
   { label: '7' }
 ]);
+
+const clickLevel = () => {
+  if (!canChangeLevel.value) {
+    uni.showToast({
+      icon: 'none',
+      title: '您已经选择过等级信息，请联系客服修改'
+    });
+  };
+};
 const levelChange = (e) => {
   console.log('levelChange', e);
   const index = e.detail.value || '';
@@ -272,6 +286,8 @@ const demandChange = (e) => {
   demand.value = value;
   return value;
 };
+
+const canChangeLevel = ref(false);
 
 // 验证表单
 const validateFormData = () => {
@@ -390,6 +406,9 @@ onLoad(async (option) => {
     level.value = Constant.LEVEL_GRADE_2STRING_MAP[loginInfoData.value.level];
     sex.value = loginInfoData.value.sex === '男' ? 1 : loginInfoData.value.sex === '女' ? 0 : 1;
     demand.value = loginInfoData.value.demand;
+    if (loginInfoData.value.level) {
+      canChangeLevel.value = false;
+    }
   }
   isChoose.value = false;
 });
@@ -452,6 +471,9 @@ onLoad(async (option) => {
       .content {
         width: 60%;
         .inputBlock {
+          &.placeHolder {
+            color: #a0a0a0;
+          }
           text-align: right;
           font-size: 32rpx;
           color: #333;

@@ -514,7 +514,7 @@ onLoad(async (options) => {
             margin-right: 8rpx;
             .priceText {
               font-size: 32rpx;
-              font-weight: 600;
+              font-weight: 700;
               color: #ff6829;
               line-height: 48rpx;
               margin-left: 8rpx;
@@ -568,7 +568,7 @@ onLoad(async (options) => {
     line-height: 44rpx;
     .priceText {
       font-size: 40rpx;
-      font-weight: 600;
+      font-weight: 700;
       color: #ff6829;
       line-height: 56rpx;
     }
@@ -584,7 +584,7 @@ onLoad(async (options) => {
       background: #fff;
     }
     font-size: 32rpx;
-    font-weight: 600;
+    font-weight: 700;
     color: #ffffff;
     line-height: 48rpx;
     padding: 20rpx 48rpx;
@@ -618,7 +618,7 @@ onLoad(async (options) => {
       border: 2rpx solid #ff6829;
       backdrop-filter: blur(1rpx);
       font-size: 32rpx;
-      font-weight: 600;
+      font-weight: 700;
       color: #ff6829;
       line-height: 48rpx;
       padding: 20rpx 36rpx;
@@ -627,7 +627,7 @@ onLoad(async (options) => {
       background: linear-gradient(135deg, #ffab43 0%, #ff6829 100%);
       border-radius: 44rpx;
       font-size: 32rpx;
-      font-weight: 600;
+      font-weight: 700;
       color: #ffffff;
       line-height: 48rpx;
       padding: 20rpx 36rpx;

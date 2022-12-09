@@ -2,7 +2,7 @@
   <view class="page">
     <nav-bar
       ref="navBar"
-      title="报名"
+      title="确认订单"
       showBackIcon="black"
       titleColor="color:#2F2E3B;"
       backgroundColor="rgba(255,255,255,1)"
@@ -24,7 +24,10 @@
           />
           <view class="userInfo">
             <view class="infoRow">
-              <view class="userName" :class="{red: !loginInfoData?.tel || !loginInfoData?.openId}">
+              <view
+                class="userName"
+                :class="{ red: !loginInfoData?.tel || !loginInfoData?.openId }"
+              >
                 {{
                   loginInfoData?.nickname && loginInfoData?.openId
                     ? loginInfoData.nickname +
@@ -41,7 +44,9 @@
                     : 'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/sex-female.png'
                 "
               />
-              <view class="level"> 0基础1级 </view>
+              <view class="level" v-if="loginInfoData?.level">
+                {{ Constant.LEVEL_GRADE_2STRING_MAP[loginInfoData?.level] }} 级
+              </view>
             </view>
             <view class="infoRow" v-if="loginInfoData?.openId">
               <view class="phone" v-if="loginInfoData?.tel">
@@ -120,7 +125,10 @@
     <view class="modalContainer">
       <Modal v-model:show="successModalShow">
         <view class="modalBlock">
-          <image class="successImg" src="https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/success-icon.png" />
+          <image
+            class="successImg"
+            src="https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/success-icon.png"
+          />
           <view class="text">订单支付成功</view>
         </view>
         <template v-slot:bottom>
@@ -148,6 +156,7 @@ import config from '@/api/config';
 import PopupBottom from '@/components/popup-bottom';
 import Modal from '@/components/modal';
 import MpHtml from '@/components/mp-html/mp-html.vue';
+import Constant from '@/lib/constant';
 
 const BASE_URL = config.REQUEST_URL_PREFIX;
 const systemInfo = useSystemInfoStore();
@@ -276,7 +285,7 @@ const submit = () => {
       console.log('error=====', error);
       uni.hideLoading();
       uni.showToast({
-        title: error.message || '支付失败',
+        title: error.msg || '支付失败',
         icon: 'none',
         duration: 2000
       });
@@ -415,6 +424,7 @@ onLoad(async (options) => {
         font-size: 28rpx;
         line-height: 44rpx;
         height: 150rpx;
+        padding: 0 0;
       }
     }
   }
@@ -464,7 +474,7 @@ onLoad(async (options) => {
           margin-right: 8rpx;
           .priceText {
             font-size: 32rpx;
-            font-weight: 600;
+            font-weight: 700;
             color: #ff6829;
             line-height: 48rpx;
             margin-left: 8rpx;
@@ -530,14 +540,14 @@ onLoad(async (options) => {
     line-height: 44rpx;
     .priceText {
       font-size: 40rpx;
-      font-weight: 600;
+      font-weight: 700;
       color: #ff6829;
       line-height: 56rpx;
     }
   }
   .payBtn {
     font-size: 32rpx;
-    font-weight: 600;
+    font-weight: 700;
     color: #ffffff;
     line-height: 48rpx;
     padding: 20rpx 48rpx;
@@ -562,7 +572,7 @@ onLoad(async (options) => {
       font-weight: 500;
       color: #333333;
       line-height: 52rpx;
-      margin-top: 16rpx
+      margin-top: 16rpx;
     }
   }
   .actionBlock {
@@ -573,7 +583,7 @@ onLoad(async (options) => {
       border: 2rpx solid #ff6829;
       backdrop-filter: blur(1rpx);
       font-size: 32rpx;
-      font-weight: 600;
+      font-weight: 700;
       color: #ff6829;
       line-height: 48rpx;
       padding: 20rpx 36rpx;
@@ -584,7 +594,7 @@ onLoad(async (options) => {
       background: linear-gradient(135deg, #ffab43 0%, #ff6829 100%);
       border-radius: 44rpx;
       font-size: 32rpx;
-      font-weight: 600;
+      font-weight: 700;
       color: #ffffff;
       line-height: 48rpx;
       padding: 20rpx 36rpx;

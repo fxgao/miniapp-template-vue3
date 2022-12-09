@@ -63,8 +63,9 @@ const goCoachDetail = () => {
     height: 264rpx;
     background: url('https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/bg/coach-bg-small.png') 0 0 no-repeat;
     background-size: contain;
+    margin-bottom: 0;
     .info .right .name {
-      max-width: 96rpx;
+      max-width: 100rpx;
     }
     .content {
       @include text-ellipsis-2;
@@ -100,8 +101,9 @@ const goCoachDetail = () => {
         color: #FFFFFF;
         line-height: 48rpx;
         text-align: center;
-        width: 124rpx;
+        width: 128rpx;
         align-self: flex-end;
+        padding-right: 4rpx
       }
       .labels {
         @include flex-start;

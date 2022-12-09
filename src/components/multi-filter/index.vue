@@ -5,7 +5,7 @@
     :class="{ isSticky: isSticky }"
     :style="{ top: isSticky ? (stickyTop ? stickyTop : navHeight) : 0 }"
   >
-    <view class="tabsContainer" :style="{ height: tabsHeight + 'rpx', background: bgColor }">
+    <view class="tabsContainer" :style="{ height: tabsHeight + 'rpx', background: bgColor }" @touchmove.stop.prevent="stop">
       <view
         class="tabsListBlock"
         :class="{ tabsListList: tabType === 'list', tabsListPage: tabType === 'page' }"
@@ -33,7 +33,7 @@
       >
     </view>
     <view class="dropContainer" v-show="show">
-      <view class="mock" @click="handClose"></view>
+      <view class="mock" @click="handClose" @touchmove.stop.prevent="stop"></view>
       <view class="content">
         <scroll-view
           :scroll-y="true"
@@ -84,7 +84,7 @@
             </view>
           </view>
         </scroll-view>
-        <view class="bottom">
+        <view class="bottom" @touchmove.stop.prevent="stop">
           <view class="actionBtn reset" @click="handleReset">重置</view>
           <view class="actionBtn confirm" @click="handleConfirm">确定</view>
         </view>
@@ -463,6 +463,8 @@ const handClose = () => {
   show.value = false;
 };
 
+const stop = () => {};
+
 defineExpose({
   handClose,
   handleReset,
@@ -591,7 +593,7 @@ $selectColor: v-bind('activeColor');
           margin-top: 48rpx;
           .title {
             font-size: 32rpx;
-            font-weight: 600;
+            font-weight: 700;
             color: #333333;
             line-height: 48rpx;
           }
@@ -623,7 +625,7 @@ $selectColor: v-bind('activeColor');
               &.active {
                 .label {
                   color: $selectColor;
-                  font-weight: 600;
+                  font-weight: 700;
                 }
               }
               .label {
@@ -656,7 +658,7 @@ $selectColor: v-bind('activeColor');
           font-size: 32rpx;
           color: #ff6829;
           line-height: 90rpx;
-          font-weight: 600;
+          font-weight: 700;
           text-align: center;
           &.reset {
             border: 2px solid #ff6829;

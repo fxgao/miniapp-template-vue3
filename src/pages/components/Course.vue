@@ -68,7 +68,7 @@ const pageScroll = (e) => {
     return;
   }
   const transparent = scrollTop / 36 >= 1 ? 1 : scrollTop / 36;
-  const transparent2 = scrollTop / 198 >= 1 ? 1 : scrollTop / 198;
+  const transparent2 = scrollTop / 168 >= 1 ? 1 : scrollTop / 168;
   if (transparent2 >= 1) {
     filterBgColor.value = `rgba(255,255,255,${transparent2})`;
   } else {
@@ -220,7 +220,7 @@ defineExpose({
 
 <style lang="scss" scoped>
 .page {
-  min-height: auto;
+  min-height: 100vh;
   .pageContainer {
     .filterBlock {
       position: sticky;

@@ -77,10 +77,14 @@ const goCourseDetail = (data) => {
 .pageContainer {
   &.white {
     background: #fff;
+    .listContainer {
+      margin-top: 0rpx;
+    }
   }
   min-height: calc(100vh - v-bind('navHeight'));
   .listContainer {
     padding: 0 38rpx;
+    margin-top: 32rpx;
   }
   .listBottomText {
     font-size: 28rpx;

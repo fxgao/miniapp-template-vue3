@@ -289,7 +289,7 @@ onLoad(async (options) => {
     .title {
       @include text-ellipsis-2;
       font-size: 40rpx;
-      font-weight: 600;
+      font-weight: 700;
       color: #333333;
       line-height: 56rpx;
       padding: 0 40rpx;
@@ -445,6 +445,7 @@ onLoad(async (options) => {
       .componentItem {
         width: auto;
         display: inline-block;
+        margin-bottom: 32rpx;
       }
     }
   }
@@ -474,7 +475,7 @@ onLoad(async (options) => {
     border: 2rpx solid #ff6829;
     backdrop-filter: blur(1rpx);
     font-size: 32rpx;
-    font-weight: 600;
+    font-weight: 700;
     color: #ff6829;
     line-height: 48rpx;
     padding: 20rpx 36rpx;
@@ -483,7 +484,7 @@ onLoad(async (options) => {
     background: linear-gradient(135deg, #ffab43 0%, #ff6829 100%);
     border-radius: 44rpx;
     font-size: 32rpx;
-    font-weight: 600;
+    font-weight: 700;
     color: #ffffff;
     line-height: 48rpx;
     padding: 20rpx 36rpx;

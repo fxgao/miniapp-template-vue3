@@ -154,7 +154,7 @@ const settingList = ref([
 ]);
 
 const goEditProfile = () => {
-  to('/edit-profile');
+  to('/edit-profile?navBack=true');
 };
 
 const goJoinPath = (item) => {
@@ -216,7 +216,7 @@ defineExpose({
           @include flex-start;
           .userName {
             font-size: 36rpx;
-            font-weight: 600;
+            font-weight: 700;
             color: #333333;
             line-height: 52rpx;
           }
@@ -249,7 +249,7 @@ defineExpose({
       padding: 24rpx;
       .title {
         font-size: 32rpx;
-        font-weight: 600;
+        font-weight: 700;
         color: #333333;
         line-height: 48rpx;
       }
