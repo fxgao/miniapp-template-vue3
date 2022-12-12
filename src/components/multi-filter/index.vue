@@ -5,22 +5,29 @@
     :class="{ isSticky: isSticky }"
     :style="{ top: isSticky ? (stickyTop ? stickyTop : navHeight) : 0 }"
   >
-    <view class="tabsContainer" :style="{ height: tabsHeight + 'rpx', background: bgColor }" @touchmove.stop.prevent="stop">
+    <view
+      class="tabsContainer"
+      :style="{ height: tabsHeight + 'rpx', background: bgColor }"
+      @touchmove.stop.prevent="stop"
+    >
       <view
         class="tabsListBlock"
         :class="{ tabsListList: tabType === 'list', tabsListPage: tabType === 'page' }"
         v-if="tabList.length > 0"
       >
         <view
-          :class="{ tabsItem: true, active: item.selected }"
+          :class="{ tabsItem: true, active: item.selected || item.num > 0 }"
           @click="changeTab(item)"
           v-for="(item, index) in tabListData"
           :key="index"
         >
           {{ item.showLabel || item.label }}
           <template v-if="tabType === 'list'">
-            <view v-if="item.selected" class="iconfont icon-arrow-down"></view>
-            <view v-else class="iconfont icon-arrow-up"></view>
+            <view
+              v-if="item.selected"
+              class="icon arrow-up active"
+            ></view>
+            <view v-else class="icon arrow-down" :class="{ active: item.num > 0 }"></view>
           </template>
         </view>
       </view>
@@ -334,7 +341,8 @@ const selectData = (listData, data, index) => {
         if (item.linkKey === linkKey) {
           return {
             ...item,
-            showLabel: `${item.label}(${num})`
+            showLabel: `${item.label}(${num})`,
+            num
           };
         } else {
           return item;
@@ -461,6 +469,14 @@ const handleResetAll = () => {
 
 const handClose = () => {
   show.value = false;
+  const tabListReset = tabListData.value.map((item) => {
+    console.log('tabListReset map', item);
+    return {
+      ...item,
+      selected: false
+    };
+  });
+  tabListData.value = tabListReset;
 };
 
 const stop = () => {};
@@ -506,6 +522,7 @@ $selectColor: v-bind('activeColor');
         @include flex-between;
         width: 100%;
         .tabsItem {
+          @include flex-center;
           &.active {
             font-size: 28rpx;
             font-weight: 500;
@@ -676,5 +693,27 @@ $selectColor: v-bind('activeColor');
     left: 0;
     right: 0;
   }
+}
+.icon {
+  &.arrow-up {
+    &.active {
+      background: url('https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/fillter-up-active.png') 0 0 no-repeat;
+      background-size: contain;
+    }
+    background: url('https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/fillter-up-disable.png') 0 0 no-repeat;
+    background-size: contain;
+  }
+  &.arrow-down {
+    &.active {
+      background: url('https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/fillter-down-active.png') 0 0 no-repeat;
+      background-size: contain;
+    }
+    background: url('https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/fillter-down-disable.png') 0 0 no-repeat;
+    background-size: contain;
+  }
+  width: 16rpx;
+  height: 16rpx;
+  margin-left: 8rpx;
+
 }
 </style>

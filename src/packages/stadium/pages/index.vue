@@ -67,8 +67,7 @@ const filterTabList = ref([
     label: '全城',
     value: 1,
     linkKey: 'area',
-    showMore: true,
-    selected: true
+    showMore: true
   },
   {
     label: '场地类型',

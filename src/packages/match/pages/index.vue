@@ -4,7 +4,7 @@
       ref="navbar"
       :backgroundColor="'rgba(255,255,255,1)'"
       :showBackIcon="'black'"
-      title="赛事"
+      title="赛事列表"
       :navCenterStyle="'flex-end'"
     />
     <view class="pageContainer">
@@ -23,6 +23,7 @@
           url="/wx/publish/gameList"
           ref="matchListRef"
           :listType="'column'"
+          :params="filterParams"
         >
           <template v-slot="{ data }">
             <view @click="goMatchDetail(data)">
@@ -42,7 +43,7 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue';
+import { ref, reactive, nextTick } from 'vue';
 import List from '@/components/list';
 import MultiFilter from '@/components/multi-filter';
 import MatchCard from '@/components/list-card/match-card';
@@ -54,6 +55,8 @@ const matchList = ref([]);
 const matchListRef = ref(null);
 
 const filter = ref(null);
+const filterParams = ref({
+});
 const filterTabList = ref([
   {
     label: '全城',
@@ -176,7 +179,12 @@ const filterData = reactive({
 
 const filterChange = (data) => {
   console.log('filterChange', data);
-  matchListRef.value.refresh(data);
+  filterParams.value = data;
+  // 需要重置外部列表数据，否则会引起列表数据问题
+  matchList.value = [];
+  nextTick(() => {
+    matchListRef.value.refresh();
+  });
 };
 
 const goMatchDetail = (data) => {

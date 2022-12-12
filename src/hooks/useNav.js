@@ -12,6 +12,7 @@ const REDIRECT_URL = {
   '/course/detail': '/packages/course/pages/detail',
   '/match/index': '/packages/match/pages/index',
   '/match/detail': '/packages/match/pages/detail',
+  '/activity/index': '/packages/activity/pages/index',
   '/activity/detail': '/packages/activity/pages/detail',
   '/edit-profile': '/packages/mine/pages/edit-profile',
   '/suggest': '/packages/mine/pages/suggest',

@@ -253,7 +253,7 @@ const copyWechatNumber = () => {
 };
 
 const handleGoMore = () => {
-  to('/index:activity', {
+  to('/activity/index', {
     stadiumId: stadiumId.value
   });
 };

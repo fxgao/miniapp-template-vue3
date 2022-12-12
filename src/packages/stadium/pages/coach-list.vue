@@ -4,7 +4,7 @@
       ref="navbar"
       :backgroundColor="'rgba(255,255,255,1)'"
       :showBackIcon="'black'"
-      title="教练"
+      title="教练列表"
       :navCenterStyle="'flex-end'"
     />
     <view class="pageContainer">
@@ -49,7 +49,7 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue';
+import { ref, reactive, nextTick } from 'vue';
 import MultiFilter from '@/components/multi-filter';
 import List from '@/components/list';
 import CoachCard from '@/components/list-card/coach-card';
@@ -206,7 +206,12 @@ const filterData = reactive({
 
 const filterChange = (data) => {
   console.log('filterChange', data);
-  coachListRef.value.refresh(data);
+  params.value = data;
+  // 需要重置外部列表数据，否则会引起列表数据问题
+  coachList.value = [];
+  nextTick(() => {
+    coachListRef.value.refresh();
+  });
 };
 </script>
 
