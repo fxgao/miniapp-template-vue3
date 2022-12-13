@@ -18,7 +18,7 @@
         @onShow="filterShow"
       ></multi-filter>
       <view class="list">
-        <List v-model:dataList="courseList" url="/wx/publish/courseList" ref="courseListRef" :params="filterParams">
+        <List v-model:dataList="courseList" url="/wx/templete/course/listPage" ref="courseListRef" :params="filterParams">
           <template v-slot="{ data }">
             <view @click="goCourseDetail(data)">
               <course-card
