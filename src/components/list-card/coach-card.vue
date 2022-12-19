@@ -8,7 +8,7 @@
         </view>
         <view class="labels">
           <view class="label-item red" v-if="level == 1">高级</view>
-          <view class="label-item">外教</view>
+          <view class="label-item" v-if="nationality != 1">外教</view>
         </view>
       </view>
     </view>
@@ -46,10 +46,14 @@ const props = defineProps({
   size: {
     type: String,
     default: 'large'
+  },
+  nationality: {
+    type: String || Number,
+    default: 1
   }
 });
 
-const { id, name, img, content, level, style, size } = toRefs(props);
+const { id, name, img, content, level, style, size, nationality } = toRefs(props);
 
 const goCoachDetail = () => {
   to();

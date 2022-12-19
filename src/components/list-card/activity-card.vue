@@ -84,7 +84,8 @@ const joinList = computed(() => {
     align-items: flex-end;
     .joinInfo {
       @include flex-between;
-      width: 236rpx;
+      max-width: 244rpx;
+      min-width: 168rpx;
       .avatarBlock {
         @include flex-center;
         margin-right: -16rpx;
@@ -102,6 +103,7 @@ const joinList = computed(() => {
         font-size: 24rpx;
         color: #a0a0a0;
         line-height: 40rpx;
+        margin-left: 8rpx;
       }
     }
     .price {

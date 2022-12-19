@@ -22,14 +22,14 @@
           <view class="leftText">报名费用：</view>
           <view class="right">¥{{ courseInfo.courseFee || '0' }}</view>
         </view>
-        <view class="infoItem">
+        <!-- <view class="infoItem">
           <view class="leftText">课程校区：</view>
           <view class="right">{{ courseInfo.courseFee || '0' }}</view>
         </view>
         <view class="infoItem">
           <view class="leftText">课程地址：</view>
           <view class="right">{{ courseInfo.place || '暂无' }}</view>
-        </view>
+        </view> -->
       </view>
       <view class="infoBlock">
         <view class="title">课程安排</view>
@@ -254,7 +254,7 @@ onLoad(async (options) => {
     .saveBtn {
       border-radius: 40rpx;
       border: 2rpx solid #ff6829;
-      backdrop-filter: blur(1rpx);
+      backdrop-filter: blur(2rpx);
       font-size: 32rpx;
       font-weight: 700;
       color: #ff6829;

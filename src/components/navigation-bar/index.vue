@@ -411,6 +411,7 @@ onMounted(() => {
       font-size: 36rpx;
       white-space: nowrap;
       text-overflow: ellipsis;
+      font-weight: 700;
     }
   }
   .nav-bar__center.large {

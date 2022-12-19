@@ -199,7 +199,7 @@ const courseListRef = ref(null);
 const goCourseDetail = (item) => {
   console.log('goCourseDetail', item);
   to('/course/detail', {
-    id: item.activityId,
+    id: item.id,
     pubId: item.id
   });
 };

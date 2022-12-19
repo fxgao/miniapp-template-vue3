@@ -11,7 +11,7 @@
     <view class="pageContainer" :style="popup1 ? 'padding-bottom:' + popup1.topSlotHeight : ''">
       <view class="infoBlock">
         <detail-header :title="activityInfo.activeName" :labelList="labelList"></detail-header>
-        <view class="reportInfoBlock">
+        <view class="reportInfoBlock" v-if="activityInfo.participantVo.participanCount > 0">
           <report-info :total="activityInfo.participantVo.participanCountMax" :infoList="activityInfo.participantVo.participantUserVo" ></report-info>
         </view>
       </view>
@@ -65,8 +65,8 @@
       <PopupBottom ref="popup1">
         <template v-slot:outer-main>
           <view class="actionBlock">
-            <view class="actionBtn plain" :class="{'w100': !activityInfo.isOrder}" @click="showWechatModal">立即咨询</view>
-            <view class="actionBtn" v-if="activityInfo.isOrder" @click="goOrderConfirm">¥{{ activityInfo.activityPrice }} 报名</view>
+            <view class="actionBtn plain" @click="showWechatModal">立即咨询</view>
+            <view class="actionBtn" :class="{disable: activityInfo.isOrder === 0}" @click="goOrderConfirm">¥{{ activityInfo.activityPrice }} 报名</view>
           </view>
         </template>
       </PopupBottom>
@@ -152,6 +152,8 @@ const showWechatModal = () => {
 };
 
 const goOrderConfirm = () => {
+  if (activityInfo.value.isOrder === 0) return;
+
   if (isFromMine.value) {
     uni.showToast({ title: '您已报名该活动', icon: 'none' });
     return;
@@ -307,6 +309,11 @@ onLoad(async (options) => {
         background: #fff;
         border: 4rpx solid #ff6829;
       }
+      &.disable {
+        color: #fff;
+        background: #C0C0C0;
+        border: 4rpx solid #C0C0C0;
+      }
       &.w100 {
         width: 100%;
       }
@@ -340,7 +347,7 @@ onLoad(async (options) => {
     .saveBtn {
       border-radius: 40rpx;
       border: 2rpx solid #ff6829;
-      backdrop-filter: blur(1rpx);
+      backdrop-filter: blur(2rpx);
       font-size: 32rpx;
       font-weight: 700;
       color: #ff6829;

@@ -11,16 +11,16 @@
     <view class="pageContainer" :style="popup1 ? 'padding-bottom:' + popup1.topSlotHeight : ''">
       <view class="infoBlock">
         <detail-header :title="matchInfo.gameName" :labelList="labelList"></detail-header>
-        <view class="reportInfoBlock">
+        <!-- <view class="reportInfoBlock">
           <report-info :total="matchInfo.completePersonCount"></report-info>
-        </view>
+        </view> -->
       </view>
       <view class="infoBlock">
         <view class="title">基本信息</view>
         <view class="infoItem">
           <view class="leftText">赛事举办方：</view>
           <view class="right"
-            >{{ matchInfo.stadiumName }}</view
+            >{{ matchInfo.stadiumName || '得乐体育' }}</view
           >
         </view>
         <view class="infoItem">
@@ -39,7 +39,7 @@
         </view>
         <view class="infoItem">
           <view class="leftText">报名费用：</view>
-          <view class="right">{{ matchInfo.entryFee || '暂无' }}</view>
+          <view class="right">{{ '¥' + matchInfo.entryFee || '暂无' }}</view>
         </view>
       </view>
       <view class="infoBlock">
@@ -274,7 +274,7 @@ onLoad(async (options) => {
     .saveBtn {
       border-radius: 40rpx;
       border: 2rpx solid #ff6829;
-      backdrop-filter: blur(1rpx);
+      backdrop-filter: blur(2rpx);
       font-size: 32rpx;
       font-weight: 700;
       color: #ff6829;

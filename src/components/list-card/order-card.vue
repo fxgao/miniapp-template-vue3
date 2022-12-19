@@ -1,7 +1,7 @@
 <template>
   <view class="orderCardContainer">
     <view class="infoBlock" :class="{'nopd': noPadding}">
-      <image :src="headFigure" class="infoImg" />
+      <image :src="headFigure" class="infoImg" mode="aspectFill"/>
       <view class="infoRight">
         <view class="infoTitle">{{ publishInfo?.publishName }}</view>
         <view class="infoSub">{{ stadiumInfo?.stadiumName }}</view>
@@ -17,7 +17,7 @@
           <view class="actionBtn plain" v-if="info.orderStatus === 20">申请退款</view>
         </view>
       </view>
-      <image v-if="info.orderStatus === 50" class="coverStatusIcon" :src="'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/refund-icon.png'"  />
+      <image v-if="info.orderStatus === 50" class="coverStatusIcon" :src="'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/refund-icon.png'"/>
     </template>
   </view>
 </template>

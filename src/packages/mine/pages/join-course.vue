@@ -10,7 +10,13 @@
     <view class="pageContainer" :class="{ white: courseList.length === 0 }">
       <!-- 列表 -->
       <view class="listContainer">
-        <List v-show="courseList.length > 0" v-model:loading="loading" v-model:dataList="courseList" url="/wx/publish/courseList" ref="courseListRef">
+        <List
+          v-if="courseList.length > 0"
+          v-model:loading="loading"
+          v-model:dataList="courseList"
+          url="/wx/publish/courseList"
+          ref="courseListRef"
+        >
           <template v-slot="{ data }">
             <view @click="goCourseDetail(data)">
               <course-card
@@ -28,7 +34,7 @@
           </template>
         </List>
         <empty
-          v-if="(courseList.length === 0 && !listLoading)"
+          v-if="courseList.length === 0 && !listLoading"
           title="暂无课程"
           subTitle="目前还没有报名课程哦"
           icon="https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/empty/no-course.png"
@@ -58,7 +64,8 @@ const courseListRef = ref(null);
 
 const listLoading = computed(() => {
   console.log(courseListRef);
-  return courseListRef.value ? courseListRef.value.loading : true;
+  // return courseListRef.value ? courseListRef.value.loading : true;
+  return false;
 });
 
 const goCourseDetail = (data) => {

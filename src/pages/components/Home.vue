@@ -86,6 +86,7 @@
               :img="item.photo"
               :level="item.level"
               :content="item.remarks"
+              :nationality="item.nationality"
               :style="'margin-left: 32rpx;display: inline-block;'"
             ></coach-card>
           </view>

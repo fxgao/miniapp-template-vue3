@@ -16,7 +16,7 @@ const match = {
   getMatchDetail(id) {
     return request({
       requestParams: {
-        url: `/wx/publish/getGameDetail/${id}`,
+        url: `/wx/game/${id}`,
         method: 'GET'
       }
     });

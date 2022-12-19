@@ -536,7 +536,7 @@ onLoad(async (options) => {
     .saveBtn {
       border-radius: 40rpx;
       border: 2rpx solid #ff6829;
-      backdrop-filter: blur(1rpx);
+      backdrop-filter: blur(2rpx);
       font-size: 32rpx;
       font-weight: 700;
       color: #ff6829;

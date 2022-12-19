@@ -30,9 +30,10 @@
       <view class="scheduleBg"></view>
       <view
         class="activityBlock"
+        :class="{mini: calcHeight(item.start, item.end) < 60}"
         @click="goDetail(item)"
         :style="{
-          background: item.textColor,
+          background: isOverTime(item.start) ? '#F5F5F5' : item.textColor,
           color: item.color,
           top: calcTop(item.start) + 'rpx',
           height: calcHeight(item.start, item.end) + 'rpx'
@@ -43,22 +44,24 @@
         <view
           class="title"
           :style="{
-            color: item.color
+            color: isOverTime(item.start) ? '#a0a0a0' : item.color
           }"
           >{{ item.title }}</view
         >
         <view
           class="info"
           :style="{
-            color: item.color
+            color: isOverTime(item.start) ? '#a0a0a0' : item.color
           }"
         >
           {{ item.start }}-{{ item.end }} {{ isOverTime(item.start) ? '已结束报名' : '可报名' }}
-          <image
+          <view
             v-if="!isOverTime(item.start)"
             class="icon"
-            src="https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/right-arrow-icon.png"
-          />
+            :style="{
+              background: item.color
+            }"
+          ></view>
         </view>
       </view>
     </scroll-view>
@@ -291,6 +294,17 @@ onMounted(() => {
       display: flex;
       flex-direction: column;
       justify-content: center;
+      &.mini {
+        .title {
+          font-size: 28rpx;
+          line-height: 28rpx;
+        }
+        .info {
+          margin-top: 0;
+          font-size: 24rpx;
+          line-height: 24rpx;
+        }
+      }
       .title {
         @include text-ellipsis;
         font-size: 28rpx;
@@ -303,10 +317,15 @@ onMounted(() => {
         margin-top: 8rpx;
         font-size: 24rpx;
         line-height: 40rpx;
+        color: #a0a0a0;
         .icon {
           width: 32rpx;
           height: 32rpx;
           margin-left: 8rpx;
+          -webkit-mask-image: url("data:image/svg+xml,%3Csvg t='1671417145989' class='icon' viewBox='0 0 1024 1024' version='1.1' xmlns='http://www.w3.org/2000/svg' p-id='2676' width='200' height='200'%3E%3Cpath d='M722.438 510.815c-0.246-0.246-0.513-0.454-0.766-0.69l-299.893-299.892c-14.231-14.24-37.291-14.24-51.529 0-14.241 14.231-14.241 37.291 0 51.529l274.851 274.859-274.849 274.851c-14.241 14.237-14.241 37.301 0 51.532 7.116 7.119 16.436 10.682 25.764 10.682 9.321 0 18.644-3.563 25.763-10.682l299.905-299.901c0.246-0.234 0.51-0.438 0.751-0.678 7.129-7.13 10.685-16.469 10.674-25.804 0.006-9.337-3.55-18.676-10.674-25.804z' fill='%23272636' p-id='2677'%3E%3C/path%3E%3C/svg%3E");
+          mask-image: url("data:image/svg+xml,%3Csvg t='1671417145989' class='icon' viewBox='0 0 1024 1024' version='1.1' xmlns='http://www.w3.org/2000/svg' p-id='2676' width='200' height='200'%3E%3Cpath d='M722.438 510.815c-0.246-0.246-0.513-0.454-0.766-0.69l-299.893-299.892c-14.231-14.24-37.291-14.24-51.529 0-14.241 14.231-14.241 37.291 0 51.529l274.851 274.859-274.849 274.851c-14.241 14.237-14.241 37.301 0 51.532 7.116 7.119 16.436 10.682 25.764 10.682 9.321 0 18.644-3.563 25.763-10.682l299.905-299.901c0.246-0.234 0.51-0.438 0.751-0.678 7.129-7.13 10.685-16.469 10.674-25.804 0.006-9.337-3.55-18.676-10.674-25.804z' fill='%23272636' p-id='2677'%3E%3C/path%3E%3C/svg%3E");
+          -webkit-mask-size: cover;
+          mask-size: cover;
         }
       }
     }

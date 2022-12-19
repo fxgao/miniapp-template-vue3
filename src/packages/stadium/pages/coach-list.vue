@@ -32,6 +32,7 @@
                 :img="data.photo"
                 :level="data.level"
                 :content="data.remarks"
+                :nationality="item.nationality"
                 :size="'small'"
               ></coach-card>
             </view>

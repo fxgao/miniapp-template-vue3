@@ -16,7 +16,7 @@ const course = {
   getCourseDetail(id) {
     return request({
       requestParams: {
-        url: `/wx/publish/courseDetail/${id}`,
+        url: `/wx/templete/course/${id}`,
         method: 'GET'
       }
     });

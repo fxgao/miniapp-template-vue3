@@ -1,6 +1,6 @@
 <template>
   <view class="listCardContainer">
-    <image class="img" :src="img" />
+    <image class="img" :src="img" mode="aspectFill"/>
     <view class="info">
       <view class="title">
         {{ title }}

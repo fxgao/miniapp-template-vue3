@@ -15,7 +15,7 @@
           url="/wx/stadium/list"
           ref="matchListRef"
           :listType="'column'"
-          v-show="joinMatchList.length > 0"
+          v-if="joinMatchList.length > 0"
         >
           <template v-slot="{ data }">
             <view @click="goMatchDetail(data)">
@@ -60,7 +60,8 @@ const joinMatchList = ref([]);
 const matchListRef = ref(null);
 
 const listLoading = computed(() => {
-  return matchListRef.value ? matchListRef.value.loading : true;
+  // return matchListRef.value ? matchListRef.value.loading : true;
+  return false;
 });
 
 const goMatchDetail = (data) => {
