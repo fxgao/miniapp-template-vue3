@@ -51,6 +51,7 @@
 
 <script setup>
 import { ref, reactive, nextTick } from 'vue';
+import { onShareAppMessage } from '@dcloudio/uni-app';
 import MultiFilter from '@/components/multi-filter';
 import List from '@/components/list';
 import CoachCard from '@/components/list-card/coach-card';
@@ -214,6 +215,13 @@ const filterChange = (data) => {
     coachListRef.value.refresh();
   });
 };
+
+onShareAppMessage(() => {
+  return {
+    title: '快来选择专属你的网球教练吧！',
+    imageUrl: 'https://dele.htennis.net/proApi/little-moth-server/moth/file/20221129/1669706159124WechatIMG12.jpeg'
+  };
+});
 </script>
 
 <style lang="scss" scoped>

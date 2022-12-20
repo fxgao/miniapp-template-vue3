@@ -34,8 +34,8 @@
             <view class="age" v-if="loginInfoData?.age"> {{ loginInfoData.age }}岁 </view>
           </view>
           <view class="infoRow" v-if="loginInfoData?.openId">
-            <view class="level">
-              0基础1级
+            <view class="level" v-if="loginInfoData?.level">
+              {{ Constant.LEVEL_GRADE_2STRING_MAP[loginInfoData?.level] }}
             </view>
             <view class="phone" v-if="loginInfoData?.tel">
               {{loginInfoData.tel}}
@@ -79,6 +79,7 @@ import { reactive, ref, toRefs } from 'vue';
 import { onLoad } from '@dcloudio/uni-app';
 import { useAppInstance, useNav } from '@/hooks';
 import { useLoginInfoStore } from '@/stores/loginInfo';
+import Constant from '@/lib/constant';
 import api from '@/api';
 
 const { $onLaunched } = useAppInstance();

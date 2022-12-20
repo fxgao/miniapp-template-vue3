@@ -71,7 +71,7 @@
 
 <script setup>
 import { computed, ref } from 'vue';
-import { onLoad } from '@dcloudio/uni-app';
+import { onLoad, onShareAppMessage } from '@dcloudio/uni-app';
 import DetailHeader from '@/components/detail/header';
 import MpHtml from '@/components/mp-html/mp-html.vue';
 import PopupBottom from '@/components/popup-bottom';
@@ -156,6 +156,14 @@ const goStadiumDetail = (item) => {
     id: item.id
   });
 };
+
+onShareAppMessage(() => {
+  return {
+    title: `${courseInfo.value.courseName}课程真不错，快来参与围观吧！`,
+    imageUrl: courseInfo.value.courseHeadFigure || 'https://dele.htennis.net/proApi/little-moth-server/moth/file/20221129/1669706159124WechatIMG12.jpeg',
+    path: `/packages/coures/pages/detail?id=${courseId.value}&pubId=${publishId.value}`
+  };
+});
 
 onLoad(async (options) => {
   console.log('course detail onload', options);

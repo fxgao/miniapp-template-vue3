@@ -24,7 +24,7 @@
           mode="aspectFit"
         />
         <view class="level">
-          {{ item.level }}级
+          {{ Constant.LEVEL_GRADE_2STRING_MAP[item.level] }}
         </view>
       </view>
     </view>
@@ -33,6 +33,7 @@
 
 <script setup>
 import { ref, toRefs, computed } from 'vue';
+import Constant from '@/lib/constant';
 
 const props = defineProps({
   infoList: {

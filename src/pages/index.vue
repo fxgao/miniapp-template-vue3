@@ -85,7 +85,7 @@ import Course from './components/Course';
 import Home from './components/Home';
 import Mine from './components/Mine';
 import api from '@/api';
-import { onLoad, onPageScroll, onReachBottom } from '@dcloudio/uni-app';
+import { onLoad, onPageScroll, onReachBottom, onShareAppMessage } from '@dcloudio/uni-app';
 import { useSystemInfoStore } from '@/stores/systemInfo';
 import { useLocationInfoStore } from '@/stores/location';
 import { useAppInstance, useNav } from '@/hooks';
@@ -273,6 +273,30 @@ const locationChange = (info) => {
   getHotStadiumList(); // 热门场馆
   getNearbyStadiumList(code); // 附近场馆
 };
+
+onShareAppMessage(() => {
+  let title = '';
+  let imgUrl = '';
+  let path = '';
+  if (current.value === 'course') {
+    title = '这些网球课正适合你，快来参与吧！';
+    imgUrl = 'https://dele.htennis.net/proApi/little-moth-server/moth/file/20221129/1669706159124WechatIMG12.jpeg';
+    path = '/pages/index?key=course';
+  } else if (current.value === 'activity') {
+    title = '这些网球活动正在进行中，快来参与吧！';
+    imgUrl = 'https://dele.htennis.net/proApi/little-moth-server/moth/file/20221129/1669706159124WechatIMG12.jpeg';
+    path = '/pages/index?key=activity';
+  } else {
+    title = '我在得乐网球，等你一起来玩！';
+    imgUrl = 'https://dele.htennis.net/proApi/little-moth-server/moth/file/20221129/1669706159124WechatIMG12.jpeg';
+    path = '/pages/index?key=home';
+  }
+  return {
+    title,
+    imageUrl: imgUrl,
+    path
+  };
+});
 
 onLoad(async (options) => {
   if (options.key && options.key !== current.value) {

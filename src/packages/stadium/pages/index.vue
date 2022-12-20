@@ -46,6 +46,7 @@
 
 <script setup>
 import { ref, reactive, computed, watch, nextTick } from 'vue';
+import { onShareAppMessage } from '@dcloudio/uni-app';
 import { storeToRefs } from 'pinia';
 import List from '@/components/list';
 import StadiumCard from '@/components/list-card/stadium-card';
@@ -230,6 +231,13 @@ const goStadiumDetail = (data) => {
   const { id } = data;
   to('/stadium/detail', { id });
 };
+
+onShareAppMessage(() => {
+  return {
+    title: '这些网球馆离你最近，快邀约好友来玩吧！',
+    imageUrl: 'https://dele.htennis.net/proApi/little-moth-server/moth/file/20221129/1669706159124WechatIMG12.jpeg'
+  };
+});
 </script>
 
 <style lang="scss" scoped>

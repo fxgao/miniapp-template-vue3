@@ -40,7 +40,9 @@
                     : 'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/sex-female.png'
                 "
               />
-              <view class="level"> 0基础1级 </view>
+              <view class="level" v-if="loginInfoData?.level">
+                {{ Constant.LEVEL_GRADE_2STRING_MAP[loginInfoData?.level] }}
+              </view>
             </view>
             <view class="infoRow" v-if="loginInfoData?.openId">
               <view class="phone" v-if="loginInfoData?.tel">
@@ -158,7 +160,7 @@
 
 <script setup>
 import { ref, reactive, computed, nextTick } from 'vue';
-import { onLoad, onShow } from '@dcloudio/uni-app';
+import { onLoad, onShow, onShareAppMessage } from '@dcloudio/uni-app';
 import { storeToRefs } from 'pinia';
 import { useAppInstance, useNav } from '@/hooks';
 import { useSystemInfoStore } from '@/stores/systemInfo';
@@ -354,6 +356,36 @@ const initData = async (id) => {
     console.log('getOrderDetail error', error);
   }
 };
+
+const activitytInfo = computed(() => {
+  return orderInfo.value && orderInfo.value.tbBizActivityVo ? orderInfo.value.tbBizActivityVo : {};
+});
+
+const courseInfo = computed(() => {
+  return orderInfo.value && orderInfo.value.tbBizCourseVo ? orderInfo.value.tbBizCourseVo : {};
+});
+
+const gameInfo = computed(() => {
+  return orderInfo.value && orderInfo.value.tbBizGameVo ? orderInfo.value.tbBizGameVo : {};
+});
+
+const headFigure = computed(() => {
+  if (orderInfo.value?.actType === 'course_official' && orderInfo.value?.actType === 'course_experience') {
+    return courseInfo.value?.courseHeadFigure || '';
+  } else if (orderInfo.value?.actType === 'game') {
+    return gameInfo.value?.gameImageUrl || '';
+  } else {
+    return activitytInfo.value?.activeHeadFigure || '';
+  }
+});
+
+onShareAppMessage(() => {
+  return {
+    title: '我在参与活动，邀你一起来围观！',
+    imageUrl: headFigure.value || 'https://dele.htennis.net/proApi/little-moth-server/moth/file/20221129/1669706159124WechatIMG12.jpeg',
+    path: '/pages/index?key=home'
+  };
+});
 
 onShow(() => {
   console.log('onshow', isRefund);

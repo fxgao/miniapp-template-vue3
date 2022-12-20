@@ -83,7 +83,7 @@
 
 <script setup>
 import { computed, ref } from 'vue';
-import { onLoad } from '@dcloudio/uni-app';
+import { onLoad, onShareAppMessage } from '@dcloudio/uni-app';
 import DetailHeader from '@/components/detail/header';
 import ReportInfo from '@/components/detail/report-info';
 import MpHtml from '@/components/mp-html/mp-html.vue';
@@ -168,6 +168,14 @@ const getHotStadiumList = () => {
     stadiumList.value = res || [];
   });
 };
+
+onShareAppMessage(() => {
+  return {
+    title: `${matchInfo.value.gameName}比赛真不错，快来参与围观吧！`,
+    imageUrl: matchInfo.value.gameImageUrl || 'https://dele.htennis.net/proApi/little-moth-server/moth/file/20221129/1669706159124WechatIMG12.jpeg',
+    path: `/packages/match/pages/detail?id=${matchId.value}&pubId=${publishId.value}`
+  };
+});
 
 onLoad(async (options) => {
   console.log('match detail onload', options);

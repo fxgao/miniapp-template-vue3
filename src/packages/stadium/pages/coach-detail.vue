@@ -17,8 +17,10 @@
           <text class="seniority">教龄{{coachDetail.seniority}}年</text>
         </view>
         <view class="labels">
-          <view class="label-item red" v-if="coachDetail.level">高级</view>
-          <view class="label-item">外教</view>
+          <view class="label-item red" v-if="coachDetail.level == 2">高级</view>
+          <view class="label-item red" v-if="coachDetail.level == 3">精英</view>
+          <view class="label-item red" v-if="coachDetail.level == 4">职业</view>
+          <view class="label-item" v-if="coachDetail.nationality != 1">外教</view>
         </view>
         <view class="stadium" v-for="item in stadiumList" :key="item.id" @click="goStadiumDetail(item)">
           <view class="place">{{item.stadiumName}}</view>
@@ -57,7 +59,7 @@
 
 <script setup>
 import { computed, reactive, ref, toRefs } from 'vue';
-import { onLoad, onPageScroll } from '@dcloudio/uni-app';
+import { onLoad, onPageScroll, onShareAppMessage } from '@dcloudio/uni-app';
 import { useAppInstance, useNav } from '@/hooks';
 import { useLoginInfoStore } from '@/stores/loginInfo';
 import PopupBottom from '@/components/popup-bottom';
@@ -111,6 +113,14 @@ const callPhone = () => {
     phoneNumber: coachDetail.value.phone
   });
 };
+
+onShareAppMessage(() => {
+  return {
+    title: `我是${coachDetail.value.nickName}，每位网球人的陪伴者！`,
+    imageUrl: coachDetail.value.photo || 'https://dele.htennis.net/proApi/little-moth-server/moth/file/20221129/1669706159124WechatIMG12.jpeg',
+    path: `/packages/match/pages/detail?id=${coachId.value}`
+  };
+});
 
 onLoad(async (options) => {
   coachId.value = options.id;

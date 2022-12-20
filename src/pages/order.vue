@@ -41,7 +41,9 @@
                     : 'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/sex-female.png'
                 "
               />
-              <view class="level"> 0基础1级 </view>
+              <view class="level" v-if="loginInfoData?.level">
+                {{ Constant.LEVEL_GRADE_2STRING_MAP[loginInfoData?.level] }}
+              </view>
             </view>
             <view class="infoRow" v-if="loginInfoData?.openId">
               <view class="phone" v-if="loginInfoData?.tel">
@@ -145,6 +147,7 @@ import config from '@/api/config';
 import PopupBottom from '@/components/popup-bottom';
 import Modal from '@/components/modal';
 import MpHtml from '@/components/mp-html/mp-html.vue';
+import Constant from '@/lib/constant';
 
 const BASE_URL = config.REQUEST_URL_PREFIX;
 const systemInfo = useSystemInfoStore();

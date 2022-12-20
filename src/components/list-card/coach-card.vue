@@ -7,7 +7,9 @@
           {{ name }}
         </view>
         <view class="labels">
-          <view class="label-item red" v-if="level == 1">高级</view>
+          <view class="label-item red" v-if="level == 2">高级</view>
+          <view class="label-item red" v-if="level == 3">精英</view>
+          <view class="label-item red" v-if="level == 4">职业</view>
           <view class="label-item" v-if="nationality != 1">外教</view>
         </view>
       </view>

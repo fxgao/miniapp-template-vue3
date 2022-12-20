@@ -104,7 +104,7 @@
 
 <script setup>
 import { computed, reactive, ref } from 'vue';
-import { onLoad } from '@dcloudio/uni-app';
+import { onLoad, onShareAppMessage } from '@dcloudio/uni-app';
 import { useAppInstance, useNav } from '@/hooks';
 import api from '@/api';
 import uniAsync from '@/lib/uni-async';
@@ -258,6 +258,14 @@ const handleGoMore = () => {
     stadiumId: stadiumId.value
   });
 };
+
+onShareAppMessage(() => {
+  return {
+    title: `我在${stadiumInfo.value.stadiumName}等你一起来打球！`,
+    imageUrl: stadiumInfo.value.stadiumHeadFigure || 'https://dele.htennis.net/proApi/little-moth-server/moth/file/20221129/1669706159124WechatIMG12.jpeg',
+    path: `/packages/stadium/pages/detail?id=${stadiumId.value}`
+  };
+});
 
 onLoad(async (options) => {
   console.log('stadium detail onload', options);

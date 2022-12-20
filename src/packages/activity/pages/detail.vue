@@ -90,7 +90,7 @@
 
 <script setup>
 import { computed, ref } from 'vue';
-import { onLoad } from '@dcloudio/uni-app';
+import { onLoad, onShareAppMessage } from '@dcloudio/uni-app';
 import DetailHeader from '@/components/detail/header';
 import ReportInfo from '@/components/detail/report-info';
 import MpHtml from '@/components/mp-html/mp-html.vue';
@@ -240,6 +240,14 @@ const getHotStadiumList = () => {
     stadiumList.value = res || [];
   });
 };
+
+onShareAppMessage(() => {
+  return {
+    title: `${activityInfo.value.activeName}活动真不错，快来参与围观吧！`,
+    imageUrl: activityInfo.value.activeHeadFigure || 'https://dele.htennis.net/proApi/little-moth-server/moth/file/20221129/1669706159124WechatIMG12.jpeg',
+    path: `/packages/activity/pages/detail?actId=${activityId.value}&pubId=${publishId.value}`
+  };
+});
 
 onLoad(async (options) => {
   const { actId, pubId, fromMine = false } = options;

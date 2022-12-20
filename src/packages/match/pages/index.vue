@@ -44,6 +44,7 @@
 
 <script setup>
 import { ref, reactive, nextTick } from 'vue';
+import { onShareAppMessage } from '@dcloudio/uni-app';
 import List from '@/components/list';
 import MultiFilter from '@/components/multi-filter';
 import MatchCard from '@/components/list-card/match-card';
@@ -195,6 +196,13 @@ const goMatchDetail = (data) => {
     pubId: activityId
   });
 };
+
+onShareAppMessage(() => {
+  return {
+    title: '经典赛事不容错过，快来围观参与吧！',
+    imageUrl: 'https://dele.htennis.net/proApi/little-moth-server/moth/file/20221129/1669706159124WechatIMG12.jpeg'
+  };
+});
 </script>
 
 <style lang="scss" scoped>

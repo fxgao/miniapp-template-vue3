@@ -45,7 +45,7 @@
                 "
               />
               <view class="level" v-if="loginInfoData?.level">
-                {{ Constant.LEVEL_GRADE_2STRING_MAP[loginInfoData?.level] }} 级
+                {{ Constant.LEVEL_GRADE_2STRING_MAP[loginInfoData?.level] }}
               </view>
             </view>
             <view class="infoRow" v-if="loginInfoData?.openId">
