@@ -50,6 +50,7 @@ import MultiFilter from '@/components/multi-filter';
 import ActivityCard from '@/components/list-card/activity-card';
 
 import api from '@/api';
+import Constant from '@/lib/constant';
 
 const locationInfoStore = useLocationInfoStore();
 const { getAreaList } = storeToRefs(locationInfoStore);
@@ -127,7 +128,7 @@ const filterTabList = ref([
 const filterData = reactive({
   activity: [
     {
-      title: '',
+      title: '区域',
       type: 'checkBox',
       multiple: true,
       key: 'areaId',
@@ -139,6 +140,13 @@ const filterData = reactive({
           reset: true
         }
       ]
+    },
+    {
+      title: '等级',
+      type: 'block',
+      multiple: true,
+      key: 'level',
+      list: []
     }
   ]
 });
@@ -172,8 +180,22 @@ watch(
       checked: true,
       reset: true
     });
+    const levelList = [];
+    for (const key in Constant.LEVEL_GRADE_2STRING_MAP) {
+      levelList.push({
+        label: Constant.LEVEL_GRADE_2STRING_MAP[key],
+        value: key,
+        checked: false
+      });
+    }
     filterData.activity = [{
-      title: '',
+      title: '等级',
+      type: 'block',
+      multiple: true,
+      key: 'level',
+      list: levelList
+    }, {
+      title: '区域',
       type: 'checkBox',
       multiple: true,
       key: 'areaId',

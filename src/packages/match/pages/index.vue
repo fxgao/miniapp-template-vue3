@@ -49,8 +49,17 @@ import List from '@/components/list';
 import MultiFilter from '@/components/multi-filter';
 import MatchCard from '@/components/list-card/match-card';
 import { useAppInstance, useNav } from '@/hooks';
+import Constant from '@/lib/constant';
 
 const { to } = useNav();
+const levelList = [];
+for (const key in Constant.LEVEL_GRADE_2STRING_MAP) {
+  levelList.push({
+    label: Constant.LEVEL_GRADE_2STRING_MAP[key],
+    value: key,
+    checked: false
+  });
+}
 
 const matchList = ref([]);
 const matchListRef = ref(null);
@@ -81,6 +90,12 @@ const filterTabList = ref([
     label: '比赛状态',
     value: 4,
     linkKey: 'gameStatus',
+    showMore: true
+  },
+  {
+    label: '等级',
+    value: 5,
+    linkKey: 'level',
     showMore: true
   }
 ]);
@@ -174,6 +189,15 @@ const filterData = reactive({
           value: '2'
         }
       ]
+    }
+  ],
+  level: [
+    {
+      title: '',
+      type: 'block',
+      multiple: true,
+      key: 'level',
+      list: levelList
     }
   ]
 });

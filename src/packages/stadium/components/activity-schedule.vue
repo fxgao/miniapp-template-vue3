@@ -33,7 +33,7 @@
         :class="{mini: calcHeight(item.start, item.end) < 60}"
         @click="goDetail(item)"
         :style="{
-          background: isOverTime(item.start) ? '#F5F5F5' : item.textColor,
+          background: item.isOrder === 1 ? item.textColor : '#F5F5F5',
           color: item.color,
           top: calcTop(item.start) + 'rpx',
           height: calcHeight(item.start, item.end) + 'rpx'
@@ -44,19 +44,19 @@
         <view
           class="title"
           :style="{
-            color: isOverTime(item.start) ? '#a0a0a0' : item.color
+            color: item.isOrder === 1 ? item.color : '#a0a0a0'
           }"
           >{{ item.title }}</view
         >
         <view
           class="info"
           :style="{
-            color: isOverTime(item.start) ? '#a0a0a0' : item.color
+            color: item.isOrder === 1 ? item.color : '#a0a0a0'
           }"
         >
-          {{ item.start }}-{{ item.end }} {{ isOverTime(item.start) ? '已结束报名' : '可报名' }}
+          {{ item.start }}-{{ item.end }} {{ item.isOrder === 1 ? '可报名' : '已结束报名' }}
           <view
-            v-if="!isOverTime(item.start)"
+            v-if="item.isOrder === 1"
             class="icon"
             :style="{
               background: item.color

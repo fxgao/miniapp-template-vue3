@@ -53,10 +53,19 @@ import StadiumCard from '@/components/list-card/stadium-card';
 import Marquee from '@/components/marquee';
 import MultiFilter from '@/components/multi-filter';
 import { useAppInstance, useNav } from '@/hooks';
-
+import Constant from '@/lib/constant';
 import { useLocationInfoStore } from '@/stores/location';
+
 const locationInfoStore = useLocationInfoStore();
 const { getAreaList } = storeToRefs(locationInfoStore);
+const levelList = [];
+for (const key in Constant.LEVEL_GRADE_2STRING_MAP) {
+  levelList.push({
+    label: Constant.LEVEL_GRADE_2STRING_MAP[key],
+    value: key,
+    checked: false
+  });
+}
 
 const { to } = useNav();
 const stadiumListRef = ref(null);
@@ -86,6 +95,12 @@ const filterTabList = ref([
     label: '全部人群',
     value: 4,
     linkKey: 'applicablePeople',
+    showMore: true
+  },
+  {
+    label: '等级',
+    value: 5,
+    linkKey: 'level',
     showMore: true
   }
 ]);
@@ -185,6 +200,15 @@ const filterData = reactive({
           value: '3'
         }
       ]
+    }
+  ],
+  level: [
+    {
+      title: '',
+      type: 'block',
+      multiple: true,
+      key: 'level',
+      list: levelList
     }
   ]
 });

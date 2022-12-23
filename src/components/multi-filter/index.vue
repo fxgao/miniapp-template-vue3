@@ -604,10 +604,12 @@ $selectColor: v-bind('activeColor');
         transition: all 0.3s;
         height: v-bind('mainsHeight');
         .chooseItem {
+          &:not(:first-child) {
+            margin-top: 48rpx;
+          }
           &.noMgt {
             margin-top: 0rpx;
           }
-          margin-top: 48rpx;
           .title {
             font-size: 32rpx;
             font-weight: 700;
@@ -620,6 +622,7 @@ $selectColor: v-bind('activeColor');
               flex-direction: column;
             }
             @include flex-start;
+            flex-wrap: wrap;
             margin-top: 24rpx;
             .filterItemBlock {
               &.active {
@@ -632,6 +635,7 @@ $selectColor: v-bind('activeColor');
               color: #333333;
               line-height: 44rpx;
               margin-right: 20rpx;
+              margin-bottom: 12rpx;
             }
             .filterItemCheckBox {
               @include flex-between;

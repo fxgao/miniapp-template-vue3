@@ -49,6 +49,16 @@ import CourseCard from '@/components/list-card/course-card';
 import MultiFilter from '@/components/multi-filter';
 
 import api from '@/api';
+import Constant from '@/lib/constant';
+
+const levelList = [];
+for (const key in Constant.LEVEL_GRADE_2STRING_MAP) {
+  levelList.push({
+    label: Constant.LEVEL_GRADE_2STRING_MAP[key],
+    value: key,
+    checked: false
+  });
+}
 
 const { $onLaunched } = useAppInstance();
 const { to } = useNav();
@@ -116,6 +126,13 @@ const filterTabList = ref([
 
 const filterData = reactive({
   course: [
+    {
+      title: '等级',
+      type: 'block',
+      multiple: true,
+      key: 'level',
+      list: levelList
+    },
     {
       title: '课程类型',
       type: 'block',
