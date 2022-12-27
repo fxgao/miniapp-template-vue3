@@ -20,7 +20,7 @@
       <view class="listContainer">
         <List
           v-model:dataList="matchList"
-          url="/wx/publish/gameList"
+          url="/wx/game/listPage"
           ref="matchListRef"
           :listType="'column'"
           :params="filterParams"
