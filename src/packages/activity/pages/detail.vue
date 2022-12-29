@@ -31,7 +31,7 @@
         </view>
         <view class="infoItem">
           <view class="leftText">活动地点：</view>
-          <view class="right">{{ activityInfo.areaDetail || '暂无' }}</view>
+          <view class="right">{{ activityInfo.areaDetail || '暂无' }}{{ activityInfo.placeName ? '-' + activityInfo.placeName : '' }}</view>
         </view>
         <view class="infoItem">
           <view class="leftText">活动等级：</view>

@@ -27,7 +27,7 @@
           <image class="rightIcon" src="https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/right-arrow-icon.png" />
         </view>
         <view class="content">
-          {{ coachDetail.remarks }}
+          {{ coachDetail.coachIntroduction }}
         </view>
       </view>
     </view>
@@ -61,15 +61,12 @@
 import { computed, reactive, ref, toRefs } from 'vue';
 import { onLoad, onPageScroll, onShareAppMessage } from '@dcloudio/uni-app';
 import { useAppInstance, useNav } from '@/hooks';
-import { useLoginInfoStore } from '@/stores/loginInfo';
 import PopupBottom from '@/components/popup-bottom';
 // import Modal from '@/components/modal';
 import api from '@/api';
 
 const { $onLaunched } = useAppInstance();
 const { to } = useNav();
-const { loginInfoData } = useLoginInfoStore();
-console.log('useLoginInfoStore', loginInfoData);
 
 const navTitleColor = ref('color: rgba(0,0,0,1);justify-content: flex-end;');
 const navBarBackgroundColor = ref('rgba(255,255,255,0)');

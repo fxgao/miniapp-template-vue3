@@ -16,7 +16,7 @@ const order = {
   refundOrder(data) {
     return request({
       requestParams: {
-        url: '/wx/order/refundPay',
+        url: '/wx/order/prepayRefundPay',
         method: 'POST',
         data
       }

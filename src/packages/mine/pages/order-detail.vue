@@ -95,7 +95,7 @@
             </view>
             <view class="detailItem">
               <view class="detailTitle">手机号</view>
-              <view class="detailContent">{{ orderInfo?.phone ? orderInfo?.phone : '暂无手机号' }}</view>
+              <view class="detailContent">{{ orderInfo?.tel ? orderInfo?.tel : '暂无手机号' }}</view>
             </view>
             <view class="detailItem">
               <view class="detailTitle">订单备注</view>
@@ -123,7 +123,7 @@
         付款即代表您同意此协议。
       </view>
     </view>
-    <view class="detailPopupBottom" v-if="orderInfo.orderStatus === 10 || orderInfo.orderStatus === 20">
+    <view class="detailPopupBottom" v-if="orderInfo.orderStatus === 10 || orderInfo.orderStatus === 20 || orderInfo.orderStatus === 40">
       <PopupBottom ref="popup1">
         <template v-slot:outer-main>
           <view class="popupContainer">
@@ -135,6 +135,10 @@
             </template>
             <template v-if="orderInfo.orderStatus === 20">
               <view class="payBtn half plain" @click="goRefund">申请退款</view>
+              <view class="payBtn half" @click="showServeModal">联系客服</view>
+            </template>
+            <template v-if="orderInfo.orderStatus === 40">
+              <view class="payBtn half plain">退款审核中</view>
               <view class="payBtn half" @click="showServeModal">联系客服</view>
             </template>
           </view>

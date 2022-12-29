@@ -76,6 +76,7 @@
 
 <script setup>
 import { reactive, ref, toRefs } from 'vue';
+import { storeToRefs } from 'pinia';
 import { onLoad } from '@dcloudio/uni-app';
 import { useAppInstance, useNav } from '@/hooks';
 import { useLoginInfoStore } from '@/stores/loginInfo';
@@ -84,7 +85,8 @@ import api from '@/api';
 
 const { $onLaunched } = useAppInstance();
 const { to } = useNav();
-const { loginInfoData } = useLoginInfoStore();
+const loginInfoStore = useLoginInfoStore();
+const { loginInfoData } = storeToRefs(loginInfoStore);
 console.log('useLoginInfoStore', loginInfoData);
 
 const navTitleColor = ref('color: rgba(0,0,0,1);justify-content: flex-end;');

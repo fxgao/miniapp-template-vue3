@@ -15,6 +15,7 @@
         <view class="actionBlock">
           <view class="actionBtn" v-if="info.orderStatus === 10">去支付</view>
           <view class="actionBtn plain" v-if="info.orderStatus === 20">申请退款</view>
+          <view class="actionBtn plain" v-if="info.orderStatus === 40">退款审核中</view>
         </view>
       </view>
       <image v-if="info.orderStatus === 50" class="coverStatusIcon" :src="'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/refund-icon.png'"/>

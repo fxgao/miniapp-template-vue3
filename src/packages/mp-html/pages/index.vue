@@ -45,7 +45,7 @@ const getRulesInfo = async (alias, title) => {
   const res = await api.common.getProtocolContent(alias);
   console.log('getProtocolContent', res);
   tipTitle.value = title;
-  tipsContent.value = res.data || '暂无内容';
+  tipsContent.value = res.data || res || '暂无内容';
 };
 
 onLoad((options) => {

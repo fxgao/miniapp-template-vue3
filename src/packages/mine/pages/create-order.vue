@@ -115,7 +115,7 @@
         <template v-slot:outer-main>
           <view class="popupContainer">
             <view class="info">
-              金额（元）： <span class="priceText">{{ price }}</span>
+              金额（元）： <span class="priceText">¥{{ price }}</span>
             </view>
             <view class="payBtn" @click="pay">去付款</view>
           </view>
@@ -283,7 +283,6 @@ const submit = () => {
     },
     (error) => {
       console.log('error=====', error);
-      uni.hideLoading();
       uni.showToast({
         title: error.msg || '支付失败',
         icon: 'none',

@@ -87,15 +87,11 @@
 <script setup>
 import { ref, computed, reactive } from 'vue';
 import { onLoad } from '@dcloudio/uni-app';
-import { storeToRefs } from 'pinia';
-import { useLoginInfoStore } from '@/stores/loginInfo';
 import { useAppInstance } from '@/hooks';
 import api from '@/api';
 import PopupBottom from '@/components/popup-bottom';
 import OrderCard from '@/components/list-card/order-card';
 
-// const loginInfoStore = useLoginInfoStore();
-// const { loginInfoData } = storeToRefs(loginInfoStore);
 const { $onLaunched } = useAppInstance();
 
 const popup1 = ref(null);

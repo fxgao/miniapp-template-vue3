@@ -29,17 +29,37 @@
             >{{ matchInfo.startTime }} - {{ matchInfo.endTime }}</view
           >
         </view>
-        <view class="infoItem">
+        <!-- <view class="infoItem">
           <view class="leftText">活动场馆：</view>
           <view class="right">{{ matchInfo.stadiumName || '暂无' }}</view>
-        </view>
-        <view class="infoItem">
+        </view> -->
+        <!-- <view class="infoItem">
           <view class="leftText">活动地点：</view>
           <view class="right">{{ matchInfo.areaDetail || '暂无' }}</view>
+        </view> -->
+        <view class="infoItem">
+          <view class="leftText">比赛形式：</view>
+          <view class="right">{{ matchInfo.gameTypeValue || '暂无' }}</view>
+        </view>
+        <view class="infoItem">
+          <view class="leftText">适用年龄：</view>
+          <view class="right">{{ matchInfo.applicableAgeValue || '暂无' }}</view>
+        </view>
+        <view class="infoItem">
+          <view class="leftText">适用性别：</view>
+          <view class="right">{{ matchInfo.applicableSexValue || '男女均可' }}</view>
         </view>
         <view class="infoItem">
           <view class="leftText">报名费用：</view>
           <view class="right">{{ '¥' + matchInfo.entryFee || '暂无' }}</view>
+        </view>
+        <view class="infoItem">
+          <view class="leftText">最低等级：</view>
+          <view class="right">{{ matchInfo.levelStart || '-' }}</view>
+        </view>
+        <view class="infoItem">
+          <view class="leftText">最高等级：</view>
+          <view class="right">{{ matchInfo.levelEnd || '-' }}</view>
         </view>
       </view>
       <view class="infoBlock">

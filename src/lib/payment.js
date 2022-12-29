@@ -39,7 +39,7 @@ class PaymentControl {
         } else {
           failFunc(res);
         }
-        uni.hideLoading();
+        // uni.hideLoading();
       });
     } catch (e) {
       failFunc(e);
