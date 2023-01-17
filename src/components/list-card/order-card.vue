@@ -11,7 +11,7 @@
     <template v-if="showBottom">
       <view class="bottomBlock">
         <view class="payText">{{payText}}: ¥{{info.orderPrice}}</view>
-        <!-- 801 未查询订单  10未支付, 默认10 20支付成功 30支付失败 40待退款 50已退款 -->
+        <!-- 801 未查询订单  10未支付, 默认10 20支付成功 30支付失败 40待退款 50已退款 具体在constant.js-->
         <view class="actionBlock">
           <view class="actionBtn" v-if="info.orderStatus === 10">去支付</view>
           <view class="actionBtn plain" v-if="info.orderStatus === 20">申请退款</view>
@@ -19,7 +19,7 @@
           <view class="actionBtn plain" v-if="info.orderStatus === 100">退款失败</view>
         </view>
       </view>
-      <image v-if="info.orderStatus === 50" class="coverStatusIcon" :src="'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/refund-icon.png'"/>
+      <image v-if="info.orderStatus === 50 || info.orderStatus === 51" class="coverStatusIcon" :src="'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/refund-icon.png'"/>
     </template>
   </view>
 </template>

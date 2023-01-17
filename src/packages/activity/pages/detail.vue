@@ -11,7 +11,7 @@
     <view class="pageContainer" :style="popup1 ? 'padding-bottom:' + popup1.topSlotHeight : ''">
       <view class="infoBlock">
         <detail-header :title="activityInfo.activeName" :labelList="labelList"></detail-header>
-        <view class="reportInfoBlock" v-if="activityInfo.participantVo.participanCount > 0">
+        <view class="reportInfoBlock" v-if="activityInfo.participantVo && activityInfo.participantVo.participanCount > 0">
           <report-info :total="activityInfo.participantVo.participanCountMax" :infoList="activityInfo.participantVo.participantUserVo" ></report-info>
         </view>
       </view>
