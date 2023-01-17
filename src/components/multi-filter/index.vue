@@ -173,10 +173,14 @@ const props = defineProps({
   color: {
     type: String,
     default: '#333'
+  },
+  tabChangeEnable: {
+    type: Boolean,
+    default: true
   }
 });
 
-const { tabType, tabList, filterData, isSticky, stickyTop, activeColor } = toRefs(props);
+const { tabType, tabList, filterData, isSticky, stickyTop, activeColor, tabChangeEnable } = toRefs(props);
 
 const emits = defineEmits(['change', 'onShow']);
 
@@ -268,6 +272,7 @@ watch(
 
 // 切换tab
 const changeTab = (item) => {
+  if (!tabChangeEnable.value) return;
   if (item.showMore) {
     show.value = true;
     emits('onShow', true);
@@ -469,14 +474,16 @@ const handleResetAll = () => {
 
 const handClose = () => {
   show.value = false;
-  const tabListReset = tabListData.value.map((item) => {
-    console.log('tabListReset map', item);
-    return {
-      ...item,
-      selected: false
-    };
-  });
-  tabListData.value = tabListReset;
+  if (tabType.value === 'list') {
+    const tabListReset = tabListData.value.map((item) => {
+      console.log('tabListReset map', item);
+      return {
+        ...item,
+        selected: false
+      };
+    });
+    tabListData.value = tabListReset;
+  }
 };
 
 const stop = () => {};

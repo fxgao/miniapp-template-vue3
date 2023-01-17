@@ -1,7 +1,7 @@
 <template>
   <view class="listContainer">
-    <view class="listBlock" :class="{column: listType === 'column'}">
-      <view class="list" v-for="(item, index) in dataList" :key="item.id + 'listitem' + index">
+    <view class="listBlock" :class="{column: listType === 'column'}" v-if="dataList.length">
+      <view class="list" v-for="(item) in dataList" :key="item.id">
         <slot :data="item"></slot>
       </view>
     </view>
@@ -185,7 +185,6 @@ defineExpose({
     grid-template-columns: repeat(2, 1fr);
     column-gap: 30rpx;
     row-gap: 32rpx;
-
   }
 }
 </style>

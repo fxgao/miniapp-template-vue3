@@ -1,6 +1,6 @@
 <template>
   <view class="activityCardContainer">
-    <BaseList :title="info.activeName" :subTitle="subTitle" :img="coverImg" :labelList="labelList">
+    <BaseList :title="info.activeName" :subTitle="subTitle" :img="coverImg" :isActivity="true" :activitySubTitle="activitySubTitle">
       <view class="activityInfo">
         <view class="joinInfo">
           <view class="avatarBlock" v-if="joinList?.length">
@@ -16,13 +16,13 @@
               :key="index"
             />
           </view>
-          <view class="signUpText"
-            >{{ info?.participantVo.participanCount || 0 }}人报名/{{
+          <view class="signUpText" :class="{ noml: !joinList?.length }"
+            >{{ info?.participantVo.participanCount || 0 }}人已报/{{
               info?.participantVo.participanCountMax || 'x'
             }}满</view
           >
         </view>
-        <view class="price"> ¥{{ info.activityPrice || info.orderPrice }}{{ priceTypeText }} </view>
+        <view class="price"> ¥{{ info?.activityPriceTotalAmount || info?.activityPrice || info?.orderPrice }}{{ priceTypeText }} </view>
       </view>
     </BaseList>
   </view>
@@ -40,10 +40,14 @@ const props = defineProps({
 });
 const { info } = toRefs(props);
 
+const activitySubTitle = computed(() => {
+  return `${info.value?.activeStartTime.replace(/-/g, '.')}-${info.value?.endTime}`;
+});
 const subTitle = computed(() => {
-  return info.value?.activeStartTime
-    ? '截止报名 ' + info.value?.activeStartTime
-    : info.value?.activityDate;
+  // return info.value?.activeStartTime
+  //   ? '截止报名 ' + info.value?.activeStartTime
+  //   : info.value?.activityDate;
+  return ` ${info.value?.stadiumName}`;
 });
 
 const coverImg = computed(() => {
@@ -84,7 +88,7 @@ const joinList = computed(() => {
     align-items: flex-end;
     .joinInfo {
       @include flex-between;
-      max-width: 244rpx;
+      max-width: 284rpx;
       min-width: 168rpx;
       .avatarBlock {
         @include flex-center;
@@ -100,6 +104,9 @@ const joinList = computed(() => {
         }
       }
       .signUpText {
+        &.noml {
+          margin-left: 0rpx;
+        }
         font-size: 24rpx;
         color: #a0a0a0;
         line-height: 40rpx;

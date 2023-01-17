@@ -287,7 +287,7 @@ const demandChange = (e) => {
   return value;
 };
 
-const canChangeLevel = ref(false);
+const canChangeLevel = ref(true);
 
 // 验证表单
 const validateFormData = () => {
@@ -408,6 +408,8 @@ onLoad(async (option) => {
     demand.value = loginInfoData.value.demand;
     if (loginInfoData.value.level) {
       canChangeLevel.value = false;
+    } else {
+      canChangeLevel.value = true;
     }
   }
   isChoose.value = false;

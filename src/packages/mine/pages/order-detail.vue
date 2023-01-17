@@ -137,8 +137,12 @@
               <view class="payBtn half plain" @click="goRefund">申请退款</view>
               <view class="payBtn half" @click="showServeModal">联系客服</view>
             </template>
-            <template v-if="orderInfo.orderStatus === 40">
+            <template v-if="orderInfo.orderStatus === 40 || orderInfo.orderStatus === 80">
               <view class="payBtn half plain">退款审核中</view>
+              <view class="payBtn half" @click="showServeModal">联系客服</view>
+            </template>
+            <template v-if="orderInfo.orderStatus === 100">
+              <view class="payBtn half plain">退款申请失败</view>
               <view class="payBtn half" @click="showServeModal">联系客服</view>
             </template>
           </view>
@@ -386,8 +390,9 @@ const headFigure = computed(() => {
 onShareAppMessage(() => {
   return {
     title: '我在参与活动，邀你一起来围观！',
-    imageUrl: headFigure.value || 'https://dele.htennis.net/proApi/little-moth-server/moth/file/20221129/1669706159124WechatIMG12.jpeg',
-    path: '/pages/index?key=home'
+    // imageUrl: headFigure.value || 'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/share/order.png',
+    imageUrl: 'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/share/order.png',
+    path: `/packages/activity/pages/detail?actId=${orderInfo.value.actId}&pubId=${orderInfo.value.publishId}`
   };
 });
 

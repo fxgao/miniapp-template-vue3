@@ -124,8 +124,8 @@ const goCoachDetail = () => {
             border: none;
           }
           border-radius: 4rpx;
-          border: 1rpx solid #979797;
-          font-size: 24rpx;
+          background: #f8f8f8;
+          font-size: 22rpx;
           color: #A0A0A0;
           line-height: 24rpx;
           padding: 4rpx 8rpx;

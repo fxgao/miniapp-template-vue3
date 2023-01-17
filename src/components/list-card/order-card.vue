@@ -4,7 +4,7 @@
       <image :src="headFigure" class="infoImg" mode="aspectFill"/>
       <view class="infoRight">
         <view class="infoTitle">{{ publishInfo?.publishName }}</view>
-        <view class="infoSub">{{ stadiumInfo?.stadiumName }}</view>
+        <view class="infoSub">{{ stadiumInfo?.stadiumName }} {{ placeInfo?.placeName }}</view>
         <view class="infoSub">活动时间{{ publishInfo.startTime }}</view>
       </view>
     </view>
@@ -15,7 +15,8 @@
         <view class="actionBlock">
           <view class="actionBtn" v-if="info.orderStatus === 10">去支付</view>
           <view class="actionBtn plain" v-if="info.orderStatus === 20">申请退款</view>
-          <view class="actionBtn plain" v-if="info.orderStatus === 40">退款审核中</view>
+          <view class="actionBtn plain" v-if="info.orderStatus === 40 || info.orderStatus === 80">退款审核中</view>
+          <view class="actionBtn plain" v-if="info.orderStatus === 100">退款失败</view>
         </view>
       </view>
       <image v-if="info.orderStatus === 50" class="coverStatusIcon" :src="'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/refund-icon.png'"/>
@@ -77,6 +78,10 @@ const publishInfo = computed(() => {
 
 const stadiumInfo = computed(() => {
   return info.value && info.value.tbBizStadiumVo ? info.value.tbBizStadiumVo : {};
+});
+
+const placeInfo = computed(() => {
+  return info.value && info.value.tbBizPlaceVo ? info.value.tbBizPlaceVo : {};
 });
 
 </script>

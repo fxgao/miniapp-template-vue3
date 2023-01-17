@@ -41,7 +41,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, nextTick } from 'vue';
 import { storeToRefs } from 'pinia';
 import List from '@/components/list';
 import Empty from '@/components/base/empty';
@@ -66,6 +66,16 @@ const goOrderDetail = (data) => {
   const { orderSn } = data;
   to('/mine/order-detail', { id: orderSn });
 };
+
+const changeOrderStatus = (orderNo, status) => {
+  console.log('changeOrderStatus', orderNo, status);
+  const curIndex = orderList.value.findIndex(item => item.orderSn === orderNo);
+  if (curIndex > -1) orderList.value[curIndex].orderStatus = status;
+};
+
+defineExpose({
+  changeOrderStatus
+});
 </script>
 
 <style lang="scss" scoped>

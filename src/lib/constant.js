@@ -5,15 +5,18 @@ let PROCESS_ENV = process.env.VUE_APP_PROCESS_ENV || 'development';
 const STORAGE_KEYS = {
   ADD_MINIPROGRAM_DAY: 'ADD_MINIPROGRAM_DAY'
 };
-
-// 支付状态 10 未支付, 默认10 0 支付成功 30 支付失败 40 待退款 50 已退款 60 已取消
+// 支付状态 默认10 10 未支付 20 支付成功 30 支付失败 40 待退款 50 已退款 60 已取消 70 退款失败 80 已申请退款 100 不同意退款 110 免费订单-后台添加订单
 const PAY_STATUS = {
   UNPAID: 10,
   PAID: 20,
   PAY_FAIL: 30,
   REFUNDING: 40,
   REFUNDED: 50,
-  CANCEL: 60
+  CANCEL: 60,
+  REFUND_FAIL: 70,
+  APPLY_REFUND: 80,
+  REFUND_REFUSED: 100,
+  FREE_ORDER: 110
 };
 
 const PAY_STATUS_2STRING = {
@@ -22,7 +25,11 @@ const PAY_STATUS_2STRING = {
   30: '支付失败',
   40: '待退款',
   50: '已退款',
-  60: '已取消'
+  60: '已取消',
+  70: '退款失败',
+  80: '申请退款中',
+  100: '不同意退款',
+  110: '免费订单'
 };
 
 const ACTIVITY_TYPE = {

@@ -5,7 +5,7 @@
       <view class="title">
         {{ title }}
       </view>
-      <view class="labelBlock">
+      <view class="labelBlock" v-if="!isActivity">
         <view
           :class="'labelItem' + ' ' + item.type"
           v-for="(item, index) in labelList"
@@ -13,7 +13,8 @@
           >{{ item.labelValue }}</view
         >
       </view>
-      <view class="subTitle">
+      <view class="activitySubTitle" v-if="activitySubTitle && isActivity">{{ activitySubTitle }}</view>
+      <view class="subTitle" :class="{'activity': isActivity}">
         {{ subTitle }}
       </view>
       <view class="slotInfo">
@@ -38,13 +39,21 @@ const props = defineProps({
     type: String,
     default: ''
   },
+  isActivity: {
+    type: Boolean,
+    default: false
+  },
+  activitySubTitle: {
+    type: String,
+    default: ''
+  },
   labelList: {
     type: Array,
     default: () => []
   }
 });
 
-const { img, title, subTitle, labelList } = toRefs(props);
+const { img, title, subTitle, isActivity, activitySubTitle, labelList } = toRefs(props);
 </script>
 
 <style lang="scss" scoped>
@@ -80,29 +89,40 @@ const { img, title, subTitle, labelList } = toRefs(props);
         &.type {
           background: #EEF7E6;
           color: #5DB612;
-          border: 1rpx solid transparent;
+          // border: 1rpx solid transparent;
         }
         &.red {
           background: #FFEEEE;
           color: #FF5A5A;
-          border: 1rpx solid transparent;
+          // border: 1rpx solid transparent;
         }
         &:not(:last-child) {
           margin-right: 8rpx;
         }
         padding: 4rpx 8rpx;
         border-radius: 4rpx;
-        border: 1rpx solid #979797;
-        font-size: 24rpx;
+        background: #f8f8f8;
+        font-size: 22rpx;
         color: #A0A0A0;
-        line-height: 24rpx;
+        line-height: 28rpx;
       }
     }
     .subTitle {
+      &.activity {
+        margin-top: 8rpx;
+        margin-bottom: -10rpx;
+      }
       margin-top: 16rpx;
       font-size: 24rpx;
       color: #A0A0A0;
       line-height: 40rpx;
+    }
+
+    .activitySubTitle {
+      font-size: 24rpx;
+      color: #A0A0A0;
+      line-height: 40rpx;
+      margin-top: 8rpx;
     }
     .slotInfo {
       margin-top: 8rpx;

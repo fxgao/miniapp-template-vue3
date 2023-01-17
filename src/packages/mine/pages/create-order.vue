@@ -45,7 +45,7 @@
                 "
               />
               <view class="level" v-if="loginInfoData?.level">
-                {{ Constant.LEVEL_GRADE_2STRING_MAP[loginInfoData?.level] }}
+                级别{{ Constant.LEVEL_GRADE_2STRING_MAP[loginInfoData?.level] }}
               </view>
             </view>
             <view class="infoRow" v-if="loginInfoData?.openId">
@@ -144,7 +144,7 @@
 
 <script setup>
 import { ref, computed } from 'vue';
-import { onLoad } from '@dcloudio/uni-app';
+import { onLoad, onShareAppMessage } from '@dcloudio/uni-app';
 import { storeToRefs } from 'pinia';
 import { useSystemInfoStore } from '@/stores/systemInfo';
 import { useLoginInfoStore } from '@/stores/loginInfo';
@@ -189,6 +189,12 @@ const confirmInfo = ref({
   time: '2022.09.24 20:00 - 22:00'
 });
 const demand = ref('');
+const demandChange = (e) => {
+  console.log('demandChange', e);
+  const value = e.detail.value || '';
+  demand.value = value;
+  return value;
+};
 
 const priceExplainText = computed(() => {
   return '此活动需支付尾款';
@@ -204,7 +210,7 @@ const submit = () => {
     });
     return;
   }
-  if (loginInfoData.value?.level > levelEnd || loginInfoData.value?.level < levelStart) {
+  if (loginInfoData.value?.level > levelEnd || (levelStart !== 14 && loginInfoData.value?.level < levelStart)) {
     uni.showToast({
       title: '您的等级要不符合要求，请看看其他活动',
       icon: 'none'
@@ -309,6 +315,14 @@ const goOrderDetail = () => {
     id: orderSn.value
   });
 };
+
+onShareAppMessage(() => {
+  return {
+    title: confirmInfo.value.name,
+    imageUrl: confirmInfo.value.img,
+    path: `/packages/activity/pages/detail?actId=${actId.value}&pubId=${pId.value}`
+  };
+});
 
 onLoad(async (options) => {
   const { activityId, publishId, type, price: priceValue, info } = options;

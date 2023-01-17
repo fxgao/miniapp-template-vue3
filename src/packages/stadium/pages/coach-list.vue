@@ -51,12 +51,13 @@
 
 <script setup>
 import { ref, reactive, nextTick } from 'vue';
-import { onShareAppMessage } from '@dcloudio/uni-app';
+import { onShareAppMessage, onLoad } from '@dcloudio/uni-app';
 import MultiFilter from '@/components/multi-filter';
 import List from '@/components/list';
 import CoachCard from '@/components/list-card/coach-card';
 import { useAppInstance, useNav } from '@/hooks';
 import Constant from '@/lib/constant';
+import api from '@/api';
 
 const levelList = [];
 for (const key in Constant.LEVEL_GRADE_2STRING_MAP) {
@@ -71,7 +72,7 @@ const { to } = useNav();
 
 const coachListRef = ref(null);
 const coachList = ref([]);
-const params = reactive({});
+const params = ref({});
 
 const goCoachDetail = (data) => {
   console.log('goMatchDetail', data);
@@ -163,10 +164,36 @@ const filterChange = (data) => {
   });
 };
 
+const stadiumList = ref([]);
+const initStadiumList = async () => {
+  const res = await api.stadium.getAllStadiumList();
+  const stadiumLabelList = res.map(item => {
+    return {
+      label: item.stadiumName,
+      value: item.id
+    };
+  });
+  console.log('initStadiumList', res);
+  filterData.stadium = [
+    {
+      title: '',
+      type: 'checkBox',
+      multiple: true,
+      key: 'stadiumIdList',
+      list: stadiumLabelList
+    }
+  ];
+  filter.value && filter.value.handleResetAll();
+};
+
+onLoad(() => {
+  initStadiumList();
+});
+
 onShareAppMessage(() => {
   return {
     title: '快来选择专属你的网球教练吧！',
-    imageUrl: 'https://dele.htennis.net/proApi/little-moth-server/moth/file/20221129/1669706159124WechatIMG12.jpeg'
+    imageUrl: 'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/share/coach.png'
   };
 });
 </script>

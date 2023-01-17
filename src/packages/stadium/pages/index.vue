@@ -259,7 +259,7 @@ const goStadiumDetail = (data) => {
 onShareAppMessage(() => {
   return {
     title: '这些网球馆离你最近，快邀约好友来玩吧！',
-    imageUrl: 'https://dele.htennis.net/proApi/little-moth-server/moth/file/20221129/1669706159124WechatIMG12.jpeg'
+    imageUrl: 'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/share/stadium.png'
   };
 });
 </script>

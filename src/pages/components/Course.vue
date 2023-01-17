@@ -14,13 +14,14 @@
         :tabList="filterTabList"
         :filterData="filterData"
         :bgColor="filterBgColor"
+        :tabChangeEnable="canTableChange"
         @change="filterChange"
         @onShow="filterShow"
       ></multi-filter>
       <view class="list">
         <List v-model:dataList="courseList" url="/wx/templete/course/listPage" ref="courseListRef" :params="filterParams">
           <template v-slot="{ data }">
-            <view @click="goCourseDetail(data)">
+            <view @click="goCourseDetail(data)" v-if="data">
               <course-card
                 :info="data"
                 :size="'small'"
@@ -41,7 +42,7 @@
 </template>
 
 <script setup>
-import { reactive, ref, toRefs, nextTick } from 'vue';
+import { reactive, ref, toRefs, nextTick, computed } from 'vue';
 import { onLoad, onReachBottom } from '@dcloudio/uni-app';
 import { useAppInstance, useNav } from '@/hooks';
 import List from '@/components/list';
@@ -126,18 +127,18 @@ const filterTabList = ref([
 
 const filterData = reactive({
   course: [
-    {
-      title: '等级',
-      type: 'block',
-      multiple: true,
-      key: 'level',
-      list: levelList
-    },
+    // {
+    //   title: '等级',
+    //   type: 'block',
+    //   multiple: true,
+    //   key: 'level',
+    //   list: levelList
+    // },
     {
       title: '课程类型',
       type: 'block',
       multiple: true,
-      key: 'courseType',
+      key: 'courseTypeList',
       list: [
         {
           label: '不限',
@@ -146,7 +147,7 @@ const filterData = reactive({
           reset: true
         },
         {
-          label: '班课',
+          label: '正式课',
           value: 1
         },
         {
@@ -159,7 +160,7 @@ const filterData = reactive({
       title: '班级类型',
       type: 'block',
       multiple: true,
-      key: 'classType',
+      key: 'classTypeList',
       list: [
         {
           label: '不限',
@@ -176,23 +177,23 @@ const filterData = reactive({
           value: 2
         }
       ]
-    },
-    {
-      title: '校区',
-      type: 'checkBox',
-      multiple: true,
-      key: 'campus',
-      list: [
-        {
-          label: '得乐网球（新媒体网球馆）',
-          value: '1'
-        },
-        {
-          label: '得乐网球（新媒体网球馆）',
-          value: '2'
-        }
-      ]
     }
+    // {
+    //   title: '校区',
+    //   type: 'checkBox',
+    //   multiple: true,
+    //   key: 'campus',
+    //   list: [
+    //     {
+    //       label: '得乐网球（新媒体网球馆）',
+    //       value: '1'
+    //     },
+    //     {
+    //       label: '得乐网球（新媒体网球馆）',
+    //       value: '2'
+    //     }
+    //   ]
+    // }
   ]
 });
 const filterChange = (data) => {
@@ -212,6 +213,10 @@ const filterShow = (flag) => {
 
 const courseList = ref([]);
 const courseListRef = ref(null);
+
+const canTableChange = computed(() => {
+  return courseListRef.value ? !courseListRef.value?.loading : true;
+});
 
 const goCourseDetail = (item) => {
   console.log('goCourseDetail', item);

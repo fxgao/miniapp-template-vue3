@@ -15,13 +15,14 @@
         :tabList="filterTabList"
         :filterData="filterData"
         :bgColor="filterBgColor"
+        :tabChangeEnable="canTableChange"
         @change="filterChange"
         @onShow="filterShow"
       ></multi-filter>
       <view class="listBlock">
         <List v-model:dataList="activityList" url="/wx/publish/activityList" listType="column" ref="activityListRef" :params="filterParams">
           <template v-slot="{data}">
-            <view @click="goActivityDetail(data)">
+            <view @click="goActivityDetail(data)" v-show="data">
               <activity-card
                 :info="data"
               ></activity-card>
@@ -40,7 +41,7 @@
 </template>
 
 <script setup>
-import { reactive, ref, toRefs, watch, nextTick } from 'vue';
+import { reactive, ref, toRefs, watch, nextTick, computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { onLoad, onReachBottom } from '@dcloudio/uni-app';
 import { useAppInstance, useNav } from '@/hooks';
@@ -131,7 +132,7 @@ const filterData = reactive({
       title: '区域',
       type: 'checkBox',
       multiple: true,
-      key: 'areaId',
+      key: 'areaIdList',
       list: [
         {
           label: '全城',
@@ -162,8 +163,12 @@ const filterChange = (data) => {
 
 const filterShow = (flag) => {
   console.log('filterShow', flag);
-  if (flag) uni.pageScrollTo({ scrollTop: 296, duration: 300 });
+  if (flag) uni.pageScrollTo({ scrollTop: 320, duration: 300 });
 };
+
+const canTableChange = computed(() => {
+  return activityListRef.value ? !activityListRef.value?.loading : true;
+});
 
 watch(
   getAreaList,
@@ -198,7 +203,7 @@ watch(
       title: '区域',
       type: 'checkBox',
       multiple: true,
-      key: 'areaId',
+      key: 'areaIdList',
       list: resList
     }];
     filter.value && filter.value.handleResetAll();

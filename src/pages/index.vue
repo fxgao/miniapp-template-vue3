@@ -51,7 +51,7 @@
             <view class="labelBlock">
               <view class="labelItem">室内</view>
               <view class="labelItem">成人</view>
-              <view class="labelItem">标签</view>
+              <view class="labelItem">可预约</view>
             </view>
           </template>
           <template v-else>
@@ -280,15 +280,15 @@ onShareAppMessage(() => {
   let path = '';
   if (current.value === 'course') {
     title = '这些网球课正适合你，快来参与吧！';
-    imgUrl = 'https://dele.htennis.net/proApi/little-moth-server/moth/file/20221129/1669706159124WechatIMG12.jpeg';
+    imgUrl = 'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/share/course.png';
     path = '/pages/index?key=course';
   } else if (current.value === 'activity') {
     title = '这些网球活动正在进行中，快来参与吧！';
-    imgUrl = 'https://dele.htennis.net/proApi/little-moth-server/moth/file/20221129/1669706159124WechatIMG12.jpeg';
+    imgUrl = 'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/share/activity.png';
     path = '/pages/index?key=activity';
   } else {
     title = '我在得乐网球，等你一起来玩！';
-    imgUrl = 'https://dele.htennis.net/proApi/little-moth-server/moth/file/20221129/1669706159124WechatIMG12.jpeg';
+    imgUrl = 'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/share/main.png';
     path = '/pages/index?key=home';
   }
   return {

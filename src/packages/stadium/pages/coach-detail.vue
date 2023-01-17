@@ -114,7 +114,7 @@ const callPhone = () => {
 onShareAppMessage(() => {
   return {
     title: `我是${coachDetail.value.nickName}，每位网球人的陪伴者！`,
-    imageUrl: coachDetail.value.photo || 'https://dele.htennis.net/proApi/little-moth-server/moth/file/20221129/1669706159124WechatIMG12.jpeg',
+    imageUrl: coachDetail.value.photo || 'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/share/coach.png',
     path: `/packages/match/pages/detail?id=${coachId.value}`
   };
 });
@@ -178,8 +178,8 @@ onLoad(async (options) => {
           border: none;
         }
         border-radius: 4rpx;
-        border: 1rpx solid #979797;
-        font-size: 24rpx;
+        background: #f8f8f8;
+        font-size: 22rpx;
         color: #A0A0A0;
         line-height: 24rpx;
         padding: 4rpx 8rpx;

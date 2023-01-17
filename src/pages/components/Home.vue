@@ -85,7 +85,7 @@
               :name="item.nickName"
               :img="item.photo"
               :level="item.level"
-              :content="item.remarks"
+              :content="item.coachIntroduction"
               :nationality="item.nationality"
               :style="'margin-left: 32rpx;display: inline-block;'"
             ></coach-card>

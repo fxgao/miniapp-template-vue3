@@ -43,13 +43,18 @@
 </template>
 
 <script setup>
-import { ref, reactive, nextTick } from 'vue';
+import { ref, reactive, nextTick, watch } from 'vue';
 import { onShareAppMessage } from '@dcloudio/uni-app';
+import { storeToRefs } from 'pinia';
 import List from '@/components/list';
 import MultiFilter from '@/components/multi-filter';
 import MatchCard from '@/components/list-card/match-card';
+import { useLocationInfoStore } from '@/stores/location';
 import { useAppInstance, useNav } from '@/hooks';
 import Constant from '@/lib/constant';
+
+const locationInfoStore = useLocationInfoStore();
+const { getAreaList } = storeToRefs(locationInfoStore);
 
 const { to } = useNav();
 const levelList = [];
@@ -69,7 +74,7 @@ const filterParams = ref({
 });
 const filterTabList = ref([
   {
-    label: '全城',
+    label: '区域',
     value: 1,
     linkKey: 'area',
     showMore: true
@@ -106,7 +111,7 @@ const filterData = reactive({
       title: '',
       type: 'checkBox',
       multiple: true,
-      key: 'areaId',
+      key: 'areaIdList',
       list: [
         {
           label: '全城',
@@ -122,7 +127,7 @@ const filterData = reactive({
       title: '',
       type: 'checkBox',
       multiple: true,
-      key: 'gameType',
+      key: 'gameTypeList',
       list: [
         {
           label: '不限',
@@ -150,7 +155,7 @@ const filterData = reactive({
       title: '',
       type: 'checkBox',
       multiple: true,
-      key: 'applicablePeople',
+      key: 'applicablePeopleList',
       list: [
         {
           label: '不限',
@@ -178,7 +183,7 @@ const filterData = reactive({
       title: '',
       type: 'checkBox',
       multiple: true,
-      key: 'gameStatus',
+      key: 'gameStatusList',
       list: [
         {
           label: '未开始',
@@ -202,6 +207,33 @@ const filterData = reactive({
   ]
 });
 
+watch(
+  getAreaList,
+  (val) => {
+    const resList = val.map((item) => {
+      return {
+        label: item.name,
+        value: item.code
+      };
+    });
+    resList.unshift({
+      label: '全城',
+      value: '',
+      checked: true,
+      reset: true
+    });
+    filterData.area = [{
+      title: '',
+      type: 'checkBox',
+      multiple: true,
+      key: 'areaIdList',
+      list: resList
+    }];
+    filter.value && filter.value.handleResetAll();
+  },
+  { immediate: true }
+);
+
 const filterChange = (data) => {
   console.log('filterChange', data);
   filterParams.value = data;
@@ -224,7 +256,7 @@ const goMatchDetail = (data) => {
 onShareAppMessage(() => {
   return {
     title: '经典赛事不容错过，快来围观参与吧！',
-    imageUrl: 'https://dele.htennis.net/proApi/little-moth-server/moth/file/20221129/1669706159124WechatIMG12.jpeg'
+    imageUrl: 'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/share/match.png'
   };
 });
 </script>

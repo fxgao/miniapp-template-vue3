@@ -65,6 +65,9 @@ const labelList = computed(() => {
     }
     .info {
       width: 320rpx;
+      .content {
+        width: 274rpx;
+      }
     }
   }
   border-radius: 16rpx;
@@ -89,17 +92,17 @@ const labelList = computed(() => {
     .labelList {
       @include flex-start;
       margin-top: 8rpx;
-      height: 36rpx;
+      // height: 40rpx;
       .labelItem {
         &:not(:last-child) {
           margin-right: 6rpx;
         }
         border-radius: 4rpx;
-        border: 1rpx solid #979797;
-        padding: 4rpx 6rpx;
-        font-size: 24rpx;
+        background: #f8f8f8;
+        padding: 4rpx 8rpx;
+        font-size: 22rpx;
         color: #A0A0A0;
-        line-height: 24rpx;
+        line-height: 28rpx;
         flex: none;
       }
     }

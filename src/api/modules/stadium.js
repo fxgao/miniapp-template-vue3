@@ -11,6 +11,15 @@ const stadium = {
       }
     });
   },
+  // 全部场馆列表
+  getAllStadiumList() {
+    return request({
+      requestParams: {
+        url: '/wx/stadium/listAll',
+        method: 'GET'
+      }
+    });
+  },
   // 场馆详情
   getStadiumDetailInfo(id) {
     return request({

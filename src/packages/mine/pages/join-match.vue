@@ -34,8 +34,6 @@
           title="暂无赛事"
           subTitle="目前还没有参与赛事哦"
           icon="https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/empty/no-match.png"
-          buttonText="去报名"
-          url="/match/index"
         ></empty>
       </view>
     </view>

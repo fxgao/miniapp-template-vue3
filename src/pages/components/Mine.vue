@@ -35,7 +35,7 @@
           </view>
           <view class="infoRow" v-if="loginInfoData?.openId">
             <view class="level" v-if="loginInfoData?.level">
-              {{ Constant.LEVEL_GRADE_2STRING_MAP[loginInfoData?.level] }}
+              级别{{ Constant.LEVEL_GRADE_2STRING_MAP[loginInfoData?.level] }}
             </view>
             <view class="phone" v-if="loginInfoData?.tel">
               {{loginInfoData.tel}}
@@ -167,7 +167,7 @@ const goJoinPath = (item) => {
 
 const goSettingPath = (item) => {
   console.log('goSettingPath', item.path);
-  if (item.path === '/suggest' && !loginInfoData?.tel) {
+  if (item.path === '/suggest' && !loginInfoData?.value?.tel) {
     to('/edit-profile');
   }
   to(item.path);

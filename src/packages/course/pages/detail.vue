@@ -15,8 +15,32 @@
       <view class="infoBlock">
         <view class="title">基本信息</view>
         <view class="infoItem">
+          <view class="leftText">课程类型：</view>
+          <view class="right">{{ courseInfo.courseTypeValue }}</view>
+        </view>
+        <view class="infoItem">
           <view class="leftText">适用人群：</view>
+          <view class="right">{{ courseInfo.applicablePeopleValue }}</view>
+        </view>
+        <view class="infoItem">
+          <view class="leftText">适用等级：</view>
           <view class="right">{{ courseInfo.applicableLevelValue }}</view>
+        </view>
+        <view class="infoItem">
+          <view class="leftText">测评等级：</view>
+          <view class="right">{{ courseInfo.assessmentLevelValue }}</view>
+        </view>
+        <view class="infoItem">
+          <view class="leftText">课程班型：</view>
+          <view class="right">{{ courseInfo.classTypeValue }}</view>
+        </view>
+        <view class="infoItem" v-if="courseInfo.classType === 2 && courseInfo.multiPersonCourseTypeValue">
+          <view class="leftText">多人课程类型：</view>
+          <view class="right">{{ courseInfo.multiPersonCourseTypeValue }}</view>
+        </view>
+        <view class="infoItem" v-if="courseInfo.classType === 2 && courseInfo.largestNumber">
+          <view class="leftText">最大报名人数：</view>
+          <view class="right">{{ courseInfo.largestNumber }}</view>
         </view>
         <view class="infoItem">
           <view class="leftText">报名费用：</view>
@@ -71,7 +95,7 @@
 
 <script setup>
 import { computed, ref } from 'vue';
-import { onLoad, onShareAppMessage } from '@dcloudio/uni-app';
+import { onLoad, onShow, onShareAppMessage } from '@dcloudio/uni-app';
 import DetailHeader from '@/components/detail/header';
 import MpHtml from '@/components/mp-html/mp-html.vue';
 import PopupBottom from '@/components/popup-bottom';
@@ -160,9 +184,14 @@ const goStadiumDetail = (item) => {
 onShareAppMessage(() => {
   return {
     title: `${courseInfo.value.courseName}课程真不错，快来参与围观吧！`,
-    imageUrl: courseInfo.value.courseHeadFigure || 'https://dele.htennis.net/proApi/little-moth-server/moth/file/20221129/1669706159124WechatIMG12.jpeg',
+    imageUrl: courseInfo.value.courseHeadFigure || 'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/share/course.png',
     path: `/packages/coures/pages/detail?id=${courseId.value}&pubId=${publishId.value}`
   };
+});
+
+onShow(async () => {
+  await $onLaunched;
+  initDetail();
 });
 
 onLoad(async (options) => {

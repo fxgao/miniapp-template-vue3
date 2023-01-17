@@ -38,8 +38,6 @@
           title="暂无课程"
           subTitle="目前还没有报名课程哦"
           icon="https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/empty/no-course.png"
-          buttonText="去报名"
-          url="/index:course"
         ></empty>
       </view>
     </view>

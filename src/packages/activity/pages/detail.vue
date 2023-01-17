@@ -30,12 +30,21 @@
           >
         </view>
         <view class="infoItem">
-          <view class="leftText">活动地点：</view>
-          <view class="right">{{ activityInfo.areaDetail || '暂无' }}{{ activityInfo.placeName ? '-' + activityInfo.placeName : '' }}</view>
+          <view class="leftText">活动场馆：</view>
+          <view class="right">{{ activityInfo.stadiumName || '暂无' }}</view>
+        </view>
+        <!-- <view class="infoItem">
+          <view class="leftText">场馆地址：</view>
+          <view class="right">{{ activityInfo.areaDetail || '暂无' }}</view>
+        </view> -->
+        <view class="infoItem">
+          <view class="leftText">活动场地：</view>
+          <view class="right">{{ activityInfo.placeName || '暂无'}}</view>
         </view>
         <view class="infoItem">
           <view class="leftText">活动等级：</view>
-          <view class="right">{{ Constant.LEVEL_GRADE_2STRING_MAP[activityInfo.levelStart] || '暂无' }} - {{ Constant.LEVEL_GRADE_2STRING_MAP[activityInfo.levelEnd] || '暂无' }}</view>
+          <!-- <view class="right">{{ Constant.LEVEL_GRADE_2STRING_MAP[activityInfo.levelStart] || '暂无' }} - {{ Constant.LEVEL_GRADE_2STRING_MAP[activityInfo.levelEnd] || '暂无' }}</view> -->
+          <view class="right">{{ activityInfo.levelValue || '暂无' }}</view>
         </view>
         <view class="infoItem">
           <view class="leftText">活动费用：</view>
@@ -45,14 +54,18 @@
           <view class="leftText">有无停车场：</view>
           <view class="right">{{ activityInfo.isParkValue || '无' }}</view>
         </view>
-        <view class="infoItem">
+        <!-- <view class="infoItem">
           <view class="leftText">活动介绍：</view>
           <view class="right">{{ activityInfo.activeRemark || '无' }}</view>
-        </view>
+        </view> -->
       </view>
       <view class="infoBlock">
         <view class="title">活动说明</view>
-        <mp-html v-model:content="activityInfo.activeRule"></mp-html>
+        <!-- <mp-html v-model:content="activityInfo.activeRule"></mp-html> -->
+        <mp-html v-model:content="activityInfo.activeRemark"></mp-html>
+        <template v-if="activityInfo.activeRule">
+          <mp-html v-model:content="activityInfo.activeRule"></mp-html>
+        </template>
       </view>
       <view class="infoBlock list">
         <view class="title">热门场馆</view>
@@ -90,7 +103,7 @@
 
 <script setup>
 import { computed, ref } from 'vue';
-import { onLoad, onShareAppMessage } from '@dcloudio/uni-app';
+import { onLoad, onShow, onShareAppMessage } from '@dcloudio/uni-app';
 import DetailHeader from '@/components/detail/header';
 import ReportInfo from '@/components/detail/report-info';
 import MpHtml from '@/components/mp-html/mp-html.vue';
@@ -244,9 +257,13 @@ const getHotStadiumList = () => {
 onShareAppMessage(() => {
   return {
     title: `${activityInfo.value.activeName}活动真不错，快来参与围观吧！`,
-    imageUrl: activityInfo.value.activeHeadFigure || 'https://dele.htennis.net/proApi/little-moth-server/moth/file/20221129/1669706159124WechatIMG12.jpeg',
+    imageUrl: activityInfo.value.activeHeadFigure || 'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/share/main.png',
     path: `/packages/activity/pages/detail?actId=${activityId.value}&pubId=${publishId.value}`
   };
+});
+onShow(async () => {
+  await $onLaunched;
+  initDetail();
 });
 
 onLoad(async (options) => {

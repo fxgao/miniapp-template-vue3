@@ -9,7 +9,11 @@
           :key="index"
           @click="changeDate(index)"
         >
-          {{ item.weekStr }} {{ item.showDateStr }}
+          <view class="date">{{ item.weekStr }}</view>
+          <view class="dateNum">
+            <view class="small">{{ item.monthStr }}/</view>
+            <view class="large">{{ item.dayStr }}</view>
+          </view>
         </view>
       </view>
     </scroll-view>
@@ -35,8 +39,8 @@
         :style="{
           background: item.isOrder === 1 ? item.textColor : '#F5F5F5',
           color: item.color,
-          top: calcTop(item.start) + 'rpx',
-          height: calcHeight(item.start, item.end) + 'rpx'
+          top: calcTop(item.start) + 4 + 'rpx',
+          height: (calcHeight(item.start, item.end) > 60 ? calcHeight(item.start, item.end) - 12 : calcHeight(item.start, item.end) - 2) + 'rpx'
         }"
         v-for="(item, index) in activityList"
         :key="index"
@@ -54,7 +58,7 @@
             color: item.isOrder === 1 ? item.color : '#a0a0a0'
           }"
         >
-          {{ item.start }}-{{ item.end }} {{ item.isOrder === 1 ? '可报名' : '已结束报名' }}
+          {{ formatMinite(item.start) }}-{{ formatMinite(item.end) }} {{ item.isOrder === 1 ? '可报名' : '已结束报名' }}
           <view
             v-if="item.isOrder === 1"
             class="icon"
@@ -182,27 +186,34 @@ const isOverTime = (startTime) => {
   return dateStart.getTime() < nowDateHours.getTime();
 };
 
+const formatMinite = (time) => {
+  const timeArr = time.split(':');
+  const Hour = Number(timeArr[0]);
+  const Minutes = Number(timeArr[1]);
+  return `${Hour}:${Minutes < 10 ? '0' + Minutes : Minutes}`;
+};
+
 const goDetail = (item) => {
   /** 用途 4活动  6课程  8比赛 */
-  const { useble, resourceId, pubId } = item;
-  console.log('goDetail', useble, resourceId, pubId);
+  const { useble, resourceId, pubId, actId } = item;
+  console.log('goDetail', useble, resourceId, pubId, actId);
   let path = '';
   if (useble === 4) {
     path = '/activity/detail';
     to(path, {
-      actId: resourceId,
+      actId,
       pubId
     });
   } else if (useble === 6) {
     path = '/course/detail';
     to(path, {
-      id: resourceId,
+      id: actId,
       pubId
     });
   } else if (useble === 8) {
     path = '/match/detail';
     to(path, {
-      id: resourceId,
+      id: actId,
       pubId
     });
   }
@@ -223,37 +234,56 @@ onMounted(() => {
       @include flex-start;
       flex-wrap: nowrap;
       margin-left: 40rpx;
-      height: 64rpx;
       .dateItem {
         &.active {
-          &::after {
-            content: '';
-            position: absolute;
-            bottom: -8rpx;
-            left: 44%;
-            transform: translateX(-50%);
-            width: 48rpx;
-            height: 8rpx;
-            background: #ff6829;
-            border-radius: 4rpx;
+          color: #fff;
+          background: #FF6829;
+          .date {
+            color: #fff;
           }
-          font-weight: 700;
-          color: #333333;
+          .dateNum {
+            .small, .large {
+              color: #fff;
+            }
+          }
         }
-        font-size: 28rpx;
-        color: #a0a0a0;
-        line-height: 44rpx;
-        padding-right: 40rpx;
-        display: inline-block;
+        border-radius: 16rpx;
+        padding: 36rpx 14rpx 8rpx;
         position: relative;
-        flex: none;
-        height: 48rpx;
+        background: #F5F5F5;
+        margin-right: 32rpx;
+        .date {
+          position: absolute;
+          top: 10rpx;
+          left: 12rpx;
+          font-size: 20rpx;
+          color: #A0A0A0;
+          line-height: 20rpx;
+        }
+        .dateNum {
+          @include flex-start;
+          align-items: flex-end;
+          .small {
+            font-size: 20rpx;
+            color: #A0A0A0;
+            line-height: 20rpx;
+            margin-bottom: 6rpx;
+          }
+          .large {
+            font-size: 36rpx;
+            color: #A0A0A0;
+            line-height: 40rpx;
+            font-weight: 700;
+          }
+        }
       }
     }
   }
   .placeInfo {
+    position: relative;
+    z-index: 20;
     padding: 12rpx 0 32rpx;
-    border-bottom: 2rpx solid #eeeeee;
+    box-shadow: 0rpx 4rpx 8rpx 0rpx rgba(0,0,0,0.05);
     .placeContainer {
       @include flex-start;
       flex-wrap: nowrap;
@@ -315,6 +345,7 @@ onMounted(() => {
       .info {
         @include flex-start;
         margin-top: 8rpx;
+        padding-left: 32rpx;
         font-size: 24rpx;
         line-height: 40rpx;
         color: #a0a0a0;

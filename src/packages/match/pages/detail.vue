@@ -23,12 +23,12 @@
             >{{ matchInfo.stadiumName || '得乐体育' }}</view
           >
         </view>
-        <view class="infoItem">
+        <!-- <view class="infoItem">
           <view class="leftText">比赛时间：</view>
           <view class="right"
             >{{ matchInfo.startTime }} - {{ matchInfo.endTime }}</view
           >
-        </view>
+        </view> -->
         <!-- <view class="infoItem">
           <view class="leftText">活动场馆：</view>
           <view class="right">{{ matchInfo.stadiumName || '暂无' }}</view>
@@ -55,11 +55,11 @@
         </view>
         <view class="infoItem">
           <view class="leftText">最低等级：</view>
-          <view class="right">{{ matchInfo.levelStart || '-' }}</view>
+          <view class="right">{{ matchInfo.levelStartValue || '-' }}</view>
         </view>
         <view class="infoItem">
           <view class="leftText">最高等级：</view>
-          <view class="right">{{ matchInfo.levelEnd || '-' }}</view>
+          <view class="right">{{ matchInfo.levelEndValue || '-' }}</view>
         </view>
       </view>
       <view class="infoBlock">
@@ -126,7 +126,7 @@ const labelList = computed(() => {
   if (matchInfo.value.gameTypeValue) {
     resLabel.push({
       label: matchInfo.value.gameTypeValue,
-      style: 'font-size: 24rpx;color: #FF5A5A;line-height: 32rpx;background: #FFEEEE;border:none;'
+      style: 'color: #FF5A5A;line-height: 28rpx;background: #FFEEEE;border:none;'
     });
   }
   if (matchInfo.value.applicableAgeValue) {
@@ -192,7 +192,7 @@ const getHotStadiumList = () => {
 onShareAppMessage(() => {
   return {
     title: `${matchInfo.value.gameName}比赛真不错，快来参与围观吧！`,
-    imageUrl: matchInfo.value.gameImageUrl || 'https://dele.htennis.net/proApi/little-moth-server/moth/file/20221129/1669706159124WechatIMG12.jpeg',
+    imageUrl: matchInfo.value.gameImageUrl || 'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/share/match.png',
     path: `/packages/match/pages/detail?id=${matchId.value}&pubId=${publishId.value}`
   };
 });

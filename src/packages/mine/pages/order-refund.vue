@@ -130,14 +130,25 @@ const confirm = () => {
       orderId: orderInfo.value.orderSn,
       reason: reason.value
     })
-    .then(() => {
-      uni.showToast({
-        title: '退款申请已提交',
-        icon: 'success'
-      });
-      setTimeout(() => {
-        uni.navigateBack();
-      }, 1000);
+    .then(res => {
+      console.log('refundOrder', res);
+      if (res.resultCode !== 200) {
+        uni.showToast({
+          title: res.codeDes,
+          icon: 'none'
+        });
+      } else {
+        const pages = getCurrentPages();
+        const orderListPage = pages[pages.length - 3].$vm;
+        orderListPage.changeOrderStatus(orderInfo.value.orderSn, 80);
+        uni.showToast({
+          title: '退款申请已提交',
+          icon: 'success'
+        });
+        setTimeout(() => {
+          uni.navigateBack();
+        }, 1000);
+      }
     })
     .catch((error) => {
       uni.showToast({
@@ -148,7 +159,7 @@ const confirm = () => {
     });
 };
 
-const orderInfo = ref(null);
+const orderInfo = ref({});
 let actInfo = reactive({});
 let stadiumInfo = reactive({});
 
