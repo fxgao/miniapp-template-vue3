@@ -37,7 +37,7 @@
         :class="{mini: calcHeight(item.start, item.end) < 60}"
         @click="goDetail(item)"
         :style="{
-          background: item.isOrder === 1 ? item.textColor : '#F5F5F5',
+          background: item.isOrder === 0 ? item.textColor : '#F5F5F5',
           color: item.color,
           top: calcTop(item.start) + 4 + 'rpx',
           height: (calcHeight(item.start, item.end) > 60 ? calcHeight(item.start, item.end) - 12 : calcHeight(item.start, item.end) - 2) + 'rpx'
@@ -48,19 +48,19 @@
         <view
           class="title"
           :style="{
-            color: item.isOrder === 1 ? item.color : '#a0a0a0'
+            color: item.isOrder === 0 ? item.color : '#a0a0a0'
           }"
           >{{ item.title }}</view
         >
         <view
           class="info"
           :style="{
-            color: item.isOrder === 1 ? item.color : '#a0a0a0'
+            color: item.isOrder === 0 ? item.color : '#a0a0a0'
           }"
         >
-          {{ formatMinite(item.start) }}-{{ formatMinite(item.end) }} {{ item.isOrder === 1 ? '可报名' : '已结束报名' }}
+          {{ formatMinite(item.start) }}-{{ formatMinite(item.end) }} {{ item.isOrder === 0 ? '可报名' : '已结束报名' }}
           <view
-            v-if="item.isOrder === 1"
+            v-if="item.isOrder === 0"
             class="icon"
             :style="{
               background: item.color
@@ -302,7 +302,7 @@ onMounted(() => {
   }
   .main {
     width: 100%;
-    height: 728rpx;
+    height: calc(100vh - 448rpx);
     .scheduleBg {
       position: relative;
       top: 0;

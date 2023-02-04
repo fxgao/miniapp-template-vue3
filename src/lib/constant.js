@@ -67,6 +67,7 @@ const LEVEL_GRADE_MAP = {
   '6.0': 11,
   '6.5': 12,
   '7.0': 13,
+  '不限': 14
 }
 
 const LEVEL_GRADE_2STRING_MAP = {
@@ -82,7 +83,15 @@ const LEVEL_GRADE_2STRING_MAP = {
   10: '5.5',
   11: '6.0',
   12: '6.5',
-  13: '7.0'
+  13: '7.0',
+  14: '不限'
+}
+
+const COACH_LEVEL_GRADE_2STRING_MAP = {
+  1: '专业教练',
+  2: '高级教练',
+  3: '精英教练',
+  4: '职业教练',
 }
 
 export default {
@@ -93,5 +102,6 @@ export default {
   ACTIVITY_TYPE,
   ACTIVITY_TYPE_2PAYTYPE,
   LEVEL_GRADE_MAP,
-  LEVEL_GRADE_2STRING_MAP
+  LEVEL_GRADE_2STRING_MAP,
+  COACH_LEVEL_GRADE_2STRING_MAP
 };

@@ -91,16 +91,21 @@
           />
         </view>
       </view>
-      <!-- 购买须知 -->
+      <!-- 订单须知 -->
       <view class="buyNoticeBlock">
-        <view class="title">购买须知</view>
+        <view class="title">订单须知</view>
         <view class="content">
-          <view class="row">
-            1、根据北京防疫规定，参与者需提供72小时内核酸证明和健康宝绿码，如因自身原因无法提供不能参与活动，概不退款
-          </view>
-          <view class="row">
-            2、一旦支付，活动开始24小时前可全额退款（根据总金额，微信支付平台将扣除一定手续费），超过24小时不可退款
-          </view>
+          <template v-if="activityRule">
+            <mp-html v-model:content="activityRule"></mp-html>
+          </template>
+          <template v-else>
+            <view class="row">
+              1、根据北京防疫规定，参与者需提供72小时内核酸证明和健康宝绿码，如因自身原因无法提供不能参与活动，概不退款
+            </view>
+            <view class="row">
+              2、一旦支付，活动开始24小时前可全额退款（根据总金额，微信支付平台将扣除一定手续费），超过24小时不可退款
+            </view>
+          </template>
         </view>
       </view>
       <!-- 协议 -->
@@ -144,7 +149,7 @@
 
 <script setup>
 import { ref, computed } from 'vue';
-import { onLoad, onShareAppMessage } from '@dcloudio/uni-app';
+import { onLoad, onShareAppMessage, onShow } from '@dcloudio/uni-app';
 import { storeToRefs } from 'pinia';
 import { useSystemInfoStore } from '@/stores/systemInfo';
 import { useLoginInfoStore } from '@/stores/loginInfo';
@@ -188,6 +193,7 @@ const confirmInfo = ref({
   area: '北京市朝阳区周家庄村111号',
   time: '2022.09.24 20:00 - 22:00'
 });
+const activityRule = ref('');
 const demand = ref('');
 const demandChange = (e) => {
   console.log('demandChange', e);
@@ -316,16 +322,25 @@ const goOrderDetail = () => {
   });
 };
 
+const goPayRule = () => {
+  to('/mp-html?alias=paymentAgreement&title=支付协议');
+};
+
 onShareAppMessage(() => {
   return {
-    title: confirmInfo.value.name,
+    title: confirmInfo.value.stadiumName + '' + confirmInfo.value.name,
     imageUrl: confirmInfo.value.img,
     path: `/packages/activity/pages/detail?actId=${actId.value}&pubId=${pId.value}`
   };
 });
 
+onShow(() => {
+  console.log('onShow', loginInfoData.value);
+});
+
 onLoad(async (options) => {
-  const { activityId, publishId, type, price: priceValue, info } = options;
+  const { activityId, publishId, type, price: priceValue, info, activityRuleStorageKey = '' } = options;
+  const activityRuleInfo = uni.getStorageSync('confirmInfo_activityRule_' + activityRuleStorageKey) || '';
   console.log(activityId, type, priceValue, info);
   await $onLaunched;
   orderType.value = type;
@@ -333,6 +348,8 @@ onLoad(async (options) => {
   pId.value = publishId;
   price.value = priceValue;
   confirmInfo.value = JSON.parse(info);
+  activityRule.value = activityRuleInfo;
+  uni.removeStorageSync('confirmInfo_activityRule_' + activityRuleStorageKey);
 });
 </script>
 

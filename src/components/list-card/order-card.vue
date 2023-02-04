@@ -20,6 +20,9 @@
         </view>
       </view>
       <image v-if="info.orderStatus === 50 || info.orderStatus === 51" class="coverStatusIcon" :src="'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/refund-icon.png'"/>
+      <image v-if="info.orderStatus === 30" class="coverStatusIcon" :src="'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/pay-fail-icon.png'"/>
+      <image v-if="info.orderStatus === 60" class="coverStatusIcon" :src="'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/cancel-icon.png'"/>
+      <image v-if="info.orderStatus === 70" class="coverStatusIcon" :src="'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/refund-fail-icon.png'"/>
     </template>
   </view>
 </template>

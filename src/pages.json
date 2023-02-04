@@ -23,6 +23,9 @@
         },
         {
           "path": "pages/coach-detail"
+        },
+        {
+          "path": "pages/schedule"
         }
       ]
     },

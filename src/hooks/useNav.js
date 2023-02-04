@@ -7,6 +7,7 @@ const REDIRECT_URL = {
   '/index:activity': '/pages/index?key=activity',
   '/stadium/index': '/packages/stadium/pages/index',
   '/stadium/detail': '/packages/stadium/pages/detail',
+  '/stadium/schedule': '/packages/stadium/pages/schedule',
   '/coach/list': '/packages/stadium/pages/coach-list',
   '/coach/detail': '/packages/stadium/pages/coach-detail',
   '/course/detail': '/packages/course/pages/detail',

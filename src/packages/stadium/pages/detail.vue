@@ -53,16 +53,38 @@
       <!-- 活动信息 -->
       <view class="stadiumActivityContainer" v-if="stadiumId">
         <view class="header">
-          <view class="title" hover-class="none" hover-stop-propagation="false">预约活动</view>
+          <view class="title" hover-class="none" hover-stop-propagation="false">全部活动</view>
           <view class="moreText" @click="handleGoMore">
-            全部活动
+            预约活动
             <image
               class="icon"
               src="https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/right-arrow-icon.png"
             />
           </view>
         </view>
-        <activity-schedule :stadiumId="stadiumId"></activity-schedule>
+        <!-- 列表 -->
+        <view class="listContainer">
+          <List
+            v-if="loadEnd"
+            v-model:dataList="activityList"
+            url="/wx/publish/activityList"
+            listType="column"
+            ref="activityListRef"
+            :params="filterParams"
+          >
+            <template v-slot="{ data }">
+              <view @click="goActivityDetail(data)">
+                <activity-card :info="data"></activity-card>
+              </view>
+            </template>
+            <template v-slot:loading>
+              <view class="listBottomText"> 加载中... </view>
+            </template>
+            <template v-slot:noMore>
+              <view class="listBottomText"> 没有更多了! </view>
+            </template>
+          </List>
+        </view>
       </view>
       <!-- 教练团队信息 -->
       <view class="coachInfoContainer" v-if="coachList.length > 0">
@@ -104,14 +126,14 @@
 
 <script setup>
 import { computed, reactive, ref } from 'vue';
-import { onLoad, onShareAppMessage } from '@dcloudio/uni-app';
+import { onLoad, onShareAppMessage, onReachBottom } from '@dcloudio/uni-app';
 import { useAppInstance, useNav } from '@/hooks';
 import api from '@/api';
 import uniAsync from '@/lib/uni-async';
+import List from '@/components/list';
 import Marquee from '@/components/marquee';
-import ActivitySchedule from '../components/activity-schedule';
 import CoachCard from '@/components/list-card/coach-card';
-import activitySchedule from '../components/activity-schedule.vue';
+import ActivityCard from '@/components/list-card/activity-card';
 import Modal from '@/components/modal';
 
 const { $onLaunched } = useAppInstance();
@@ -150,8 +172,6 @@ const initStadiumInfo = async (id) => {
   console.log('getStadiumDetailInfo res', resInfo);
   stadiumInfo.value = resInfo;
 };
-
-const initActivityInfo = (id) => {};
 
 const coachList = ref([]);
 const initCoachInfo = async (id) => {
@@ -254,10 +274,28 @@ const copyWechatNumber = () => {
 };
 
 const handleGoMore = () => {
-  to('/activity/index', {
+  to('/stadium/schedule', {
     stadiumId: stadiumId.value
   });
 };
+
+// 活动列表
+const activityList = ref([]);
+const activityListRef = ref(null);
+const loadEnd = ref(false);
+const filterParams = reactive({});
+
+const goActivityDetail = (item) => {
+  console.log('goActivityDetail', item);
+  to('/activity/detail', {
+    actId: item.activityId,
+    pubId: item.id
+  });
+};
+
+onReachBottom(() => {
+  activityListRef.value.requestList();
+});
 
 onShareAppMessage(() => {
   return {
@@ -278,8 +316,8 @@ onLoad(async (options) => {
   await $onLaunched;
   // 加载场馆信息
   await initStadiumInfo(options.id);
-  // 加载场馆活动信息
-  initActivityInfo();
+  filterParams.stadiumId = options.id || '';
+  loadEnd.value = true;
   // 加载教练信息
   initCoachInfo(options.id);
 });
@@ -433,6 +471,17 @@ onLoad(async (options) => {
           margin-left: 8rpx;
         }
       }
+    }
+    .listContainer {
+      padding: 0 40rpx 40rpx;
+      background: linear-gradient(180deg, #ffffff 0, #f5f5f5 120rpx, #f5f5f5 100%);
+    }
+    .listBottomText {
+      font-size: 28rpx;
+      color: #A0A0A0;
+      line-height: 28rpx;
+      text-align: center;
+      padding: 20rpx 0;
     }
   }
   .coachInfoContainer {

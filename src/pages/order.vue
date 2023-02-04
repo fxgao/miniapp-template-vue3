@@ -88,9 +88,9 @@
           />
         </view>
       </view>
-      <!-- 购买须知 -->
+      <!-- 订单须知 -->
       <view class="buyNoticeBlock">
-        <view class="title">购买须知</view>
+        <view class="title">订单须知</view>
         <view class="content">
           <view class="row">
             1、根据北京防疫规定，参与者需提供72小时内核酸证明和健康宝绿码，如因自身原因无法提供不能参与活动，概不退款
@@ -273,6 +273,10 @@ const goEditProfile = () => {
   to('/edit-profile', {
     navBack: true
   });
+};
+
+const goPayRule = () => {
+  to('/mp-html?alias=paymentAgreement&title=支付协议');
 };
 
 onLoad(async (options) => {

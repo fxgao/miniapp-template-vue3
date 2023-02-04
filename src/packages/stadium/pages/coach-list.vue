@@ -60,9 +60,9 @@ import Constant from '@/lib/constant';
 import api from '@/api';
 
 const levelList = [];
-for (const key in Constant.LEVEL_GRADE_2STRING_MAP) {
+for (const key in Constant.COACH_LEVEL_GRADE_2STRING_MAP) {
   levelList.push({
-    label: Constant.LEVEL_GRADE_2STRING_MAP[key],
+    label: Constant.COACH_LEVEL_GRADE_2STRING_MAP[key],
     value: key,
     checked: false
   });

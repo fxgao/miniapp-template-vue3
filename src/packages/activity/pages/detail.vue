@@ -11,23 +11,25 @@
     <view class="pageContainer" :style="popup1 ? 'padding-bottom:' + popup1.topSlotHeight : ''">
       <view class="infoBlock">
         <detail-header :title="activityInfo.activeName" :labelList="labelList"></detail-header>
-        <view class="reportInfoBlock" v-if="activityInfo.participantVo && activityInfo.participantVo.participanCount > 0">
-          <report-info :total="activityInfo.participantVo.participanCountMax" :infoList="activityInfo.participantVo.participantUserVo" ></report-info>
+        <view
+          class="reportInfoBlock"
+          v-if="activityInfo.participantVo && activityInfo.participantVo.participanCount > 0"
+        >
+          <report-info
+            :total="activityInfo.participantVo.participanCountMax"
+            :infoList="activityInfo.participantVo.participantUserVo"
+          ></report-info>
         </view>
       </view>
       <view class="infoBlock">
         <view class="title">基本信息</view>
         <view class="infoItem">
           <view class="leftText">活动时间：</view>
-          <view class="right"
-            >{{ activityInfo.activeStartTime }} - {{ activityInfo.endTime }}</view
-          >
+          <view class="right">{{ activityInfo.activeStartTime }} - {{ activityInfo.endTime }}</view>
         </view>
         <view class="infoItem">
           <view class="leftText">截止报名：</view>
-          <view class="right"
-            >{{ activityInfo.lastSignUpTimeStr }}</view
-          >
+          <view class="right">{{ activityInfo.lastSignUpTimeStr }}</view>
         </view>
         <view class="infoItem">
           <view class="leftText">活动场馆：</view>
@@ -39,7 +41,7 @@
         </view> -->
         <view class="infoItem">
           <view class="leftText">活动场地：</view>
-          <view class="right">{{ activityInfo.placeName || '暂无'}}</view>
+          <view class="right">{{ activityInfo.placeName || '暂无' }}</view>
         </view>
         <view class="infoItem">
           <view class="leftText">活动等级：</view>
@@ -48,7 +50,9 @@
         </view>
         <view class="infoItem">
           <view class="leftText">活动费用：</view>
-          <view class="right">{{ activityInfo.activityPrice ? '¥' + activityInfo.activityPrice : '暂无' }}</view>
+          <view class="right">{{
+            activityInfo.activityPrice ? '¥' + activityInfo.activityPrice : '暂无'
+          }}</view>
         </view>
         <view class="infoItem">
           <view class="leftText">有无停车场：</view>
@@ -79,7 +83,22 @@
         <template v-slot:outer-main>
           <view class="actionBlock">
             <view class="actionBtn plain" @click="showWechatModal">立即咨询</view>
-            <view class="actionBtn" :class="{disable: activityInfo.isOrder === 0}" @click="goOrderConfirm">¥{{ activityInfo.activityPrice }} 报名</view>
+            <!-- C端活动详情不可报名情况下活动状态判断逻辑及展示优先级：
+                  已开始：用户进入详情时间晚于活动开始时间，如活动开始时间为1月18日10点-11点，若用户进入活动详情页时间在1月18日10点（含）-11点（含）之间，则活动支付按钮置灰，且文案展示【已开始】
+                  已结束：用户进入详情时间晚于活动结束时间，如活动开始时间为1月18日10点-11点，若用户进入活动详情页时间在1月18日11点（不含）之后，则活动支付按钮置灰，且文案展示【已结束】
+                  人数已满：若用户进入详情页后，活动已报名人数已达到活动最大人数，则活动支付按钮置灰，且文案展示【人数已满】
+                  未成局：若用户进入详情页后，活动已报名人数未达到活动成局人数，则活动支付按钮可用，文案展示【金额+报名】
+                  已取消：若在后台取消了该活动，则用户进入详情页后，则活动支付按钮置灰，且文案展示【已取消】——目前BC端交互逻辑是B端取消后，该活动就不再在C端活动列表展示，对于新用户而言无感知。
+
+                  不可报名的状态展示优先级：当活动命中了多个不可报名状态时，在C端展示文案优先级为：人数已满＞已结束＞已开始＞未成局＞已取消 -->
+            <view class="actionBtn" @click="goOrderConfirm" v-if="activityInfo.isOrder === 0"
+              >¥{{ activityInfo.activityPrice }} 报名</view
+            >
+            <view class="actionBtn disable" v-else-if="activityInfo.isOrder === 1">已开始</view>
+            <view class="actionBtn disable" v-else-if="activityInfo.isOrder === 2">已结束</view>
+            <view class="actionBtn disable" v-else-if="activityInfo.isOrder === 3">人数已满</view>
+            <view class="actionBtn disable" v-else-if="activityInfo.isOrder === 4">已取消</view>
+            <view class="actionBtn disable" v-else>¥{{ activityInfo.activityPrice }} 报名</view>
           </view>
         </template>
       </PopupBottom>
@@ -91,11 +110,11 @@
           <view class="text">更多活动内容请添加教练微信进行咨询</view>
         </view>
         <template v-slot:bottom>
-            <view class="actionBlock">
-              <view class="saveBtn" @click="saveQrCode">保存二维码</view>
-              <view class="copyBtn" @click="copyWechatNumber">复制微信号</view>
-            </view>
-          </template>
+          <view class="actionBlock">
+            <view class="saveBtn" @click="saveQrCode">保存二维码</view>
+            <view class="copyBtn" @click="copyWechatNumber">复制微信号</view>
+          </view>
+        </template>
       </Modal>
     </view>
   </view>
@@ -111,6 +130,7 @@ import PopupBottom from '@/components/popup-bottom';
 import Modal from '@/components/modal';
 import StadiumCard from '@/components/list-card/stadium-card';
 import { useAppInstance, useNav } from '@/hooks';
+import { randomString } from '@/utils';
 import api from '@/api';
 import uniAsync from '@/lib/uni-async';
 import Constant from '@/lib/constant';
@@ -165,19 +185,23 @@ const showWechatModal = () => {
 };
 
 const goOrderConfirm = () => {
-  if (activityInfo.value.isOrder === 0) return;
+  if (activityInfo.value.isOrder !== 0) return;
 
   if (isFromMine.value) {
     uni.showToast({ title: '您已报名该活动', icon: 'none' });
     return;
   }
+  const activityRuleStorageKey = randomString(10, true);
+  uni.setStorageSync('confirmInfo_activityRule_' + activityRuleStorageKey, activityInfo.value.activeRule || '');
   to('/mine/create-order', {
     type: Constant.ACTIVITY_TYPE_2PAYTYPE[activityInfo.value.activeType],
     price: activityInfo.value.activityPrice,
     activityId: activityId.value,
     publishId: publishId.value,
+    activityRuleStorageKey,
     info: JSON.stringify({
       img: activityInfo.value.activeHeadFigure,
+      stadiumName: activityInfo.value.stadiumName,
       name: activityInfo.value.activeName,
       area: activityInfo.value.areaDetail || '得乐场馆',
       time: `${activityInfo.value.activeStartTime}-${activityInfo.value.endTime}`,
@@ -257,7 +281,9 @@ const getHotStadiumList = () => {
 onShareAppMessage(() => {
   return {
     title: `${activityInfo.value.activeName}活动真不错，快来参与围观吧！`,
-    imageUrl: activityInfo.value.activeHeadFigure || 'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/share/main.png',
+    imageUrl:
+      activityInfo.value.activeHeadFigure ||
+      'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/share/main.png',
     path: `/packages/activity/pages/detail?actId=${activityId.value}&pubId=${publishId.value}`
   };
 });
@@ -290,7 +316,7 @@ onLoad(async (options) => {
       margin-top: 16rpx;
     }
     &.list {
-      background: linear-gradient(180deg, #FFFFFF 0, #F5F5F5 120rpx, #F5F5F5 100%);
+      background: linear-gradient(180deg, #ffffff 0, #f5f5f5 120rpx, #f5f5f5 100%);
     }
     background: #fff;
     padding: 32rpx 40rpx;
@@ -336,8 +362,8 @@ onLoad(async (options) => {
       }
       &.disable {
         color: #fff;
-        background: #C0C0C0;
-        border: 4rpx solid #C0C0C0;
+        background: #c0c0c0;
+        border: 4rpx solid #c0c0c0;
       }
       &.w100 {
         width: 100%;

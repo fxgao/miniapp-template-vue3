@@ -108,12 +108,17 @@
       <view class="buyNoticeBlock">
         <view class="title">订单须知</view>
         <view class="content">
-          <view class="row">
-            1、根据北京防疫规定，参与者需提供72小时内核酸证明和健康宝绿码，如因自身原因无法提供不能参与活动，概不退款
-          </view>
-          <view class="row">
-            2、一旦支付，活动开始24小时前可全额退款（根据总金额，微信支付平台将扣除一定手续费），超过24小时不可退款
-          </view>
+          <template v-if="activityRule">
+            <mp-html v-model:content="activityRule"></mp-html>
+          </template>
+          <template v-else>
+            <view class="row">
+              1、根据北京防疫规定，参与者需提供72小时内核酸证明和健康宝绿码，如因自身原因无法提供不能参与活动，概不退款
+            </view>
+            <view class="row">
+              2、一旦支付，活动开始24小时前可全额退款（根据总金额，微信支付平台将扣除一定手续费），超过24小时不可退款
+            </view>
+          </template>
         </view>
       </view>
       <!-- 协议 -->
@@ -176,6 +181,7 @@ import { useLoginInfoStore } from '@/stores/loginInfo';
 import OrderCard from '@/components/list-card/order-card';
 import PopupBottom from '@/components/popup-bottom';
 import Modal from '@/components/modal';
+import MpHtml from '@/components/mp-html/mp-html.vue';
 import Constant from '@/lib/constant';
 import api from '@/api';
 import config from '@/api/config';
@@ -377,6 +383,10 @@ const gameInfo = computed(() => {
   return orderInfo.value && orderInfo.value.tbBizGameVo ? orderInfo.value.tbBizGameVo : {};
 });
 
+const activityRule = computed(() => {
+  return activitytInfo.value?.activeRule || '';
+});
+
 const headFigure = computed(() => {
   if (orderInfo.value?.actType === 'course_official' && orderInfo.value?.actType === 'course_experience') {
     return courseInfo.value?.courseHeadFigure || '';
@@ -386,6 +396,10 @@ const headFigure = computed(() => {
     return activitytInfo.value?.activeHeadFigure || '';
   }
 });
+
+const goPayRule = () => {
+  to('/mp-html?alias=paymentAgreement&title=支付协议');
+};
 
 onShareAppMessage(() => {
   return {

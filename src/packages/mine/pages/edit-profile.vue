@@ -231,21 +231,20 @@ const birthDayChange = (e) => {
 
 const level = ref('');
 const levelOptionList = ref([
-  { label: '0基础' },
-  { label: '0.5' },
-  { label: '1' },
-  { label: '1.5' },
-  { label: '2' },
-  { label: '2.5' },
-  { label: '3' },
+  { label: 'L0零基础' },
+  { label: 'L1-1.5' },
+  { label: 'L2-2.0' },
+  { label: 'L3-2.5' },
+  { label: '3.0' },
   { label: '3.5' },
-  { label: '4' },
+  { label: '4.0' },
   { label: '4.5' },
-  { label: '5' },
+  { label: '5.0' },
   { label: '5.5' },
-  { label: '6' },
+  { label: '6.0' },
   { label: '6.5' },
-  { label: '7' }
+  { label: '7.0' },
+  { label: '不限' }
 ]);
 
 const clickLevel = () => {
