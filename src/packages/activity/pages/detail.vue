@@ -91,9 +91,15 @@
                   已取消：若在后台取消了该活动，则用户进入详情页后，则活动支付按钮置灰，且文案展示【已取消】——目前BC端交互逻辑是B端取消后，该活动就不再在C端活动列表展示，对于新用户而言无感知。
 
                   不可报名的状态展示优先级：当活动命中了多个不可报名状态时，在C端展示文案优先级为：人数已满＞已结束＞已开始＞未成局＞已取消 -->
-            <view class="actionBtn" @click="goOrderConfirm" v-if="activityInfo.isOrder === 0"
-              >¥{{ activityInfo.activityPrice }} 报名</view
+            <view
+              class="actionBtn"
+              :class="{ disable: activityInfo.isApply === 2 }"
+              @click="goOrderConfirm"
+              v-if="activityInfo.isOrder === 0"
             >
+              <template v-if="activityInfo.isApply === 2"> 已报名 </template>
+              <template v-else> ¥{{ activityInfo.activityPrice }} 报名 </template>
+            </view>
             <view class="actionBtn disable" v-else-if="activityInfo.isOrder === 1">已开始</view>
             <view class="actionBtn disable" v-else-if="activityInfo.isOrder === 2">已结束</view>
             <view class="actionBtn disable" v-else-if="activityInfo.isOrder === 3">人数已满</view>
@@ -186,13 +192,17 @@ const showWechatModal = () => {
 
 const goOrderConfirm = () => {
   if (activityInfo.value.isOrder !== 0) return;
+  if (activityInfo.value.isApply === 2) return;
 
   if (isFromMine.value) {
     uni.showToast({ title: '您已报名该活动', icon: 'none' });
     return;
   }
   const activityRuleStorageKey = randomString(10, true);
-  uni.setStorageSync('confirmInfo_activityRule_' + activityRuleStorageKey, activityInfo.value.activeRule || '');
+  uni.setStorageSync(
+    'confirmInfo_activityRule_' + activityRuleStorageKey,
+    activityInfo.value.activeRule || ''
+  );
   to('/mine/create-order', {
     type: Constant.ACTIVITY_TYPE_2PAYTYPE[activityInfo.value.activeType],
     price: activityInfo.value.activityPrice,
