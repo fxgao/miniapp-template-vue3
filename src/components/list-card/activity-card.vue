@@ -31,6 +31,7 @@
 <script setup>
 import { computed, toRefs } from 'vue';
 import BaseList from './base';
+import Constant from '@/lib/constant';
 
 const props = defineProps({
   info: {
@@ -55,7 +56,8 @@ const coverImg = computed(() => {
 });
 
 const priceTypeText = computed(() => {
-  return info.value?.activityPriceTypeValue || '';
+  const activityPriceTypeValue = Constant.ACTIVITY_PRICE_TYPE[info.value?.activityPriceType];
+  return activityPriceTypeValue === '定额' ? '' : (activityPriceTypeValue || '');
 });
 
 const labelList = computed(() => {
