@@ -58,7 +58,7 @@
             color: item.isOrder === 0 ? item.color : '#a0a0a0'
           }"
         >
-          {{ formatMinite(item.start) }}-{{ formatMinite(item.end) }} {{ item.isOrder === 0 ? '可报名' : '已结束报名' }}
+          {{ formatMinite(item.start) }}-{{ formatMinite(item.end) }} {{ item.isOrder === 0 ? (item.isApply === 2 ? '您已经报名' : '可报名') : '已结束报名' }}
           <view
             v-if="item.isOrder === 0"
             class="icon"

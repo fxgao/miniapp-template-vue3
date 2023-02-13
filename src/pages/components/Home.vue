@@ -30,7 +30,7 @@
       <!-- 热门课程 -->
       <view class="courseBlock" v-if="hotCourseList.length > 0">
         <view class="topBlock">
-          <view class="titleBg"> 热门课程 </view>
+          <view class="titleBg"> 热门课程 <span class="smallTitle">左滑看更多</span></view>
           <view class="moreText" @click="handleGoMore('course')">
             查看更多
             <image
@@ -69,7 +69,7 @@
       <!-- 明星教练 -->
       <view class="coachBlock" v-if="starCoachList.length > 0">
         <view class="topBlock">
-          <view class="titleBg"> 明星教练 </view>
+          <view class="titleBg"> 明星教练 <span class="smallTitle">左滑看更多</span> </view>
           <view class="moreText" @click="handleGoMore('coach')">
             查看更多
             <image
@@ -295,6 +295,13 @@ defineExpose({
         border-radius: 50%;
         background: linear-gradient(135deg, #ffcb8a 0%, #ffffff 100%);
       }
+      .smallTitle {
+        font-size: 24rpx;
+        font-weight: 400;
+        color: #999;
+        line-height: 32rpx;
+        margin-left: 8rpx;
+      }
       font-size: 36rpx;
       font-weight: 700;
       color: #333333;
@@ -331,11 +338,10 @@ defineExpose({
     }
     .coachListScroll,
     .courseListScroll {
-      width: 100%;
+      // width: 100%;
       white-space: nowrap;
       margin-top: 32rpx;
       @include flex-start;
-      align-items: flex-start;
       .componentItem {
         width: auto;
         display: inline-block;

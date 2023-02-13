@@ -31,7 +31,7 @@
                 :name="data.nickName"
                 :img="data.photo"
                 :level="data.level"
-                :content="data.remarks"
+                :content="data.coachIntroduction"
                 :nationality="data.nationality"
                 :size="'small'"
               ></coach-card>

@@ -4,7 +4,7 @@
       ref="navbar"
       :backgroundColor="'rgba(255,255,255,1)'"
       :showBackIcon="'black'"
-      title="约球场馆"
+      title="场馆列表"
       :navCenterStyle="'flex-end'"
     />
     <view class="pageContainer">
@@ -96,13 +96,13 @@ const filterTabList = ref([
     value: 4,
     linkKey: 'applicablePeople',
     showMore: true
-  },
-  {
-    label: '等级',
-    value: 5,
-    linkKey: 'level',
-    showMore: true
   }
+  // {
+  //   label: '等级',
+  //   value: 5,
+  //   linkKey: 'level',
+  //   showMore: true
+  // }
 ]);
 
 const filterData = reactive({
@@ -160,16 +160,24 @@ const filterData = reactive({
           reset: true
         },
         {
-          label: '红地',
+          label: '草地',
           value: '1'
         },
         {
-          label: '草地',
+          label: '红土',
           value: '2'
         },
         {
-          label: '混凝土',
+          label: '硬地',
           value: '3'
+        },
+        {
+          label: '弹性',
+          value: '4'
+        },
+        {
+          label: '地胶',
+          value: '5'
         }
       ]
     }
@@ -201,16 +209,16 @@ const filterData = reactive({
         }
       ]
     }
-  ],
-  level: [
-    {
-      title: '',
-      type: 'block',
-      multiple: true,
-      key: 'level',
-      list: levelList
-    }
   ]
+  // level: [
+  //   {
+  //     title: '',
+  //     type: 'block',
+  //     multiple: true,
+  //     key: 'level',
+  //     list: levelList
+  //   }
+  // ]
 });
 
 const filterChange = (data) => {

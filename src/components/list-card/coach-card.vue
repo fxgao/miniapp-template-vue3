@@ -75,6 +75,8 @@ const goCoachDetail = () => {
     }
     .content {
       @include text-ellipsis-2;
+      word-break: break-all;
+      white-space: pre-wrap;
       height: 80rpx;
     }
   }

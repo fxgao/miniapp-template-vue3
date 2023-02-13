@@ -55,6 +55,10 @@
           }}</view>
         </view>
         <view class="infoItem">
+          <view class="leftText">最小成局人数：</view>
+          <view class="right">{{ activityInfo.completePersonCount + '人' || '暂无' }}</view>
+        </view>
+        <view class="infoItem">
           <view class="leftText">有无停车场：</view>
           <view class="right">{{ activityInfo.isParkValue || '无' }}</view>
         </view>
@@ -290,7 +294,7 @@ const getHotStadiumList = () => {
 
 onShareAppMessage(() => {
   return {
-    title: `${activityInfo.value.activeName}活动真不错，快来参与围观吧！`,
+    title: `${activityInfo.value.stadiumName}:${activityInfo.value.activeName}`,
     imageUrl:
       activityInfo.value.activeHeadFigure ||
       'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/share/main.png',

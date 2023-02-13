@@ -125,8 +125,8 @@
 </template>
 
 <script setup>
-import { computed, reactive, ref } from 'vue';
-import { onLoad, onShareAppMessage, onReachBottom } from '@dcloudio/uni-app';
+import { computed, reactive, ref, nextTick } from 'vue';
+import { onLoad, onShareAppMessage, onReachBottom, onShow } from '@dcloudio/uni-app';
 import { useAppInstance, useNav } from '@/hooks';
 import api from '@/api';
 import uniAsync from '@/lib/uni-async';
@@ -303,6 +303,17 @@ onShareAppMessage(() => {
     imageUrl: stadiumInfo.value.stadiumHeadFigure || 'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/share/stadium.png',
     path: `/packages/stadium/pages/detail?id=${stadiumId.value}`
   };
+});
+
+onShow(() => {
+  console.log('stadium detail onshow');
+  if (loadEnd.value) {
+    // 需要重置外部列表数据，否则会引起列表数据问题
+    activityList.value = [];
+    nextTick(() => {
+      activityListRef.value.refresh();
+    });
+  }
 });
 
 onLoad(async (options) => {

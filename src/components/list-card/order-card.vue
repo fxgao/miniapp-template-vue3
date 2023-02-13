@@ -5,7 +5,7 @@
       <view class="infoRight">
         <view class="infoTitle">{{ publishInfo?.publishName }}</view>
         <view class="infoSub">{{ stadiumInfo?.stadiumName }} {{ placeInfo?.placeName }}</view>
-        <view class="infoSub">活动时间{{ publishInfo.startTime }}</view>
+        <view class="infoSub">活动时间:{{ info.activeTime + ' ' }}{{ publishInfo.startTime }}{{ publishInfo.endTime ? '-' + publishInfo.endTime : '' }}</view>
       </view>
     </view>
     <template v-if="showBottom">

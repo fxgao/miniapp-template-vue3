@@ -328,7 +328,7 @@ const goPayRule = () => {
 
 onShareAppMessage(() => {
   return {
-    title: confirmInfo.value.stadiumName + '' + confirmInfo.value.name,
+    title: confirmInfo.value.stadiumName + ':' + confirmInfo.value.name,
     imageUrl: confirmInfo.value.img,
     path: `/packages/activity/pages/detail?actId=${actId.value}&pubId=${pId.value}`
   };

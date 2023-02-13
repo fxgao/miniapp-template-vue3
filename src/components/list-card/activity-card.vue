@@ -3,7 +3,7 @@
     <BaseList :title="info.activeName" :subTitle="subTitle" :img="coverImg" :isActivity="true" :activitySubTitle="activitySubTitle">
       <view class="activityInfo">
         <view class="joinInfo">
-          <view class="avatarBlock" v-if="joinList?.length">
+          <view class="avatarBlock" :style="{ marginRight: `-${(joinList?.length - 1) * 16}rpx` }" v-if="joinList?.length">
             <image
               class="avatarItem"
               :style="{ zIndex: index + 1, transform: `translateX(-${index * 16}rpx)` }"
@@ -17,9 +17,9 @@
             />
           </view>
           <view class="signUpText" :class="{ noml: !joinList?.length }"
-            >{{ info?.participantVo.participanCount || 0 }}人已报/{{
+            >{{ info?.participantVo.participanCount || 0 }}人已报/最多{{
               info?.participantVo.participanCountMax || 'x'
-            }}满</view
+            }}人</view
           >
         </view>
         <view class="price"> ¥{{ info?.activityPriceTotalAmount || info?.activityPrice || info?.orderPrice }}{{ priceTypeText }} </view>
@@ -87,12 +87,11 @@ const joinList = computed(() => {
     @include flex-between;
     align-items: flex-end;
     .joinInfo {
-      @include flex-between;
-      max-width: 284rpx;
+      @include flex-center;
+      max-width: 318rpx;
       min-width: 168rpx;
       .avatarBlock {
         @include flex-center;
-        margin-right: -16rpx;
         .avatarItem {
           position: relative;
           width: 40rpx;
@@ -110,7 +109,7 @@ const joinList = computed(() => {
         font-size: 24rpx;
         color: #a0a0a0;
         line-height: 40rpx;
-        margin-left: 8rpx;
+        margin-left: 4rpx;
       }
     }
     .price {
