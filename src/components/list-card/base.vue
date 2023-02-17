@@ -108,6 +108,7 @@ const { img, title, subTitle, isActivity, activitySubTitle, labelList } = toRefs
       }
     }
     .subTitle {
+      @include text-ellipsis;
       &.activity {
         margin-top: 8rpx;
         margin-bottom: -10rpx;
@@ -116,6 +117,7 @@ const { img, title, subTitle, isActivity, activitySubTitle, labelList } = toRefs
       font-size: 24rpx;
       color: #A0A0A0;
       line-height: 40rpx;
+      max-width: 432rpx;
     }
 
     .activitySubTitle {

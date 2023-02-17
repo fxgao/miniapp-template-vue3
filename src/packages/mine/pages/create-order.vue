@@ -65,7 +65,7 @@
             <view class="infoRight">
               <view class="infoTitle">{{ confirmInfo.name }}</view>
               <view class="infoSub">{{ confirmInfo.area }}</view>
-              <view class="infoSub">活动时间{{ confirmInfo.time }}</view>
+              <view class="infoSub">活动时间：{{ confirmInfo.time }}</view>
             </view>
           </view>
           <view class="priceInfo">
