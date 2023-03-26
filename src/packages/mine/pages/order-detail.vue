@@ -54,7 +54,12 @@
       </view>
       <!-- 订单信息 -->
       <view class="orderInfoBlock">
-        <view class="title">订单信息</view>
+        <view class="title">
+          订单信息
+          <view class="countDownText" v-if="orderInfo && orderInfo.orderStatus === 10 && payCountDownStr">
+            请在<div class="countDownNum">{{ payCountDownStr }}</div>内支付，超时将自动取消
+          </view>
+        </view>
         <view class="orderBlock">
           <order-card :info="orderInfo" :noPadding="true"></order-card>
           <view class="priceInfo">
@@ -173,7 +178,7 @@
 
 <script setup>
 import { ref, reactive, computed, nextTick } from 'vue';
-import { onLoad, onShow, onShareAppMessage } from '@dcloudio/uni-app';
+import { onLoad, onShow, onShareAppMessage, onUnload } from '@dcloudio/uni-app';
 import { storeToRefs } from 'pinia';
 import { useAppInstance, useNav } from '@/hooks';
 import { useSystemInfoStore } from '@/stores/systemInfo';
@@ -203,6 +208,8 @@ let actInfo = reactive({});
 let stadiumInfo = reactive({});
 const popup1 = ref(null);
 const serveModalShow = ref(false);
+let payCountDownTimer = null;
+const payCountDownStr = ref('');
 
 const payStatusStr = computed(() => {
   return PAY_STATUS_2STRING[orderInfo.value?.orderStatus];
@@ -358,6 +365,33 @@ const goRefund = () => {
   });
 };
 
+const clearTimer = () => {
+  if (payCountDownTimer) {
+    clearTimeout(payCountDownTimer);
+    payCountDownTimer = null;
+  }
+};
+
+const handelPayCountDown = (time) => {
+  // console.log('handelPayCountDown', time);
+  if (time > 0) {
+    const minute = Math.floor(time / 60);
+    const second = time % 60;
+    payCountDownStr.value = `${minute > 9 ? minute : '0' + minute}:${second > 9 ? second : '0' + second}`;
+    payCountDownTimer = setTimeout(() => {
+      clearTimer();
+      handelPayCountDown(time - 1);
+    }, 1000);
+  } else {
+    clearTimer();
+    payCountDownStr.value = '';
+    const pages = getCurrentPages();
+    const orderListPage = pages[pages.length - 2].$vm;
+    if (orderListPage && orderListPage.changeOrderStatus) { orderListPage.changeOrderStatus(orderInfo.value.orderSn, 60); }
+    initData(orderInfo.value.orderSn);
+  }
+};
+
 const initData = async (id) => {
   try {
     const res = await api.order.getOrderDetail(id);
@@ -365,7 +399,10 @@ const initData = async (id) => {
     orderInfo.value = res || {};
     actInfo = res && res.actJson ? JSON.parse(res.actJson) : {};
     stadiumInfo = res && res.stadiumJson ? JSON.parse(res.stadiumJson) : {};
-    console.log(actInfo, stadiumInfo);
+    // 如果是待支付订单，倒计时
+    if (res?.orderStatus === 10 && res?.refundTimeSecond > 0) {
+      handelPayCountDown(res.refundTimeSecond);
+    }
   } catch (error) {
     console.log('getOrderDetail error', error);
   }
@@ -423,6 +460,10 @@ onLoad(async (options) => {
   console.log('onload', options);
   await $onLaunched;
   initData(id);
+});
+
+onUnload(() => {
+  clearTimer();
 });
 </script>
 
@@ -519,6 +560,40 @@ onLoad(async (options) => {
   }
 
   .orderInfoBlock {
+    .title {
+      position: relative;
+      .countDownText {
+        &::before {
+          content: '';
+          position: absolute;
+          left: 12rpx;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 32rpx;
+          height: 32rpx;
+          background: url('https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/i-icon-warn.png') 0 0 no-repeat;
+          background-size: contain;
+        }
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        height: 48rpx;
+        background: #FFEFE9;
+        border-radius: 26rpx;
+        font-size: 24rpx;
+        color: #FF6829;
+        line-height: 48rpx;
+        padding-left: 48rpx;
+        padding-right: 24rpx;
+        .countDownNum {
+          display: inline-block;
+          font-weight: 500;
+          width: 84rpx;
+          text-align: center;
+        }
+      }
+    }
     .orderBlock {
       margin-top: 32rpx;
       .orderInfo {

@@ -48,11 +48,9 @@
           <view class="name">{{ index === 0 ? '附近场馆' : '全部场馆' }}</view>
           <template v-if="index !== 1">
             <view class="remark">{{ item ? item.stadiumName : '' }}</view>
-            <view class="labelBlock">
-              <view class="labelItem">室内</view>
-              <view class="labelItem">成人</view>
-              <view class="labelItem">可预约</view>
-            </view>
+            <!-- <view class="labelBlock" v-if="item && item.labelList">
+              <view class="labelItem" v-for="(child, index) in item.labelList" :key="index">{{child}}</view>
+            </view> -->
           </template>
           <template v-else>
             <view class="remark">查看全部场馆</view>
@@ -184,6 +182,7 @@ const getNearbyStadiumList = async (code) => {
   api.homePage.getNearbyStadiumList(data).then((res) => {
     console.log('getNearbyStadiumList res', res);
     if (!res.length) return;
+    res[0].labelList = res[0].placeEnvFormSet.concat(res[0].placeMaterialTypeSet || []).concat(res[0].placeApplyPeopleSet || []).slice(0, 3);
     stadiumList.value[0] = res[0] || {};
   });
 };

@@ -11,7 +11,7 @@
                 item.img ||
                 'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/default-avatar.png'
               "
-              mode="aspectFix"
+              mode="aspectFit"
               v-for="(item, index) in joinList"
               :key="index"
             />

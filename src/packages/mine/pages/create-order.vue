@@ -122,7 +122,8 @@
             <view class="info">
               金额（元）： <span class="priceText">¥{{ price }}</span>
             </view>
-            <view class="payBtn" @click="pay">去付款</view>
+            <view v-if="orderSn" class="payBtn disabled">已支付</view>
+            <view v-else class="payBtn" @click="pay">去付款</view>
           </view>
         </template>
       </PopupBottom>
@@ -300,10 +301,10 @@ const submit = () => {
         icon: 'none',
         duration: 2000
       });
-      error.orderId &&
-        uni.redirectTo({
-          url: '/pages/order-detail?orderId=' + error.orderId + '&fromWhere=payFail'
-        });
+      error.orderNo &&
+      to('/mine/order-detail', {
+        id: error.orderNo
+      }, 'redirectTo');
     }
   );
 };
@@ -319,7 +320,7 @@ const goEditProfile = () => {
 const goOrderDetail = () => {
   to('/mine/order-detail', {
     id: orderSn.value
-  });
+  }, 'redirectTo');
 };
 
 const goPayRule = () => {
@@ -576,6 +577,11 @@ onLoad(async (options) => {
     }
   }
   .payBtn {
+    &.disabled {
+      color: #fff;
+      background: #c0c0c0;
+      border: 4rpx solid #c0c0c0;
+    }
     font-size: 32rpx;
     font-weight: 700;
     color: #ffffff;

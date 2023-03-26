@@ -12,11 +12,9 @@
       <Marquee></Marquee>
       <view class="stadiumInfoContainer">
         <view class="title">{{ stadiumInfo.stadiumName }}</view>
-        <view class="labelList">
-          <view class="labelItem">室内</view>
-          <view class="labelItem">幼少儿</view>
-          <view class="labelItem">可预约</view>
-        </view>
+        <!-- <view class="labelList" v-if="stadiumInfo.labelList">
+          <view class="labelItem" v-for="(child, index) in stadiumInfo.labelList" :key="index">{{child}}</view>
+        </view> -->
         <scroll-view v-if="detailImgList.length > 0" class="imgBlock" :scroll-x="true">
           <view
             class="imgItem"
@@ -44,7 +42,7 @@
             <view class="iconItem" @click="showWechatModal">
               <image class="icon" src="https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/wechat-icon.png" />
             </view>
-            <view class="iconItem" @click="copyPhone">
+            <view class="iconItem" @click="callPhone">
               <image class="icon" src="https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/phone-icon.png" />
             </view>
           </view>
@@ -170,6 +168,7 @@ const detailImgList = computed(() => {
 const initStadiumInfo = async (id) => {
   const resInfo = await api.stadium.getStadiumDetailInfo(id);
   console.log('getStadiumDetailInfo res', resInfo);
+  // resInfo.labelList = resInfo.placeEnvFormSet.concat(resInfo.placeMaterialTypeSet || []).concat(resInfo.placeApplyPeopleSet || []).slice(0, 3);
   stadiumInfo.value = resInfo;
 };
 
@@ -211,10 +210,48 @@ const showWechatModal = () => {
   wechatModalShow.value = true;
 };
 
-const copyPhone = () => {
-  uni.makePhoneCall({
-    phoneNumber: stadiumInfo.value.landlinePhone
-  });
+const callPhone = () => {
+  // 如果存在场馆电话或场馆手机号
+  if (stadiumInfo.value.landlinePhone && stadiumInfo.value.mobilePhone) {
+    uni.showActionSheet({
+      itemList: ['场馆电话:' + stadiumInfo.value.landlinePhone, '场馆手机:' + stadiumInfo.value.mobilePhone],
+      success: (res) => {
+        if (res.tapIndex === 0) {
+          uni.makePhoneCall({
+            phoneNumber: stadiumInfo.value.landlinePhone
+          });
+        } else if (res.tapIndex === 1) {
+          uni.makePhoneCall({
+            phoneNumber: stadiumInfo.value.mobilePhone
+          });
+        }
+      }
+    });
+  } else if (stadiumInfo.value.landlinePhone) {
+    uni.showActionSheet({
+      itemList: ['场馆电话:' + stadiumInfo.value.landlinePhone],
+      success: (res) => {
+        if (res.tapIndex === 0) {
+          uni.makePhoneCall({
+            phoneNumber: stadiumInfo.value.landlinePhone
+          });
+        }
+      }
+    });
+  } else if (stadiumInfo.value.mobilePhone) {
+    uni.showActionSheet({
+      itemList: ['场馆手机:' + stadiumInfo.value.mobilePhone],
+      success: (res) => {
+        if (res.tapIndex === 0) {
+          uni.makePhoneCall({
+            phoneNumber: stadiumInfo.value.mobilePhone
+          });
+        }
+      }
+    });
+  } else {
+    uni.showToast({ title: '场馆暂无联系电话', icon: 'none' });
+  };
 };
 
 const saveQrCode = async () => {

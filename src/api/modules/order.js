@@ -13,10 +13,21 @@ const order = {
       }
     });
   },
-  refundOrder(data) {
+  // 退款前置检验接口
+  preRefundOrder(data) {
     return request({
       requestParams: {
         url: '/wx/order/prepayRefundPay',
+        method: 'POST',
+        data
+      }
+    });
+  },
+  // 退款
+  refundOrder(data) {
+    return request({
+      requestParams: {
+        url: '/wx/order/refundPay',
         method: 'POST',
         data
       }

@@ -126,21 +126,65 @@ const confirm = () => {
     return;
   }
   api.order
+    .preRefundOrder({
+      orderId: orderInfo.value.orderSn,
+      reason: reason.value
+    })
+    .then((res) => {
+      console.log('preRefundOrder', res);
+      // 800-未查询订单;801-24小时内不允许退款;802-48小时扣除20%退款;803-2人成局无需退款;200-正常退款
+      const { resultCode, codeDes, originalAmount, amountDeducted, amountOfRefund } = res;
+      if (resultCode === 800 || resultCode === 801 || resultCode === 803) {
+        uni.showToast({
+          title: codeDes,
+          icon: 'none'
+        });
+      } else if (resultCode === 802) {
+        uni.showModal({
+          title: '退款申请',
+          content: `原始金额:${originalAmount}元  扣除金额:${amountDeducted}元  实际退款金额:${amountOfRefund}元  (活动开始前48小时内退款需扣除20%订单金额)`,
+          confirmText: '仍要退款',
+          success: (res) => {
+            if (res.confirm) {
+              handleRefund();
+            }
+          }
+        });
+      } else {
+        uni.showModal({
+          title: '退款申请',
+          content: `退款金额：${originalAmount}元，实际退款金额：${amountOfRefund}元`,
+          confirmText: '确定退款',
+          success: (res) => {
+            if (res.confirm) {
+              handleRefund();
+            }
+          }
+        });
+      }
+    })
+    .catch((error) => {
+      uni.showToast({
+        title: '退款申请失败',
+        icon: 'none'
+      });
+      console.log('pre refund error', error);
+    });
+};
+
+// 处理正式退款
+const handleRefund = () => {
+  api.order
     .refundOrder({
       orderId: orderInfo.value.orderSn,
       reason: reason.value
     })
-    .then(res => {
+    .then((res) => {
       console.log('refundOrder', res);
-      if (res.resultCode !== 200) {
-        uni.showToast({
-          title: res.codeDes,
-          icon: 'none'
-        });
-      } else {
+      if (res.resultCode === 50) {
         const pages = getCurrentPages();
         const orderListPage = pages[pages.length - 3].$vm;
-        orderListPage.changeOrderStatus(orderInfo.value.orderSn, 80);
+        if (orderListPage && orderListPage.changeOrderStatus) { orderListPage.changeOrderStatus(orderInfo.value.orderSn, 80); }
         uni.showToast({
           title: '退款申请已提交',
           icon: 'success'
@@ -148,6 +192,11 @@ const confirm = () => {
         setTimeout(() => {
           uni.navigateBack();
         }, 1000);
+      } else {
+        uni.showToast({
+          title: '退款申请失败',
+          icon: 'none'
+        });
       }
     })
     .catch((error) => {
