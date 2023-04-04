@@ -16,6 +16,7 @@ const OSS_URL_PREFIX_ENV_CONFIG = {
 const REQUEST_URL_PREFIX_ENV_CONFIG = {
   production: 'https://dele.htennis.net/mothApi/little-moth-wx-api',
   development: 'https://dele.htennis.net/mothApi/little-moth-wx-api'
+  // development: 'https://moth-admin-vue.webdyc.com/mothApi/little-moth-wx-api'
 };
 
 const REQUEST_URL_PREFIX =

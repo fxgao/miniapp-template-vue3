@@ -47,7 +47,7 @@
             </view>
             <view class="infoRow" v-if="loginInfoData?.openId">
               <view class="phone" v-if="loginInfoData?.tel">
-                {{ loginInfoData.tel }}
+                {{ hideMiddlePhone(loginInfoData.tel) }}
               </view>
             </view>
           </view>
@@ -93,7 +93,7 @@
         <view class="title">订单须知</view>
         <view class="content">
           <view class="row">
-            1、根据北京防疫规定，参与者需提供72小时内核酸证明和健康宝绿码，如因自身原因无法提供不能参与活动，概不退款
+            1、如因自身原因无法提供不能参与活动，概不退款
           </view>
           <view class="row">
             2、一旦支付，活动开始24小时前可全额退款（根据总金额，微信支付平台将扣除一定手续费），超过24小时不可退款
@@ -141,7 +141,7 @@ import { useSystemInfoStore } from '@/stores/systemInfo';
 import { useLoginInfoStore } from '@/stores/loginInfo';
 import { useAppInstance, useNav } from '@/hooks';
 import payment from '@/lib/payment';
-import { debounce } from '@/utils';
+import { debounce, hideMiddlePhone } from '@/utils';
 import api from '@/api';
 import config from '@/api/config';
 import PopupBottom from '@/components/popup-bottom';

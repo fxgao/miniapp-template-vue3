@@ -38,7 +38,7 @@
               级别{{ Constant.LEVEL_GRADE_2STRING_MAP[loginInfoData?.level] }}
             </view>
             <view class="phone" v-if="loginInfoData?.tel">
-              {{loginInfoData.tel}}
+              {{ hideMiddlePhone(loginInfoData.tel) }}
             </view>
           </view>
         </view>
@@ -75,13 +75,13 @@
 </template>
 
 <script setup>
-import { reactive, ref, toRefs } from 'vue';
+import { ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { onLoad } from '@dcloudio/uni-app';
 import { useAppInstance, useNav } from '@/hooks';
 import { useLoginInfoStore } from '@/stores/loginInfo';
 import Constant from '@/lib/constant';
-import api from '@/api';
+import { hideMiddlePhone } from '@/utils';
 
 const { $onLaunched } = useAppInstance();
 const { to } = useNav();

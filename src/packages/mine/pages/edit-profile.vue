@@ -56,6 +56,7 @@
               class="icon"
               src="https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/i-icon.png"
               mode="aspectFit"
+              @click="goLevelRule"
             />
           </view>
           <view class="content">
@@ -120,7 +121,7 @@ import { storeToRefs } from 'pinia';
 import dayjs from 'dayjs';
 import { useSystemInfoStore } from '@/stores/systemInfo';
 import { useLoginInfoStore } from '@/stores/loginInfo';
-import { useAppInstance } from '@/hooks';
+import { useAppInstance, useNav } from '@/hooks';
 import api from '@/api';
 import Constant from '@/lib/constant';
 import { debounce, randomString } from '@/utils';
@@ -129,6 +130,7 @@ const systemInfo = useSystemInfoStore();
 const loginInfoStore = useLoginInfoStore();
 const { loginInfoData } = storeToRefs(loginInfoStore);
 const { $onLaunched } = useAppInstance();
+const { to } = useNav();
 
 // 规则
 const pattern = /^[\uD800-\uDBFF-\uDC00-\uDFFF-\u4E00-\u9FA5A-Za-z0-9_+~]+$/;
@@ -384,6 +386,10 @@ const handleSave = async (lastAvatarImg = '') => {
       }, 1000);
     }
   }
+};
+
+const goLevelRule = () => {
+  to('/mp-html?alias=descriptionGrade&title=等级说明');
 };
 
 onLoad(async (option) => {

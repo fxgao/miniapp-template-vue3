@@ -523,6 +523,7 @@ onLoad(async (options) => {
     .listContainer {
       padding: 0 40rpx 40rpx;
       background: linear-gradient(180deg, #ffffff 0, #f5f5f5 120rpx, #f5f5f5 100%);
+      min-height: 24vh;
     }
     .listBottomText {
       font-size: 28rpx;

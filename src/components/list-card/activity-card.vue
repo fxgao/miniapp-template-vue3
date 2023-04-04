@@ -88,6 +88,7 @@ const joinList = computed(() => {
   .activityInfo {
     @include flex-between;
     align-items: flex-end;
+    margin-left: 4rpx;
     .joinInfo {
       @include flex-center;
       max-width: 318rpx;
@@ -106,7 +107,7 @@ const joinList = computed(() => {
       }
       .signUpText {
         &.noml {
-          margin-left: 0rpx;
+          margin-left: 2rpx;
         }
         font-size: 24rpx;
         color: #a0a0a0;

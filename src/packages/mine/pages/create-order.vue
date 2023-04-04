@@ -50,7 +50,7 @@
             </view>
             <view class="infoRow" v-if="loginInfoData?.openId">
               <view class="phone" v-if="loginInfoData?.tel">
-                {{ loginInfoData.tel }}
+                {{ hideMiddlePhone(loginInfoData.tel) }}
               </view>
             </view>
           </view>
@@ -64,8 +64,20 @@
             <image :src="confirmInfo.img" class="infoImg" />
             <view class="infoRight">
               <view class="infoTitle">{{ confirmInfo.name }}</view>
-              <view class="infoSub">{{ confirmInfo.area }}</view>
-              <view class="infoSub">活动时间：{{ confirmInfo.time }}</view>
+              <view class="infoSub">
+                <image
+                  src="https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/ball_icon.png"
+                  class="imgIcon"
+                />
+                {{ confirmInfo.stadiumName }} {{ confirmInfo.placeName }}
+              </view>
+              <view class="infoSub">
+                <image
+                  src="https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/clock_icon.png"
+                  class="imgIcon"
+                />
+                活动时间：{{ confirmInfo.time }}
+              </view>
             </view>
           </view>
           <view class="priceInfo">
@@ -100,7 +112,7 @@
           </template>
           <template v-else>
             <view class="row">
-              1、根据北京防疫规定，参与者需提供72小时内核酸证明和健康宝绿码，如因自身原因无法提供不能参与活动，概不退款
+              1、如因自身原因无法提供不能参与活动，概不退款
             </view>
             <view class="row">
               2、一旦支付，活动开始24小时前可全额退款（根据总金额，微信支付平台将扣除一定手续费），超过24小时不可退款
@@ -156,7 +168,7 @@ import { useSystemInfoStore } from '@/stores/systemInfo';
 import { useLoginInfoStore } from '@/stores/loginInfo';
 import { useAppInstance, useNav } from '@/hooks';
 import payment from '@/lib/payment';
-import { debounce } from '@/utils';
+import { debounce, hideMiddlePhone } from '@/utils';
 import api from '@/api';
 import config from '@/api/config';
 import PopupBottom from '@/components/popup-bottom';
@@ -483,6 +495,15 @@ onLoad(async (options) => {
             line-height: 48rpx;
           }
           .infoSub {
+            .imgIcon {
+              height: 32rpx;
+              width: 32rpx;
+              margin-right: 8rpx;
+              margin-top: 4rpx;
+              flex: none;
+            }
+            display: flex;
+            align-items: flex-start;
             font-size: 24rpx;
             color: #a0a0a0;
             line-height: 40rpx;

@@ -99,7 +99,7 @@
               class="actionBtn"
               :class="{ disable: activityInfo.isApply === 2 }"
               @click="goOrderConfirm"
-              v-if="activityInfo.isOrder === 0"
+              v-if="activityInfo.isOrder === 0 && activityInfo.placeStatus === 1"
             >
               <template v-if="activityInfo.isApply === 2"> 已报名 </template>
               <template v-else> ¥{{ activityInfo.activityPrice }} 报名 </template>
@@ -216,6 +216,7 @@ const goOrderConfirm = () => {
     info: JSON.stringify({
       img: activityInfo.value.activeHeadFigure,
       stadiumName: activityInfo.value.stadiumName,
+      placeName: activityInfo.value.placeName,
       name: activityInfo.value.activeName,
       area: activityInfo.value.areaDetail || '得乐场馆',
       time: `${activityInfo.value.activeStartTime}-${activityInfo.value.endTime}`,

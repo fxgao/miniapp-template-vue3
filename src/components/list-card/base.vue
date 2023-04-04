@@ -13,8 +13,19 @@
           >{{ item.labelValue }}</view
         >
       </view>
-      <view class="activitySubTitle" v-if="activitySubTitle && isActivity">{{ activitySubTitle }}</view>
+      <view class="activitySubTitle" v-if="activitySubTitle && isActivity">
+        <image
+          src="https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/clock_icon.png"
+          class="imgIcon"
+        />
+        {{ activitySubTitle }}
+      </view>
       <view class="subTitle" :class="{'activity': isActivity}">
+        <image
+          src="https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/ball_icon.png"
+          class="imgIcon"
+          v-if="isActivity"
+        />
         {{ subTitle }}
       </view>
       <view class="slotInfo">
@@ -113,6 +124,15 @@ const { img, title, subTitle, isActivity, activitySubTitle, labelList } = toRefs
         margin-top: 8rpx;
         margin-bottom: -10rpx;
       }
+      .imgIcon {
+        width: 32rpx;
+        height: 32rpx;
+        margin-right: 8rpx;
+        margin-top: 4rpx;
+        flex: none;
+      }
+      display: flex;
+      align-items: flex-start;
       margin-top: 16rpx;
       font-size: 24rpx;
       color: #A0A0A0;
@@ -121,6 +141,15 @@ const { img, title, subTitle, isActivity, activitySubTitle, labelList } = toRefs
     }
 
     .activitySubTitle {
+      display: flex;
+      align-items: flex-start;
+      .imgIcon {
+        width: 32rpx;
+        height: 32rpx;
+        margin-right: 8rpx;
+        margin-top: 4rpx;
+        flex: none;
+      }
       font-size: 24rpx;
       color: #A0A0A0;
       line-height: 40rpx;

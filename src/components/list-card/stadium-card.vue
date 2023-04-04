@@ -8,7 +8,13 @@
       :labelList="labelList"
     >
       <view class="stadiumInfo">
-        <view v-if="operatStatus === Constant.OPERA_STATIS_MAP.OPEN" class="subText">{{operatStartTime}} - {{operatEndTime}}</view>
+        <view v-if="operatStatus === Constant.OPERA_STATIS_MAP.OPEN" class="subText">
+          <image
+            src="https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/clock_icon.png"
+            class="imgIcon"
+          />
+          营业时间：{{operatStartTime}} - {{operatEndTime}}
+        </view>
         <view class="time disable" v-if="operatStatus === Constant.OPERA_STATIS_MAP.CLOSE">待营业</view>
         <view class="time disable" v-if="operatStatus === Constant.OPERA_STATIS_MAP.REST">休息中</view>
         <view class="time" v-if="operatStatus === Constant.OPERA_STATIS_MAP.OPEN">营业中</view>
@@ -66,10 +72,19 @@ const labelList = computed(() => {
   .stadiumInfo {
     position: relative;
     .subText {
+      display: flex;
+      align-items: flex-start;
       font-size: 24rpx;
       color: #A0A0A0;
       line-height: 40rpx;
       margin-top: 8rpx;
+      .imgIcon {
+        flex: none;
+        width: 32rpx;
+        height: 32rpx;
+        margin-top: 4rpx;
+        margin-right: 8rpx;
+      }
     }
     .time {
       &.disable {

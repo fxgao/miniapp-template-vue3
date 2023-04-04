@@ -194,6 +194,11 @@ const formatMinite = (time) => {
 };
 
 const goDetail = (item) => {
+  const placeStatus = activityInfoList.value[nowPlaceIndex.value].placeStatus;
+  if (placeStatus !== 1) {
+    uni.showToast({ title: placeStatus === 3 ? '场地维护，暂不可预定!' : '场地未开放，暂不可预定!', icon: 'none' });
+    return;
+  };
   /** 用途 4活动  6课程  8比赛 */
   const { useble, resourceId, pubId, actId } = item;
   console.log('goDetail', useble, resourceId, pubId, actId);

@@ -181,7 +181,7 @@ const handleRefund = () => {
     })
     .then((res) => {
       console.log('refundOrder', res);
-      if (res.resultCode === 50) {
+      if (res.resultCode === 60) {
         const pages = getCurrentPages();
         const orderListPage = pages[pages.length - 3].$vm;
         if (orderListPage && orderListPage.changeOrderStatus) { orderListPage.changeOrderStatus(orderInfo.value.orderSn, 80); }

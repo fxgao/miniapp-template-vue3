@@ -269,6 +269,13 @@ const randomString = (len, hasDateNow) => {
   return pwd;
 };
 
+// 隐藏手机号中间4位
+const hideMiddlePhone = (phone) => {
+  if (!phone || phone.length !== 11) return '手机号格式不正确';
+  const reg = /^(\d{3})\d{4}(\d{4})$/;
+  return phone.replace(reg, '$1****$2');
+};
+
 export {
   cutString,
   formatDate,
@@ -283,5 +290,6 @@ export {
   throttle,
   PromiseWithAbort,
   formatDateTime,
-  randomString
+  randomString,
+  hideMiddlePhone
 };

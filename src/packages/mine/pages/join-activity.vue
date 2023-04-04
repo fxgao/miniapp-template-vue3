@@ -8,12 +8,28 @@
       :navCenterStyle="'flex-end'"
     />
     <view class="pageContainer" :class="{ white: joinActivityList.length === 0 }">
+      <!-- tabpanel -->
+      <tab-panel
+        :tabList="tabListArr"
+        :currentValue="current"
+        @change="handleTabPanelChange"
+        sticky
+        :stickyTop="navHeight"
+        flexbox
+        justify="center"
+        color="#ef6328"
+        labelColor="#ef6328"
+        gutter="92"
+      ></tab-panel>
       <!-- 列表 -->
       <view class="listContainer">
         <List
           v-model:dataList="joinActivityList"
           url="/wx/order/getActivity"
           ref="activityListRef"
+          :params="{
+            activeTimeStatus: current
+          }"
           :listType="'column'"
           v-show="joinActivityList.length > 0"
         >
@@ -43,25 +59,68 @@
 </template>
 
 <script setup>
-import { ref, reactive, watch, computed } from 'vue';
+import { ref, computed, nextTick } from 'vue';
+import { onReachBottom, onShow } from '@dcloudio/uni-app';
 import { storeToRefs } from 'pinia';
+import TabPanel from '@/components/base/tab-panel';
 import List from '@/components/list';
 import ActivityCard from '@/components/list-card/activity-card';
 import Empty from '@/components/base/empty';
-import { useAppInstance, useNav } from '@/hooks';
+import { useNav } from '@/hooks';
 
 import { useSystemInfoStore } from '@/stores/systemInfo';
 const systemInfoStore = useSystemInfoStore();
-const { safeBottom, navHeight } = storeToRefs(systemInfoStore);
+const { navHeight } = storeToRefs(systemInfoStore);
 
 const { to } = useNav();
 
 const joinActivityList = ref([]);
 const activityListRef = ref(null);
+const tabListArr = ref([
+  {
+    value: '3',
+    label: '待成局'
+  },
+  {
+    value: '2',
+    label: '未开始'
+  },
+  {
+    value: '1',
+    label: '已结束'
+  }
+]);
+const current = ref('3');
 
 const listLoading = computed(() => {
   return activityListRef.value ? activityListRef.value.loading : true;
 });
+
+const loaded = ref(false);
+onShow(() => {
+  if (loaded.value) {
+    // 需要重置外部列表数据，否则会引起列表数据问题
+    joinActivityList.value = [];
+    nextTick(() => {
+      activityListRef.value.refresh();
+    });
+  } else {
+    loaded.value = true;
+  }
+});
+
+onReachBottom(() => {
+  activityListRef.value.requestList();
+});
+
+const handleTabPanelChange = (value, index) => {
+  current.value = value;
+  // 需要重置外部列表数据，否则会引起列表数据问题
+  joinActivityList.value = [];
+  nextTick(() => {
+    activityListRef.value.refresh();
+  });
+};
 
 const goActivityDetail = (data) => {
   console.log('goStadiumDetail', data);

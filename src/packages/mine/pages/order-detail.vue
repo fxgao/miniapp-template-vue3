@@ -46,7 +46,7 @@
             </view>
             <view class="infoRow" v-if="loginInfoData?.openId">
               <view class="phone" v-if="loginInfoData?.tel">
-                {{ loginInfoData.tel }}
+                {{ hideMiddlePhone(loginInfoData.tel) }}
               </view>
             </view>
           </view>
@@ -83,7 +83,7 @@
               <view class="detailContent">{{ payStatusStr }}</view>
             </view>
             <view class="detailItem">
-              <view class="detailTitle">支付时间</view>
+              <view class="detailTitle">{{ orderInfo.orderStatus === 10 ? '订单创建时间' : '支付时间' }}</view>
               <view class="detailContent">{{ orderInfo?.payTime }}</view>
             </view>
             <view class="detailItem">
@@ -118,7 +118,7 @@
           </template>
           <template v-else>
             <view class="row">
-              1、根据北京防疫规定，参与者需提供72小时内核酸证明和健康宝绿码，如因自身原因无法提供不能参与活动，概不退款
+              1、如因自身原因无法提供不能参与活动，概不退款
             </view>
             <view class="row">
               2、一旦支付，活动开始24小时前可全额退款（根据总金额，微信支付平台将扣除一定手续费），超过24小时不可退款
@@ -191,7 +191,7 @@ import Constant from '@/lib/constant';
 import api from '@/api';
 import config from '@/api/config';
 import uniAsync from '@/lib/uni-async';
-import { debounce } from '@/utils';
+import { debounce, hideMiddlePhone } from '@/utils';
 import payment from '@/lib/payment';
 
 const systemInfo = useSystemInfoStore();
