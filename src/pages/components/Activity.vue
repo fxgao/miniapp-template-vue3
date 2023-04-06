@@ -1,5 +1,5 @@
 <template>
-  <view class="page">
+  <view class="pageActivity">
     <nav-bar
       ref="navbar"
       title="活动"
@@ -237,8 +237,10 @@ defineExpose({
 </script>
 
 <style lang="scss" scoped>
-.page {
+.pageActivity {
+  min-height: auto;
   .pageContainer {
+    min-height: 100vh;
     .listBlock {
       padding: 0 40rpx;
       margin-top: -24rpx;

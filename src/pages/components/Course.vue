@@ -1,5 +1,5 @@
 <template>
-  <view class="page">
+  <view class="pageCourse">
     <nav-bar
       ref="navbar"
       title="课程"
@@ -241,9 +241,10 @@ defineExpose({
 </script>
 
 <style lang="scss" scoped>
-.page {
-  min-height: 100vh;
+.pageCourse {
+  min-height: auto;
   .pageContainer {
+    min-height: 100vh;
     .filterBlock {
       position: sticky;
       top: 0;

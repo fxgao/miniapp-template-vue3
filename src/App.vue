@@ -56,44 +56,38 @@ const slientLogin = (successFunc = null) => {
 // 获取登录信息
 const getUserLocation = () => {
   uni.getLocation({
-    type: 'gcj02', //返回可以用于uni.openLocation的经纬度
-    geocode: true,
-    success: async (res) => {
+    // type: 'gcj02', //返回可以用于uni.openLocation的经纬度
+    success:  (res) => {
       console.log('getLocation res', res);
       const latitude = res.latitude;
       const lngitude = res.longitude;
-      try {
-        const positionInfo = await api.common.locationTransPosition(latitude, lngitude);
-        console.log('positionInfo', positionInfo);
-        locationInfoStore.setLocationInfo({
-          lat: latitude,
-          lng: lngitude,
-          code: positionInfo.code,
-          name: positionInfo.name,
-          areaList: positionInfo.areaList,
-          locationInfo: res
-        });
-      } catch (error) {
-        console.log('getUserLocation >>>>>>', error)
-      } finally {
-        $userLocationResolve && $userLocationResolve();
-      }
+      locationTransPosition(latitude, lngitude, res);
     },
-    fail: async (err) => {
+    fail: (err) => {
       console.log('getLocation fail', err);
-      const positionInfo = await api.common.locationTransPosition('', '');
-      console.log('positionInfo', positionInfo);
-      locationInfoStore.setLocationInfo({
-        lat: 0,
-        lng: 0,
-        locationInfo: null,
-        code: positionInfo.code,
-        name: positionInfo.name,
-        areaList: positionInfo.areaList,
-      });
-      $userLocationResolve && $userLocationResolve();
+      locationTransPosition('', '', null);
     }
   });
+};
+
+// 转换用户经纬度信息为位置信息
+const locationTransPosition = async (lat, lng, res) => {
+  try {
+    const positionInfo = await api.common.locationTransPosition(lat, lng);
+    console.log('positionInfo', positionInfo);
+    locationInfoStore.setLocationInfo({
+      lat: lat || 0,
+      lng: lng || 0,
+      code: positionInfo.code,
+      name: positionInfo.name,
+      areaList: positionInfo.areaList,
+      locationInfo: res
+    });
+  } catch (error) {
+    console.log('getUserLocation >>>>>>', error)
+  } finally {
+    $userLocationResolve && $userLocationResolve();
+  }
 };
 
 // 存储登录信息

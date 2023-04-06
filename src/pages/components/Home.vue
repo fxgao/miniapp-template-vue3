@@ -30,7 +30,7 @@
       <!-- 热门课程 -->
       <view class="courseBlock" v-if="hotCourseList.length > 0">
         <view class="topBlock">
-          <view class="titleBg"> 热门课程 <span class="smallTitle">左滑看更多</span></view>
+          <view class="titleBg"> 热门课程 <span class="smallTitle" v-if="hotCourseList.length > 2">左滑看更多</span></view>
           <view class="moreText" @click="handleGoMore('course')">
             查看更多
             <image
@@ -69,7 +69,7 @@
       <!-- 明星教练 -->
       <view class="coachBlock" v-if="starCoachList.length > 0">
         <view class="topBlock">
-          <view class="titleBg"> 明星教练 <span class="smallTitle">左滑看更多</span> </view>
+          <view class="titleBg"> 明星教练 <span class="smallTitle" v-if="starCoachList.length > 2">左滑看更多</span> </view>
           <view class="moreText" @click="handleGoMore('coach')">
             查看更多
             <image
