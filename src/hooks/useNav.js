@@ -23,7 +23,8 @@ const REDIRECT_URL = {
   '/mine/create-order': '/packages/mine/pages/create-order',
   '/mine/order-list': '/packages/mine/pages/order-list',
   '/mine/order-detail': '/packages/mine/pages/order-detail',
-  '/mine/order-refund': '/packages/mine/pages/order-refund'
+  '/mine/order-refund': '/packages/mine/pages/order-refund',
+  '/dev-page': '/pages/dev-page'
 };
 
 const useNavigate = () => {

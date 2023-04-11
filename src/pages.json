@@ -5,6 +5,9 @@
     },
     {
       "path": "pages/webview"
+    },
+    {
+      "path": "pages/dev-page"
     }
   ],
   "subPackages": [

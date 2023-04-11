@@ -1,6 +1,12 @@
 // 环境变量
 let PROCESS_ENV = process.env.VUE_APP_PROCESS_ENV || 'development';
 
+// 调试环境
+/* eslint-disable */
+if (__wxConfig.envVersion !== 'release') {
+  PROCESS_ENV = uni.getStorageSync('debugEnv') || PROCESS_ENV;
+}
+
 // 存储常量key
 const STORAGE_KEYS = {
   ADD_MINIPROGRAM_DAY: 'ADD_MINIPROGRAM_DAY'

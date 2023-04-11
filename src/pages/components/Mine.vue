@@ -7,7 +7,7 @@
       :backgroundColor="navBarBackgroundColor"
     />
     <view class="pageContainer">
-      <view class="userInfoBlock" @click="goEditProfile">
+      <view class="userInfoBlock" @click="goEditProfile" @longpress="toDevPage">
         <image
           class="userAvatar"
           :src="
@@ -16,6 +16,7 @@
               : 'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/icon/default-avatar.png'
           "
           mode="aspectFit"
+          @longpress="toDevPage"
         />
         <view class="userInfo">
           <view class="infoRow">
@@ -172,6 +173,12 @@ const goSettingPath = (item) => {
   }
   to(item.path);
 };
+
+const toDevPage = () => {
+  /* eslint-disable */
+  if (__wxConfig.envVersion === 'release') return;
+  to('/dev-page');
+}
 
 onLoad(async (options) => {
   await $onLaunched;
