@@ -1,5 +1,5 @@
 // 环境变量
-let PROCESS_ENV = process.env.VUE_APP_PROCESS_ENV || 'development';
+let PROCESS_ENV = process.env.VUE_APP_PROCESS_ENV || 'production';
 
 // 调试环境
 /* eslint-disable */
