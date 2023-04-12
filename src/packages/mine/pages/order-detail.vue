@@ -56,7 +56,7 @@
       <view class="orderInfoBlock">
         <view class="title">
           订单信息
-          <view class="countDownText" v-if="orderInfo && orderInfo.orderStatus === 10 && payCountDownStr">
+          <view class="countDownText" v-if="orderInfo && orderInfo?.orderStatus === 10 && payCountDownStr">
             请在<div class="countDownNum">{{ payCountDownStr }}</div>内支付，超时将自动取消
           </view>
         </view>
@@ -83,7 +83,7 @@
               <view class="detailContent">{{ payStatusStr }}</view>
             </view>
             <view class="detailItem">
-              <view class="detailTitle">{{ orderInfo.orderStatus === 10 ? '订单创建时间' : '支付时间' }}</view>
+              <view class="detailTitle">{{ orderInfo?.orderStatus === 10 ? '订单创建时间' : '支付时间' }}</view>
               <view class="detailContent">{{ orderInfo?.payTime }}</view>
             </view>
             <view class="detailItem">
@@ -133,25 +133,25 @@
         付款即代表您同意此协议。
       </view>
     </view>
-    <view class="detailPopupBottom" v-if="orderInfo.orderStatus === 10 || orderInfo.orderStatus === 20 || orderInfo.orderStatus === 40">
+    <view class="detailPopupBottom" v-if="orderInfo?.orderStatus === 10 || orderInfo?.orderStatus === 20 || orderInfo?.orderStatus === 40">
       <PopupBottom ref="popup1">
         <template v-slot:outer-main>
           <view class="popupContainer">
-            <template v-if="orderInfo.orderStatus === 10">
+            <template v-if="orderInfo?.orderStatus === 10">
               <view class="info">
                 金额（元）： <span class="priceText">{{ orderInfo.orderPrice }}</span>
               </view>
               <view class="payBtn" @click="rePay">去付款</view>
             </template>
-            <template v-if="orderInfo.orderStatus === 20">
-              <view class="payBtn half plain" @click="goRefund">申请退款</view>
-              <view class="payBtn half" @click="showServeModal">联系客服</view>
+            <template v-if="orderInfo?.orderStatus === 20">
+              <view class="payBtn half plain" @click="goRefund" v-if="orderInfo.orderChannel === 1">申请退款</view>
+              <view class="payBtn" :class="orderInfo.orderChannel == 2 ? 'full' : 'half'" @click="showServeModal">联系客服</view>
             </template>
-            <template v-if="orderInfo.orderStatus === 40 || orderInfo.orderStatus === 80">
+            <template v-if="orderInfo?.orderStatus === 40 || orderInfo?.orderStatus === 80">
               <view class="payBtn half plain">退款审核中</view>
               <view class="payBtn half" @click="showServeModal">联系客服</view>
             </template>
-            <template v-if="orderInfo.orderStatus === 100">
+            <template v-if="orderInfo?.orderStatus === 100">
               <view class="payBtn half plain">退款申请失败</view>
               <view class="payBtn half" @click="showServeModal">联系客服</view>
             </template>
@@ -706,6 +706,10 @@ onUnload(() => {
   .payBtn {
     &.half {
       width: 48%;
+      text-align: center;
+    }
+    &.full {
+      width: 100%;
       text-align: center;
     }
     &.plain {
