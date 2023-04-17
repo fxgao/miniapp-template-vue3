@@ -17,12 +17,12 @@
       </view>
       <view class="infoBlock">
         <view class="title">基本信息</view>
-        <view class="infoItem">
+        <!-- <view class="infoItem">
           <view class="leftText">赛事举办方：</view>
           <view class="right"
             >{{ matchInfo.stadiumName || '得乐体育' }}</view
           >
-        </view>
+        </view> -->
         <!-- <view class="infoItem">
           <view class="leftText">比赛时间：</view>
           <view class="right"
@@ -79,15 +79,16 @@
         <template v-slot:outer-main>
           <view class="actionBlock">
             <view class="actionBtn plain" :class="{'w100': !matchInfo.isOrder}" @click="showWechatModal">立即咨询</view>
-            <view class="actionBtn" v-if="matchInfo.isOrder" @click="goOrderConfirm">¥{{ matchInfo.entryFee }} 报名</view>
+            <!-- <view class="actionBtn" v-if="matchInfo.isOrder" @click="goOrderConfirm">¥{{ matchInfo.entryFee }} 报名</view> -->
+            <view class="actionBtn" v-if="matchInfo.isOrder">¥{{ matchInfo.entryFee }} 报名</view>
           </view>
         </template>
       </PopupBottom>
     </view>
     <view class="modalContainer">
-      <Modal v-model:show="wechatModalShow" title="活动咨询">
+      <Modal v-model:show="wechatModalShow" title="比赛咨询">
         <view class="modalBlock">
-          <image class="wechatImg" show-menu-by-longpress :src="matchInfo.wechatCardUrl" />
+          <image class="wechatImg" show-menu-by-longpress :src="wechatCardUrl" />
           <view class="text">更多活动内容请添加教练微信进行咨询</view>
         </view>
         <template v-slot:bottom>
@@ -113,12 +114,70 @@ import StadiumCard from '@/components/list-card/stadium-card';
 import { useAppInstance, useNav } from '@/hooks';
 import api from '@/api';
 import Constant from '@/lib/constant';
+import uniAsync from '@/lib/uni-async';
 const { $onLaunched } = useAppInstance();
 const { to } = useNav();
 
 const matchId = ref(null);
 const publishId = ref(null);
 const popup1 = ref(null);
+const wechatCardUrl = ref('https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/share/matchShareQR.png');
+
+const copyWechatNumber = () => {
+  uni.setClipboardData({
+    data: '13910283357', // 暂时写死
+    success: () => {
+      uni.showToast({ title: '复制成功', icon: 'none' });
+    }
+  });
+};
+
+const saveQrCode = async () => {
+  const url = wechatCardUrl.value; // 暂时写死
+  const save = (path) => {
+    uni.saveImageToPhotosAlbum({
+      filePath: path,
+      success() {
+        uni.showToast({ title: '已保存到系统相册', icon: 'none' });
+      },
+      fail(e) {
+        console.log('saveImageToPhotosAlbum fail', e);
+        uni.showToast({ title: '下载失败', icon: 'none' });
+      }
+    });
+  };
+
+  try {
+    const auth = await uniAsync.authorize({
+      scope: 'scope.writePhotosAlbum'
+    });
+    if (auth.errMsg === 'authorize:ok') {
+      if (url.startsWith('http')) {
+        uni.downloadFile({
+          url,
+          success: (res) => save(res.tempFilePath)
+        });
+      } else {
+        save(url);
+      }
+    } else {
+      uni.showModal({
+        title: '无法保存',
+        content:
+          '1.请在“设置-隐私-照片”选项中，允许微信访问你的照片 2.请点击小程序右上角"...",在“设置”中打开“添加到相册”功能',
+        showCancel: false
+      });
+    }
+  } catch (error) {
+    console.log('authorize error', error);
+    uni.showModal({
+      title: '无法保存',
+      content:
+        '1.请在“设置-隐私-照片”选项中，允许微信访问你的照片 2.请点击小程序右上角"...",在“设置”中打开“添加到相册”功能',
+      showCancel: false
+    });
+  }
+};
 
 const matchInfo = ref({});
 const labelList = computed(() => {

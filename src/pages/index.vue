@@ -83,7 +83,7 @@ import Course from './components/Course';
 import Home from './components/Home';
 import Mine from './components/Mine';
 import api from '@/api';
-import { onLoad, onPageScroll, onReachBottom, onShareAppMessage } from '@dcloudio/uni-app';
+import { onLoad, onPageScroll, onReachBottom, onShareAppMessage, onShareTimeline } from '@dcloudio/uni-app';
 import { useSystemInfoStore } from '@/stores/systemInfo';
 import { useLocationInfoStore } from '@/stores/location';
 import { useAppInstance, useNav } from '@/hooks';
@@ -294,6 +294,14 @@ onShareAppMessage(() => {
     title,
     imageUrl: imgUrl,
     path
+  };
+});
+
+onShareTimeline(() => {
+  return {
+    title: '我在得乐网球，等你一起来玩！',
+    imageUrl: 'https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/share/main.png',
+    query: 'key=home&from=timeline'
   };
 });
 

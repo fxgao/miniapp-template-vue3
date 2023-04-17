@@ -7,7 +7,7 @@
       :labelList="labelList"
     >
       <view class="matchInfo">
-        <view class="place">{{info.stadiumName || '得乐体育'}}</view>
+        <view class="place">{{info.stadiumName || ''}}</view>
         <view class="btns" v-if="(!overTime && info.gameStatus)">
           <view class="btn" v-if="info.gameStatus === 1">报名</view>
           <view class="btn grey" v-else>结束</view>
@@ -81,10 +81,11 @@ const labelList = computed(() => {
       color: #A0A0A0;
       line-height: 40rpx;
       width: 300rpx;
+      height: 40rpx;
     }
     .btns {
       position: absolute;
-      top: -38rpx;
+      top: -12rpx;
       right: 0;
       .btn {
         &.grey {
