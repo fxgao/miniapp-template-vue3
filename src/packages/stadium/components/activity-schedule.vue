@@ -57,6 +57,7 @@
           :style="{
             color: item.isOrder === 0 ? item.color : '#a0a0a0'
           }"
+          v-if="item.useble === 4"
         >
           {{ formatMinite(item.start) }}-{{ formatMinite(item.end) }} {{ item.isOrder === 0 ? (item.isApply === 2 ? '您已经报名' : '可报名') : '已结束报名' }}
           <view
@@ -213,7 +214,8 @@ const goDetail = (item) => {
     path = '/course/detail';
     to(path, {
       id: actId,
-      pubId
+      pubId,
+      from: 'schedule'
     });
   } else if (useble === 8) {
     path = '/match/detail';

@@ -13,10 +13,19 @@ const course = {
     });
   },
   // 获取活动详情
-  getCourseDetail(id) {
+  getTempleteCourseDetail(id) {
     return request({
       requestParams: {
         url: `/wx/templete/course/${id}`,
+        method: 'GET'
+      }
+    });
+  },
+  // 获取活动详情
+  getCourseDetail(id) {
+    return request({
+      requestParams: {
+        url: `/wx/course/${id}`,
         method: 'GET'
       }
     });

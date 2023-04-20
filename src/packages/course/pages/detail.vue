@@ -111,6 +111,7 @@ const { to } = useNav();
 
 const courseId = ref(null);
 const publishId = ref(null);
+const fromWhere = ref(''); // 从哪个页面跳转过来的
 const popup1 = ref(null);
 const wechatCardUrl = ref('https://dele.htennis.net/proApi/little-moth-server/moth/file/mp/share/courseShareQR.png');
 
@@ -194,7 +195,12 @@ const labelList = computed(() => {
 const initDetail = async (refresh = false) => {
   uni.showLoading();
   try {
-    const res = await api.course.getCourseDetail(courseId.value);
+    let res = null;
+    if (fromWhere.value === 'schedule') {
+      res = await api.course.getCourseDetail(courseId.value);
+    } else {
+      res = await api.course.getTempleteCourseDetail(courseId.value);
+    }
     console.log('getCourseDetail res', res);
     courseInfo.value = res;
   } catch (error) {
@@ -255,9 +261,10 @@ onShow(async () => {
 
 onLoad(async (options) => {
   console.log('course detail onload', options);
-  const { id, pubId } = options;
+  const { id, pubId, from = 'list' } = options;
   courseId.value = id;
   publishId.value = pubId;
+  fromWhere.value = from;
   await $onLaunched;
   initDetail();
   getHotStadiumList(); // 热门场馆
