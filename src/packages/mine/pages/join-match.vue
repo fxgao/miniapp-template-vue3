@@ -42,6 +42,7 @@
 
 <script setup>
 import { ref, reactive, computed } from 'vue';
+import { onReachBottom } from '@dcloudio/uni-app';
 import { storeToRefs } from 'pinia';
 import List from '@/components/list';
 import MatchCard from '@/components/list-card/match-card';
@@ -67,6 +68,10 @@ const goMatchDetail = (data) => {
   const { id } = data;
   to('/match/detail', { id });
 };
+
+onReachBottom(() => {
+  matchListRef.value.requestList();
+});
 </script>
 
 <style lang="scss" scoped>

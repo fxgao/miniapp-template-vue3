@@ -46,6 +46,7 @@
 
 <script setup>
 import { ref, reactive, computed } from 'vue';
+import { onReachBottom } from '@dcloudio/uni-app';
 import { storeToRefs } from 'pinia';
 import List from '@/components/list';
 import CourseCard from '@/components/list-card/course-card';
@@ -71,6 +72,10 @@ const goCourseDetail = (data) => {
   const { id } = data;
   to('/course/detail', { id });
 };
+
+onReachBottom(() => {
+  courseListRef.value.requestList();
+});
 </script>
 
 <style lang="scss" scoped>

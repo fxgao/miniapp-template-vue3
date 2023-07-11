@@ -51,7 +51,7 @@
 
 <script setup>
 import { ref, reactive, nextTick } from 'vue';
-import { onShareAppMessage, onLoad } from '@dcloudio/uni-app';
+import { onShareAppMessage, onLoad, onReachBottom } from '@dcloudio/uni-app';
 import MultiFilter from '@/components/multi-filter';
 import List from '@/components/list';
 import CoachCard from '@/components/list-card/coach-card';
@@ -188,6 +188,10 @@ const initStadiumList = async () => {
 
 onLoad(() => {
   initStadiumList();
+});
+
+onReachBottom(() => {
+  coachListRef.value.requestList();
 });
 
 onShareAppMessage(() => {

@@ -46,7 +46,7 @@
 
 <script setup>
 import { ref, reactive, computed, watch, nextTick } from 'vue';
-import { onShareAppMessage } from '@dcloudio/uni-app';
+import { onShareAppMessage, onReachBottom } from '@dcloudio/uni-app';
 import { storeToRefs } from 'pinia';
 import List from '@/components/list';
 import StadiumCard from '@/components/list-card/stadium-card';
@@ -263,6 +263,10 @@ const goStadiumDetail = (data) => {
   const { id } = data;
   to('/stadium/detail', { id });
 };
+
+onReachBottom(() => {
+  stadiumListRef.value.requestList();
+});
 
 onShareAppMessage(() => {
   return {

@@ -44,7 +44,7 @@
 
 <script setup>
 import { ref, reactive, nextTick, watch } from 'vue';
-import { onShareAppMessage } from '@dcloudio/uni-app';
+import { onShareAppMessage, onReachBottom } from '@dcloudio/uni-app';
 import { storeToRefs } from 'pinia';
 import List from '@/components/list';
 import MultiFilter from '@/components/multi-filter';
@@ -252,6 +252,10 @@ const goMatchDetail = (data) => {
     pubId: activityId
   });
 };
+
+onReachBottom(() => {
+  matchListRef.value.requestList();
+});
 
 onShareAppMessage(() => {
   return {
